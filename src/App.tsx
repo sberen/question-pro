@@ -1,35 +1,33 @@
 import React from 'react';
-import { Toolbar } from './Components/Toolbar';
-import {QuizSelector} from './Components/QuizSelector';
-import './App.css';
+import { TopBar } from './Components/TopBar/TopBar';
+import { MainPage }  from './Components/MainPage/MainPage'
+import {Theme, createMuiTheme, ThemeProvider} from '@material-ui/core';
+import styles from './App.module.css';
+import { green } from '@material-ui/core/colors';
 
-interface AppState {
-  quiz : string;
-  choosingQuiz: boolean
-}
-
-export class App extends React.Component<{}, AppState> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {quiz: '', choosingQuiz: false};
+const theme : Theme = createMuiTheme({
+  typography: {
+    fontFamily: 'Helvetica'
+  },
+  palette: {
+    primary: green,
+    secondary: {
+      main: "#fafafa"
+    }
   }
+});
 
+
+export class App extends React.Component {
   render() {
-    const quizSelect = this.state.choosingQuiz ? <QuizSelector changeQuiz={(qz : string) => this.setQuiz(qz)}/> : null;
     return (
       <div>
-          <Toolbar showQuiz={() => this.showQuizSet()}/>
-          {quizSelect}
+        <ThemeProvider theme={theme}>
+          <MainPage />
+        </ThemeProvider>
       </div>  
     );
   }
 
-  showQuizSet() {
-    this.setState({choosingQuiz: true});
-  }
-
-  setQuiz(quizName : string) {
-    this.setState({quiz: quizName});
-  }
 }
 
