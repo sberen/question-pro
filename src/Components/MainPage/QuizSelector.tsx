@@ -2,9 +2,10 @@ import React from 'react';
 import {Button, Grid} from '@material-ui/core';
 import './QuizSelector.css';
 import {QUIZZES} from '../QuizTypes';
+import { QuizInfo } from './QuizInfo';
 
 interface SelectorProps {
-  changeQuiz: (qz : string) => any;
+  changeQuiz(qz : QuizInfo) : void;
 }
 
 
@@ -15,7 +16,7 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
     for(let quiz of QUIZZES) {
       result.push(
         <Grid item id="button" spacing={3} xs={12}>
-          <Button onClick={() => this.props.changeQuiz(quiz)} color='primary' variant='outlined'>{quiz}</Button>
+          <Button onClick={() => this.props.changeQuiz(quiz)} color='primary' variant='outlined'>{quiz.name}</Button>
         </Grid>
       )
     }
