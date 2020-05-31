@@ -1,8 +1,8 @@
 import React from 'react';
 import {Button, Grid} from '@material-ui/core';
 import './QuizSelector.css';
-import {QUIZZES} from '../QuizTypes';
-import { QuizInfo } from './QuizInfo';
+import {QUIZZES} from '../Quiz/QuizTypes';
+import { QuizInfo } from '../Quiz/QuizInfo';
 
 interface SelectorProps {
   changeQuiz(qz : QuizInfo) : void;

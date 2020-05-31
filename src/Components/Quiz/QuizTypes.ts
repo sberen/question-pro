@@ -1,4 +1,4 @@
-import { QuizInfo } from "./MainPage/QuizInfo";
+import { QuizInfo } from "./QuizInfo";
 
 var mc = new QuizInfo('Multiple Choice Example', "Multiple Choice", "00000001");
 var vocab = new QuizInfo('Vocabulary Example', "Short Answer", "00000002");
