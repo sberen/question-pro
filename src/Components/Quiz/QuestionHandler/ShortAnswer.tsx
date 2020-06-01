@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, TextField } from '@material-ui/core';
 
 interface QuestionProps {
     question: any,
@@ -26,23 +27,25 @@ export class ShortAnswer extends React.Component<QuestionProps, {}> {
         }
         if (!this.props.isFirst){
             result.push(
-                <button key="back" onClick={() => {this.props.changeQuestion(-1)}}>Back</button>
+                <Button key='back' onClick={() => this.props.changeQuestion(-1)} variant='outlined' color='primary'>Back</Button>
             )
         }
         result.push(
-            <button key="next" onClick={() => {this.props.changeQuestion(1)}}>
-            {secondButton}</button>
+            <Button key="next" onClick={() => {this.props.changeQuestion(1)}} variant='outlined' color='primary'>
+            {secondButton}</Button>
         )
         
 
         return (
         <div>
             {this.props.question.prompt} <br/>
-            <textarea
+            <TextField
                     rows={1}
-                    cols={30}
                     onChange={this.onInputChange}
                     value={this.props.answer}
+                    variant='outlined'
+                    color='primary'
+                    size='small'
                 /> <br/>
             {result}
         </div>);
