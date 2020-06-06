@@ -24,7 +24,7 @@ export class MainPage extends React.Component<{}, MainPageState> {
   render() {
     const quizSel: any = <QuizSelector changeQuiz={(qz:QuizInfo) => this.setState({quiz: qz, chosenQuiz: true})}/>;
     
-    const quizPage: any = <QuizHandler info={this.state.quiz}/>;
+    const quizPage: any = <QuizHandler info={this.state.quiz} onBack={() => this.setState({chosenQuiz: false})}/>;
     return (
       <div>
         <div id="toolbar">
