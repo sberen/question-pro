@@ -4,11 +4,12 @@ import { TopBar } from '../TopBar/TopBar';
 import { QuizSelector } from './QuizSelector';
 import { QuizInfo } from '../Quiz/QuizInfo';
 import {QuizHandler} from '../Quiz/QuizHandler'
+import UploadQuiz from '../UploadQuiz/UploadQuiz';
 
 
 
 interface MainPageState {
-  chosenQuiz: boolean;  // Whether or not a quiz has been chosen
+  pageNum: number;  // Whether or not a quiz has been chosen
   quiz : QuizInfo; // Information regarding chosen quiz, undefined if nothing has been chosen
 }
 
@@ -17,20 +18,24 @@ export class MainPage extends React.Component<{}, MainPageState> {
     super(props);
     this.state = {
       quiz: new QuizInfo(),
-      chosenQuiz: false
+      pageNum: 0
     }
   }
   
   render() {
-    const quizSel: any = <QuizSelector changeQuiz={(qz:QuizInfo) => this.setState({quiz: qz, chosenQuiz: true})}/>;
-    
-    const quizPage: any = <QuizHandler info={this.state.quiz} onBack={() => this.setState({chosenQuiz: false})}/>;
+
+    const pages = [
+      <QuizSelector changeQuiz={(qz:QuizInfo) => this.setState({quiz: qz, pageNum: 1})}/>, 
+        <QuizHandler info={this.state.quiz} onBack={() => this.setState({pageNum: 0})}/>,
+        <UploadQuiz />
+    ];
+
     return (
       <div>
         <div id="toolbar">
-          <TopBar onQuizClick={() => this.setState({quiz: new QuizInfo(), chosenQuiz: false})}/>
+          <TopBar onQuizClick={() => this.setState({quiz: new QuizInfo(), pageNum: 0})} makeQuiz={() => this.setState({pageNum: 2})}/>
         </div>
-        {this.state.chosenQuiz ? quizPage : quizSel}
+        {pages[this.state.pageNum]}
       </div>
     )
   }

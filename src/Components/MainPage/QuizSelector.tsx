@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Grid} from '@material-ui/core';
 import './QuizSelector.css';
-import {QUIZZES} from '../Quiz/QuizTypes';
+import { QUIZZES } from '../Quiz/QuizTypes';
 import { QuizInfo } from '../Quiz/QuizInfo';
 
 interface SelectorProps {
@@ -20,6 +20,9 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
         </Grid>
       )
     }
-    return <Grid container>{result}</Grid>;
+    return (<Grid container>
+                <h3>Quizzes:</h3>
+                {result}
+            </Grid>);
   }
 }

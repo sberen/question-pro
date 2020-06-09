@@ -28,7 +28,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     var quizzes = require('../../resources/Questions.json');
 
     for (let quiz of quizzes){
-      if (quiz.uid === quizUID){
+      if (quiz.uid === quizUID && quiz.type === this.props.info.type){
         count = quiz.count;
         Qs = quiz.questions
       }
