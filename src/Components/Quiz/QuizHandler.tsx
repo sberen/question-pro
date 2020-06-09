@@ -2,6 +2,7 @@ import React from 'react';
 import {QuizInfo} from './QuizInfo';
 import {ShortAnswer} from './QuestionHandler/ShortAnswer';
 import ResultsPage from './QuestionHandler/ResultsPage';
+import { MultipleChoice } from './QuestionHandler/MultipleChoice';
 // import * as quizes from '../../resources/Questions.json';
 
 
@@ -62,7 +63,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
         {/* {testString.split('\n').map((item, key) => {
           return <span key={key}>{item}<br/></span>
         })} */}
-        <ShortAnswer 
+        <MultipleChoice 
           question={this.state.questions[this.state.currentQuestion-1]}
           changeAnswer={(ans: string) => this.updateAnswer(ans)} 
           changeQuestion={(num: number) => this.changeQuestion(num)} 
