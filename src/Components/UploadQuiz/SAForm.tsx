@@ -34,10 +34,10 @@ export default class SAForm extends React.Component<{}, FormState> {
           (<div>
             <h3>Question {ind + 1}:</h3>
             <div id="fields"> 
-              <TextField id="fields" label="Prompt" onChange={(evt: any) => this.onQuestionChange(evt, ind)} value={val.prompt} color='primary' size ='small'/>
+              <TextField id='fields' label="Prompt" onChange={(evt: any) => this.onQuestionChange(evt, ind)} value={val.prompt} color='primary' size ='small'/>
             </div>
             <div id="fields">
-              <TextField id="fields" label="Answer" onChange={(evt: any) => this.onAnswerChange(evt, ind)} value={val.answer} color='primary' size='small'/>
+              <TextField id='fields' label="Answer" onChange={(evt: any) => this.onAnswerChange(evt, ind)} value={val.answer} color='primary' size='small'/>
             </div>
           </div>)
         )}
