@@ -1,7 +1,6 @@
 [{
   "uid": "00000001",
   "type": "MC",
-  "count": 3,
   "questions": [
     {
       "prompt" : "What color is the sky?",
@@ -23,7 +22,6 @@
 {
   "uid": "00000002",
   "type": "SA",
-  "count": 3,
   "questions": [
     {
       "prompt" : "What color is the sky?",
@@ -36,6 +34,40 @@
     {
       "prompt" : "What color is a banana?",
       "answer": "yellow"
+    }
+  ]
+},
+{
+  "uid": "00000003",
+  "type": "MSA",
+  "questions": [
+    {
+      "title" : "Conjugate the word \"go\".",
+      "prompts": [
+        "Present",
+        "Past",
+        "Future"
+      ],
+      "answer": ["go", "went", "will go"]
+    },
+    {
+      "title" : "Conjugate the word \"eat\".",
+      "prompts": [
+        "Present",
+        "Past",
+        "Future"
+      ],
+      "answer": ["eat", "ate", "will eat"]
+    }
+  ]
+},
+{
+  "uid": "00000004",
+  "type": "LA",
+  "questions": [
+    {
+      "prompt" : "Describe the Sun.",
+      "answer": "blue"
     }
   ]
 }]

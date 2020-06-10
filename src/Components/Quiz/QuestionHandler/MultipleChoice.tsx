@@ -23,7 +23,7 @@ export class MultipleChoice extends QuestionHandler {
         
         return (
         <div>
-            {this.renderChoices()}
+            {this.renderChoices()} <br/>
             {result}
         </div>);
     }

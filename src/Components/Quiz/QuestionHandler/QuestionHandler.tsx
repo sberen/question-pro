@@ -3,11 +3,11 @@ import { Button, TextField } from '@material-ui/core';
 
 interface QuestionProps {
     question: any,
-    changeAnswer(ans: string): void,
+    changeAnswer(ans: string | string[]): void,
     changeQuestion(num: number): void,
     isFirst: boolean,
     isLast: boolean,
-    answer: string
+    answer: string | string[]
 }
 
 
