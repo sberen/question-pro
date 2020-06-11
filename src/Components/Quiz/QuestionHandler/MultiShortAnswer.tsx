@@ -52,16 +52,13 @@ export class MultiShortAnswers extends QuestionHandler {
     
     Title
     [(Prompt, Answer Box), ...]
-    Navigation buttons
     */
     render() {
-        let result = this.renderButtons();
         
         return (
         <div>
             {this.props.question.title} <br/>
             {this.renderQuestions()} <br/>
-            {result}
         </div>);
     }
 }

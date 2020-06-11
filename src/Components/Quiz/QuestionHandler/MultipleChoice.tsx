@@ -25,15 +25,11 @@ export class MultipleChoice extends QuestionHandler {
     
     Title
     Answer Choices
-    Navigation buttons
     */
     render() {
-        let result = this.renderButtons();
-        
         return (
         <div>
             {this.renderChoices()} <br/>
-            {result}
         </div>);
     }
 }
