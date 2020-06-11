@@ -6,15 +6,17 @@ import SAForm from './SAForm';
 import "./UploadQuiz.css";
 
 export interface FormProps {
-  questions: any[];
+  submit: (qz: QuizInfo) => void;
+  onBack: () => void;
 }
+
 
 interface UploadState {
   quizType: string | undefined;
   questions: any[];
 }
 
-export default class UploadQuiz extends React.Component<{}, UploadState> {
+export default class UploadQuiz extends React.Component<FormProps, UploadState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -34,7 +36,7 @@ export default class UploadQuiz extends React.Component<{}, UploadState> {
                         <h3>New Quiz Type:</h3> 
                         {buttons}
                       </div>
-                    : <SAForm /> ) ;
+                    : <SAForm onBack={this.props.onBack} submit={this.props.submit}/> ) ;
   }
 
 }

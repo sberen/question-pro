@@ -3,7 +3,7 @@ import {QuizInfo} from './QuizInfo';
 import {QUIZ_INDICES, SINGLE} from './QuizTypes';
 import {ShortAnswer} from './QuestionHandler/ShortAnswer';
 import {QuestionProps} from './QuestionHandler/QuestionHandler';
-import {SingleResults, MultiResults} from './QuestionHandler/ResultsPage';
+import {Results} from './QuestionHandler/ResultsPage';
 import { MultipleChoice } from './QuestionHandler/MultipleChoice';
 import { MultiShortAnswers } from './QuestionHandler/MultiShortAnswer';
 import { LongAnswer } from './QuestionHandler/LongAnswer';
@@ -13,14 +13,12 @@ import { LongAnswer } from './QuestionHandler/LongAnswer';
 interface HandlerProps {
   info : QuizInfo;
   onBack: () => void;
-  quiz: QuizInfo;
 }
 
 interface HandlerState {
   currentQuestion : number;
-  totalQuestions: number;
+  quiz: QuizInfo;
   incorrectAnswers: Map<string, [string, string]>;
-  questions: any[];
   answers: any[];
   resultsPage: boolean;
 }
@@ -29,16 +27,15 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   constructor(props : any){
     super(props);
     let quizUID = this.props.info.uid
-    let Qs: any[] = this.props.quiz.questions;
+    let Qs: any[] = this.props.info.questions;
 
     var ans = this.populateAnswers(Qs);
     console.log(ans);
 
     this.state = {
       currentQuestion: 1,
-      totalQuestions: Qs.length,
       incorrectAnswers: new Map(),
-      questions:Qs,
+      quiz: this.props.info,
       answers: ans,
       resultsPage: false
     }
@@ -46,11 +43,11 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
 
   render() {
     const props: QuestionProps = {
-          question: this.state.questions[this.state.currentQuestion-1],
+          question: this.state.quiz.questions[this.state.currentQuestion-1],
           changeAnswer: (ans: string| string[]) => this.updateAnswer(ans),
           changeQuestion: (num: number) => this.changeQuestion(num),
           isFirst: this.state.currentQuestion === 1,
-          isLast: this.state.currentQuestion === this.state.totalQuestions,
+          isLast: this.state.currentQuestion === this.state.quiz.questions.length,
           answer: this.state.answers[this.state.currentQuestion -1]
     }
 
@@ -64,11 +61,11 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     return (
       !this.state.resultsPage ? <div>
         <div><h5>{this.props.info.name}<br/>
-        Question: {this.state.currentQuestion} / {this.state.totalQuestions}
+        Question: {this.state.currentQuestion} / {this.state.quiz.questions.length}
         </h5></div>
         {quizTypes[QUIZ_INDICES.get(this.props.info.type) as number]}
         
-      </div> : MultiResults(this.state.questions, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs), () => this.props.onBack())
+      </div> : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs), () => this.props.onBack())
     );
   }
 
@@ -81,7 +78,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   }
 
   changeQuestion(num: number) {
-    const stillGoing: boolean = (this.state.currentQuestion + num) <= this.state.totalQuestions;
+    const stillGoing: boolean = (this.state.currentQuestion + num) <= this.state.quiz.questions.length;
     this.setState({currentQuestion : this.state.currentQuestion + num, resultsPage: !stillGoing});
   }
 
@@ -89,8 +86,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     const newAns: any[] = this.populateAnswers(newQs);
     this.setState({
       currentQuestion: 1, 
-      totalQuestions: newQs.length,
-      questions: newQs,
+      quiz: new QuizInfo(this.state.quiz.name, this.state.quiz.type, this.state.quiz.uid, newQs),
       answers: newAns,
       resultsPage: false
     });

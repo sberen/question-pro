@@ -1,8 +1,10 @@
 import React from 'react';
 import {TextField, Button} from '@material-ui/core';
+import {FormProps} from './UploadQuiz';
+import { QuizInfo } from '../Quiz/QuizInfo';
 
 interface Question {
-  prompt: string;
+  prompts: string;
   answer: string;
 }
 
@@ -11,13 +13,14 @@ interface FormState {
   title: string;
 }
 
-export default class SAForm extends React.Component<{}, FormState> {
+
+export default class SAForm extends React.Component<FormProps, FormState> {
   constructor(props: any) {
     super(props);
     this.state = {
       questions: [
         {
-          prompt: "",
+          prompts: "",
           answer: ""
         }
       ],
@@ -34,7 +37,7 @@ export default class SAForm extends React.Component<{}, FormState> {
           (<div>
             <h3>Question {ind + 1}:</h3>
             <div id="fields"> 
-              <TextField id='fields' label="Prompt" onChange={(evt: any) => this.onQuestionChange(evt, ind)} value={val.prompt} color='primary' size ='small'/>
+              <TextField id='fields' label="Prompt" onChange={(evt: any) => this.onQuestionChange(evt, ind)} value={val.prompts} color='primary' size ='small'/>
             </div>
             <div id="fields">
               <TextField id='fields' label="Answer" onChange={(evt: any) => this.onAnswerChange(evt, ind)} value={val.answer} color='primary' size='small'/>
@@ -43,7 +46,7 @@ export default class SAForm extends React.Component<{}, FormState> {
         )}
         <Button onClick={() => this.addQ()} variant="outlined" color="primary">Add</Button>
         <Button onClick={() => this.deleteQ()} variant='outlined' color='primary'>Delete</Button>
-        <Button onClick={() => this.writeQs()} variant='outlined' color='primary'>Submit</Button>
+        <Button onClick={() => this.submit()} variant='outlined' color='primary'>Submit</Button>
       </div>
     )
   }
@@ -62,7 +65,7 @@ export default class SAForm extends React.Component<{}, FormState> {
       let question: Question = this.state.questions[i];
       if (i === idx) {
         question = {
-          prompt: evt.target.value,
+          prompts: evt.target.value,
           answer: question.answer
         }
       }
@@ -73,7 +76,7 @@ export default class SAForm extends React.Component<{}, FormState> {
 
   addQ() {
     this.setState((prev:FormState) => ({
-      questions: [...prev.questions, {prompt: "", answer: ""}]
+      questions: [...prev.questions, {prompts: "", answer: ""}]
     }))
   }
 
@@ -84,7 +87,7 @@ export default class SAForm extends React.Component<{}, FormState> {
       if (i === idx) {
         question = {
           answer: evt.target.value,
-          prompt: question.prompt
+          prompts: question.prompts
         }
       }
       newAs.push(question);
@@ -92,7 +95,13 @@ export default class SAForm extends React.Component<{}, FormState> {
     this.setState({questions: newAs});
   }
 
-  writeQs() {
-    console.log("Submit");
+  submit() {
+    if (this.state.title === "") {
+      window.alert("Please title your quiz.");
+      return;
+    }
+    this.props.submit(new QuizInfo(this.state.title, "SA", "UID", this.state.questions));
+
+    this.props.onBack();
   }
 }

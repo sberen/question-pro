@@ -21,7 +21,7 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
       )
     }
     return (<Grid container>
-                <h3>Quizzes:</h3>
+                <h3>My Quizzes:</h3>
                 {result}
             </Grid>);
   }
