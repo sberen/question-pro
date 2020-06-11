@@ -1,8 +1,6 @@
 import React from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
-
-let id = 0;
 
 export class MultiShortAnswers extends QuestionHandler {
 

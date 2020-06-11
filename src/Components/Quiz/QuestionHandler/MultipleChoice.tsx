@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
 
 export class MultipleChoice extends QuestionHandler {
