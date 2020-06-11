@@ -28,9 +28,10 @@ export class MultiShortAnswers extends QuestionHandler {
         // maps index to question answer box pairs
         let questions = list.map((index: number) =>
             <div>
-                {prompts[index]} <br/>
+                <br/>
                 <TextField
                     rows={1}
+                    label={prompts[index]}
                     onChange={e => this.changeAnswer(e, index)}
                     value={answers[index]}
                     variant='outlined'

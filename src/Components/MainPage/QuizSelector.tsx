@@ -15,7 +15,7 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
     const result : any[] = [];
     for(let quiz of this.props.quizzes) {
       result.push(
-        <Grid item id="button" spacing={3} xs={12}>
+        <Grid key={quiz.name} item id="button" spacing={3} xs={12}>
           <Button onClick={() => this.props.changeQuiz(quiz)} color='primary' variant='outlined'>{quiz.name}</Button>
         </Grid>
       )

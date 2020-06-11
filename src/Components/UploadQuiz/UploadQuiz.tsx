@@ -2,25 +2,23 @@ import React from 'react';
 import { QuizInfo } from '../Quiz/QuizInfo';
 import { QUIZ_TYPES } from '../Quiz/QuizTypes';
 import { Button, Grid } from '@material-ui/core';
-import SAForm from './SAForm';
+import {MCForm} from './MCForm';
 import "./UploadQuiz.css";
 
-export interface FormProps {
+interface UploadProps {
   submit: (qz: QuizInfo) => void;
-  onBack: () => void;
+  afterSubmit: () => void;
 }
 
 
 interface UploadState {
   quizType: string | undefined;
-  questions: any[];
 }
 
-export default class UploadQuiz extends React.Component<FormProps, UploadState> {
+export default class UploadQuiz extends React.Component<UploadProps, UploadState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      questions: [],
       quizType: undefined
     }
   }
@@ -36,7 +34,10 @@ export default class UploadQuiz extends React.Component<FormProps, UploadState> 
                         <h3>New Quiz Type:</h3> 
                         {buttons}
                       </div>
-                    : <SAForm onBack={this.props.onBack} submit={this.props.submit}/> ) ;
+                    : <MCForm quizType={this.state.quizType} 
+                              afterSubmit={this.props.afterSubmit} 
+                              submit={this.props.submit}
+                              onBack={() => this.setState({quizType: undefined})}/> ) ;
   }
 
 }

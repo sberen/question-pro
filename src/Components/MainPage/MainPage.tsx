@@ -38,7 +38,7 @@ export class MainPage extends React.Component<{}, MainPageState> {
     const pages = [
       <QuizSelector quizzes={this.state.quizzes} changeQuiz={(qz:QuizInfo) => this.setState({quiz: qz, pageNum: 1})}/>, 
         <QuizHandler info={this.state.quiz} onBack={() => this.setState({pageNum: 0})}/>,
-        <UploadQuiz submit={(qz: QuizInfo) => this.addQuiz(qz)} onBack={() => this.setState({pageNum: 0})}/>
+        <UploadQuiz submit={(qz: QuizInfo) => this.addQuiz(qz)} afterSubmit={() => this.setState({pageNum: 0})}/>
     ];
 
     return (

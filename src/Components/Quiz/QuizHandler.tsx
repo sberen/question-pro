@@ -27,7 +27,6 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   
   constructor(props : any){
     super(props);
-    let quizUID = this.props.info.uid
     let Qs: any[] = this.props.info.questions;
 
     var ans = this.populateAnswers(Qs);
@@ -111,10 +110,10 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     } 
     // Case that the answer has multiple components and need to be represented as an array
     else {
-      var multiString = new Array<string[]>(count);
-      for (var i = 0; i< multiString.length; i++ ){
+      let multiString = new Array<string[]>(count);
+      for (let i = 0; i< multiString.length; i++ ){
         multiString[i] = new Array<string>(Qs[i].prompts.length);
-        for(var j = 0; j< Qs[i].prompts.length; j ++){
+        for(let j = 0; j< Qs[i].prompts.length; j ++){
           multiString[i][j] = "";
         }
       }
