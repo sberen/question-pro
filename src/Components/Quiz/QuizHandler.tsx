@@ -152,13 +152,8 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     } 
     // Case that the answer has multiple components and need to be represented as an array
     else {
-<<<<<<< HEAD
-      let multiString = new Array<string[]>(count);
-      for (let i = 0; i< multiString.length; i++ ){
-=======
       var multiString = new Array<string[]>(count);
-      for (i = 0; i< multiString.length; i++ ){
->>>>>>> 1c1a4381c5030cef4d565324d007923d07b7f3c9
+      for (i = 0; i< multiString.length; i++ ) {
         multiString[i] = new Array<string>(Qs[i].prompts.length);
         for(let j = 0; j< Qs[i].prompts.length; j ++){
           multiString[i][j] = "";
