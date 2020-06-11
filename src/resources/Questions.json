@@ -1,44 +1,47 @@
 [{
+  "title": "Multiple Choice",
   "uid": "00000001",
   "type": "MC",
   "questions": [
     {
-      "prompt" : "What color is the sky?",
+      "prompts" : "What color is the sky?",
       "answer": "blue",
       "choices": ["blue", "green", "yellow"]
     },
     {
-      "prompt" : "What color is grass?",
+      "prompts" : "What color is grass?",
       "answer": "green",
       "choices": ["blue", "green", "yellow"]
     },
     {
-      "prompt" : "What color is a banana?",
+      "prompts" : ["What color is a banana?"],
       "answer": "yellow",
       "choices": ["blue", "green", "yellow"]
     }
   ]
 },
 {
-  "uid": "00000002",
+  "title": "Short Answer",
+  "uid": "00000001",
   "type": "SA",
   "questions": [
     {
-      "prompt" : "What color is the sky?",
+      "prompts" : "What color is the sky?",
       "answer": "blue"
     },
     {
-      "prompt" : "What color is grass?",
+      "prompts" : "What color is grass?",
       "answer": "green"
     },
     {
-      "prompt" : "What color is a banana?",
+      "prompts" : "What color is a banana?",
       "answer": "yellow"
     }
   ]
 },
 {
-  "uid": "00000003",
+  "title": "Multiple Short Asnwer",
+  "uid": "00000001",
   "type": "MSA",
   "questions": [
     {
@@ -62,11 +65,12 @@
   ]
 },
 {
-  "uid": "00000004",
+  "title": "Long Answer",
+  "uid": "00000001",
   "type": "LA",
   "questions": [
     {
-      "prompt" : "Describe the Sun.",
+      "prompts" : "Describe the Sun.",
       "answer": "blue"
     }
   ]

@@ -9,9 +9,10 @@ export class LongAnswer extends QuestionHandler {
         
         return (
         <div>
-            {this.props.question.prompt} <br/>
+            {this.props.question.prompts} <br/>
             <TextField
                     rows={5}
+                    multiline={true}
                     onChange={this.onInputChange}
                     value={this.props.answer}
                     variant='outlined'

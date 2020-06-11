@@ -25,3 +25,12 @@ export const QUIZ_TYPES: Quiz[] = [{
   longName: "Long Answer",
   shortName: "LA"
 }];
+
+export const QUIZ_INDICES: Map<string,number> = new Map<string,number>([
+  ["SA", 0],
+  ["MC", 1],
+  ["MSA", 2],
+  ["LA", 3]
+])
+
+export const SINGLE: string[] = ["MC", "SA", "LA"];

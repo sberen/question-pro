@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, TextField } from '@material-ui/core';
 
-interface QuestionProps {
+export interface QuestionProps {
     question: any,
     changeAnswer(ans: string | string[]): void,
     changeQuestion(num: number): void,

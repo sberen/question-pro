@@ -11,22 +11,33 @@ import UploadQuiz from '../UploadQuiz/UploadQuiz';
 interface MainPageState {
   pageNum: number;  // Whether or not a quiz has been chosen
   quiz : QuizInfo; // Information regarding chosen quiz, undefined if nothing has been chosen
+  quizzes: QuizInfo[];
 }
 
 export class MainPage extends React.Component<{}, MainPageState> {
   constructor(props: any) {
     super(props);
+
+    let fromFile = require("../../resources/Questions.json");
+
+    const newQuizzes: QuizInfo[] = [];
+
+    for(let quiz of fromFile) {
+      newQuizzes.push(new QuizInfo(quiz.title, quiz.type, quiz.uid, quiz.questions));
+    }
+
     this.state = {
       quiz: new QuizInfo(),
-      pageNum: 0
+      pageNum: 0,
+      quizzes: newQuizzes
     }
   }
   
   render() {
 
     const pages = [
-      <QuizSelector changeQuiz={(qz:QuizInfo) => this.setState({quiz: qz, pageNum: 1})}/>, 
-        <QuizHandler info={this.state.quiz} onBack={() => this.setState({pageNum: 0})}/>,
+      <QuizSelector quizzes={this.state.quizzes} changeQuiz={(qz:QuizInfo) => this.setState({quiz: qz, pageNum: 1})}/>, 
+        <QuizHandler quiz={this.state.quiz} info={this.state.quiz} onBack={() => this.setState({pageNum: 0})}/>,
         <UploadQuiz />
     ];
 

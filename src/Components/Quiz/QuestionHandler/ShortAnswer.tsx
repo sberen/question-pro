@@ -9,7 +9,7 @@ export class ShortAnswer extends QuestionHandler {
         
         return (
         <div>
-            {this.props.question.prompt} <br/>
+            {this.props.question.prompts} <br/>
             <TextField
                     rows={1}
                     onChange={this.onInputChange}

@@ -11,7 +11,7 @@ export class MultipleChoice extends QuestionHandler {
         );
         return (
             <FormControl component="fieldset">
-                <FormLabel component="legend">{this.props.question.prompt}</FormLabel>
+                <FormLabel component="legend">{this.props.question.prompts}</FormLabel>
                 <RadioGroup aria-label="question" name="question1" value={this.props.answer} onChange={this.onInputChange}>
                     {options}
                 </RadioGroup>
