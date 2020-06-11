@@ -9,10 +9,8 @@ export class ShortAnswer extends QuestionHandler {
     
     Title
     Answer Box
-    Navigation buttons
     */
     render() {
-        let result = this.renderButtons();
         
         return (
         <div>
@@ -25,7 +23,6 @@ export class ShortAnswer extends QuestionHandler {
                 color='primary'
                 size='small'
             /> <br/>
-            {result}
         </div>);
     }
 }

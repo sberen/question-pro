@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
 
 export class MultipleChoice extends QuestionHandler {
@@ -36,15 +36,11 @@ export class MultipleChoice extends QuestionHandler {
     
     Title
     Answer Choices
-    Navigation buttons
     */
     render() {
-        let result = this.renderButtons();
-        
         return (
         <div>
             {this.renderChoices()} <br/>
-            {result}
         </div>);
     }
 }

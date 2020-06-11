@@ -2,11 +2,11 @@ import React from 'react';
 import {QuizInfo} from './QuizInfo';
 import {QUIZ_INDICES, SINGLE} from './QuizTypes';
 import {ShortAnswer} from './QuestionHandler/ShortAnswer';
-import {QuestionProps} from './QuestionHandler/QuestionHandler';
 import {Results} from './QuestionHandler/ResultsPage';
 import { MultipleChoice } from './QuestionHandler/MultipleChoice';
 import { MultiShortAnswers } from './QuestionHandler/MultiShortAnswer';
 import { LongAnswer } from './QuestionHandler/LongAnswer';
+import { Button } from '@material-ui/core';
 // import * as quizes from '../../resources/Questions.json';
 
 
@@ -21,10 +21,11 @@ interface HandlerState {
   incorrectAnswers: Map<string, [string, string]>;
   answers: any[]; // Current answer responses
   resultsPage: boolean; // True if showing results page
+  problemsPerPage: number;
 }
 
 export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
-  
+
   constructor(props : any){
     super(props);
     let Qs: any[] = this.props.info.questions;
@@ -37,42 +38,80 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       incorrectAnswers: new Map(),
       quiz: this.props.info,
       answers: ans,
-      resultsPage: false
+      resultsPage: false,
+      problemsPerPage: 2
     }
   }
 
   render() {
-    const props: QuestionProps = {
-          question: this.state.quiz.questions[this.state.currentQuestion-1],
-          changeAnswer: (ans: string| string[]) => this.updateAnswer(ans),
-          changeQuestion: (num: number) => this.changeQuestion(num),
-          isFirst: this.state.currentQuestion === 1,
-          isLast: this.state.currentQuestion === this.state.quiz.questions.length,
-          answer: this.state.answers[this.state.currentQuestion -1]
+    let cur = this.state.currentQuestion;
+    let perPage = this.state.problemsPerPage;
+    if (perPage === -1){
+      perPage= this.state.quiz.questions.length;
     }
-
-    const quizTypes = [
-      <ShortAnswer {...props}/>,
-      <MultipleChoice {...props}/>,
-      <MultiShortAnswers {...props}/>,
-      <LongAnswer {...props}/>
-    ]
-
+    
     return (
       !this.state.resultsPage ? <div>
         <div><h5>{this.props.info.name}<br/>
-        Question: {this.state.currentQuestion} / {this.state.quiz.questions.length}
+        Page: {Math.ceil(cur/perPage)} / {Math.ceil(this.state.quiz.questions.length/perPage)}
         </h5></div>
-        {quizTypes[QUIZ_INDICES.get(this.props.info.type) as number]}
+        {this.renderQuestions()}
+        {this.renderButtons()}
         
       </div> : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs), () => this.props.onBack())
     );
   }
 
+  // generates props for question at index
+  quizProps = (index: number) =>{
+    return {
+      question: this.state.quiz.questions[index],
+      changeAnswer: (ans: string| string[]) => this.updateAnswer(index, ans),
+      answer: this.state.answers[index]
+    }
+  }
+
+  quizTypes = (props: any) =>{
+    return [
+      <ShortAnswer {...props}/>,
+      <MultipleChoice {...props}/>,
+      <MultiShortAnswers {...props}/>,
+      <LongAnswer {...props}/>
+    ]
+  }
+
+
+  renderQuestions = () =>{
+    var startIndex = this.state.currentQuestion -1;
+    var endIndex = Math.min(startIndex + this.state.problemsPerPage, this.state.answers.length);
+    if (this.state.problemsPerPage === -1){
+      endIndex = this.state.answers.length;
+    }
+
+    var indices = []
+    for (var i = startIndex; i< endIndex; i++){
+      indices.push(i);
+    }
+
+    let questions = indices.map((index: number) =>
+      <div>
+        {this.quizTypes(this.quizProps(index))[QUIZ_INDICES.get(this.props.info.type) as number]} 
+        <br/>
+      </div>
+      
+    )
+
+    return (
+      <div>
+        {questions}
+      </div>
+    )
+  }
+
   // change answer to ans for current question
-  updateAnswer = (ans: string | string[]) => {
+  updateAnswer = (index:number, ans: string | string[]) => {
     const newAnswers = this.state.answers.slice();
-    newAnswers[this.state.currentQuestion-1] = ans;
+    newAnswers[index] = ans;
     this.setState({
       answers: newAnswers,
     });
@@ -81,7 +120,10 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   // Processing request to change question. 
   // Positive num indicates move forward by given value and negative values for going back
   changeQuestion(num: number) {
-    const stillGoing: boolean = (this.state.currentQuestion + num) <= this.state.quiz.questions.length;
+    let stillGoing: boolean = (this.state.currentQuestion + num) <= this.state.quiz.questions.length;
+    if (this.state.problemsPerPage === -1){
+      stillGoing = false;
+    }
     this.setState({currentQuestion : this.state.currentQuestion + num, resultsPage: !stillGoing});
   }
 
@@ -110,8 +152,13 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     } 
     // Case that the answer has multiple components and need to be represented as an array
     else {
+<<<<<<< HEAD
       let multiString = new Array<string[]>(count);
       for (let i = 0; i< multiString.length; i++ ){
+=======
+      var multiString = new Array<string[]>(count);
+      for (i = 0; i< multiString.length; i++ ){
+>>>>>>> 1c1a4381c5030cef4d565324d007923d07b7f3c9
         multiString[i] = new Array<string>(Qs[i].prompts.length);
         for(let j = 0; j< Qs[i].prompts.length; j ++){
           multiString[i][j] = "";
@@ -119,7 +166,29 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       }
       return multiString;
     }
-    
+  }
 
+  renderButtons = () =>{
+    const result : any[] = [];
+    var qPerPage = this.state.problemsPerPage;
+    var isFirst: boolean = this.state.currentQuestion === 1;
+    var isLast: boolean = (qPerPage === -1 || 
+      (this.state.currentQuestion + qPerPage) > this.state.quiz.questions.length);
+    var secondButton:String;
+    if(isLast){
+        secondButton = "Finish"
+    } else{
+        secondButton = "Next"
+    }
+    if (!isFirst){
+        result.push(
+            <Button key='back' onClick={() => this.changeQuestion(-1 * qPerPage)} variant='outlined' color='primary'>Back</Button>
+        )
+    }
+    result.push(
+        <Button key="next" onClick={() => {this.changeQuestion(1 * qPerPage)}} variant='outlined' color='primary'>
+        {secondButton}</Button>
+    )
+    return result;
   }
 }

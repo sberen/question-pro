@@ -1,8 +1,6 @@
 import React from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
-
-let id = 0;
 
 export class MultiShortAnswers extends QuestionHandler {
 
@@ -55,16 +53,13 @@ export class MultiShortAnswers extends QuestionHandler {
     
     Title
     [(Prompt, Answer Box), ...]
-    Navigation buttons
     */
     render() {
-        let result = this.renderButtons();
         
         return (
         <div>
             {this.props.question.title} <br/>
             {this.renderQuestions()} <br/>
-            {result}
         </div>);
     }
 }
