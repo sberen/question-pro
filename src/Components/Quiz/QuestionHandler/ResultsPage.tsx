@@ -42,26 +42,36 @@ export function SingleResults(questions: any[], responses: string[], shrinkQs: (
     let numCorrect: number = 0;
     for(let quest = 0; quest < responses.length; quest++) {
       const question: any[] = [];
-      let incorrectPrompts: number = 0;
+      const incorrectPrompts: any[] = [];
+      let numIncorrectPrompts: number = 0;
       for(let prompt = 0; prompt < responses[quest].length; prompt++) {
         let correct: boolean = questions[quest].answer[prompt] == responses[quest][prompt];
         if (!correct) {
-          incorrectPrompts++;
+          numIncorrectPrompts++;
+          incorrectPrompts.push(<div>
+            {questions[quest].prompts[prompt]}: {questions[quest].answer[prompt]}
+          </div>)
         }
         question.push(<div>
           {questions[quest].prompts[prompt]}: {responses[quest][prompt]} 
         </div>);
       } 
-      if (incorrectPrompts === 0) {
+      if (numIncorrectPrompts === 0) {
         numCorrect++;
       } else {
         incorrect.push(questions[quest]);
       }
       display.push(<h5>
-        Question {quest}: {questions[quest].title}
+        Question {quest+1}: {questions[quest].title}
         {question}
+        {numIncorrectPrompts !== 0 ? <div> <br/> Should Have Been: {incorrectPrompts}</div> : <br/>}
       </h5>)
     }
 
-    return <div>{display}</div>
+    return ( 
+
+      <div>
+        {display}
+      </div>
+    )
   }
