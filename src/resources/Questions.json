@@ -27,18 +27,15 @@
   "questions": [
     {
       "prompts" : "What color is the sky?",
-      "answer": "blue",
-      "choices": []
+      "answer": "blue"
     },
     {
       "prompts" : "What color is grass?",
-      "answer": "green",
-      "choices": []
+      "answer": "green"
     },
     {
       "prompts" : "What color is a banana?",
-      "answer": "yellow",
-      "choices": []
+      "answer": "yellow"
     }
   ]
 },

@@ -1,5 +1,7 @@
 import React from 'react';
 import { QuizInfo } from '../Quiz/QuizInfo';
+import {Button, TextField} from '@material-ui/core';
+import "./Form.css";
 
 
 export interface FormState {
@@ -10,12 +12,33 @@ export interface FormState {
 export interface FormProps {
   quizType: string | undefined;
   onBack : () => void;
-  submit: (qz: QuizInfo) => void;
+  addQuiz: (qz: QuizInfo) => void;
   afterSubmit: () => void;
 }
 
 export default class Form extends React.Component<FormProps, FormState> {
+
+  title() {
+    return <TextField label="Quiz Title" onChange={(evt:any)=> this.setState({title: evt.target.value})}/>;
+  }
+
+  renderButtons() {
+    return (
+        <div id={"buttons"}>
+          <Button onClick={() => this.addQ()} variant="outlined" color="primary">Add Question</Button>
+          <Button onClick={() => this.deleteQ()} variant='outlined' color='primary'>Delete</Button>
+          <Button onClick={() => this.submit()} variant='outlined' color='primary'>Submit</Button>
+          <Button onClick={() => this.props.onBack()} variant='outlined' color='primary'>Back</Button>
+        </div>
+    )
+  }
   
+  addQ() {
+    this.setState((prevState:FormState) => ({
+      questions: [...prevState.questions, {prompts: "", answer: ""}]
+    }));
+  }
+
   deleteQ() {
     if(this.state.questions.length !== 1) {
       this.setState((prev:FormState) => ({
@@ -49,8 +72,16 @@ export default class Form extends React.Component<FormProps, FormState> {
   }
 
   formSubmission(questions: any[]) {
-    this.props.submit(new QuizInfo(this.state.title, this.props.quizType, "UID", questions));
+    this.props.addQuiz(new QuizInfo(this.state.title, this.props.quizType, "UID", questions));
 
-    this.props.onBack();
+    this.props.afterSubmit();
+  }
+
+  submit() {
+    if (this.state.title === "") {
+      window.alert("Please title your quiz.");
+      return;
+    }
+    this.formSubmission(this.state.questions);
   }
 }

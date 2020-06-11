@@ -1,10 +1,9 @@
 import React from 'react';
-import {TextField, Button} from '@material-ui/core';
-import { QuizInfo } from '../Quiz/QuizInfo';
+import {TextField} from '@material-ui/core';
 import Form from './Form';
 
 
-export default class SAForm extends Form {
+export class SAForm extends Form {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -23,7 +22,7 @@ export default class SAForm extends Form {
     
     return (
       <div>
-        <TextField label="Quiz Title" onChange={(evt:any)=> this.setState({title: evt.target.value})}/>
+        {this.title()}
         {questions.map((val, ind) => 
           (<div>
             <h3>Question {ind + 1}:</h3>
@@ -44,19 +43,9 @@ export default class SAForm extends Form {
             </div>
           </div>)
         )}
-        <Button onClick={() => this.addQ()} variant="outlined" color="primary">Add</Button>
-        <Button onClick={() => this.deleteQ()} variant='outlined' color='primary'>Delete</Button>
-        <Button onClick={() => this.submit()} variant='outlined' color='primary'>Submit</Button>
+        {this.renderButtons()}
       </div>
     )
   }
 
-
-  submit() {
-    if (this.state.title === "") {
-      window.alert("Please title your quiz.");
-      return;
-    }
-    this.formSubmission(this.state.questions);
-  }
 }

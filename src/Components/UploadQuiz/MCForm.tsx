@@ -1,5 +1,4 @@
 import React from 'react';
-import { QuizInfo } from '../Quiz/QuizInfo';
 import Form, {FormState} from './Form';
 import {TextField, Button} from '@material-ui/core';
 
@@ -25,21 +24,23 @@ export class MCForm extends Form {
     return (
     
         <div>
-          <TextField label="Quiz Title" onChange={(evt:any)=> this.setState({title: evt.target.value})}/>
+          {this.title()}
           {questions.map((val, idx) => 
             (<div>
               <h3>Question {idx + 1}:</h3>
               <div id="fields"> 
-                <TextField id='fields'key={idx} label="Prompt" 
+                <TextField id='fields'key={idx} label="Question" 
                            onChange={(evt: any) => this.onQuestionChange(evt, idx)} 
                            value={val.prompts} 
                            color='primary' 
                            size ='small'
                 />
+                <Button style={{margin: "1px"}} onClick={() => this.addChoice(idx)} variant="outlined" color="primary">Add Choice</Button>
+                <Button style={{margin: "1px"}} onClick={() => this.deleteChoice(idx)} variant="outlined" color="primary">Delete Choice</Button>
               </div>
               <div id="fields">
                 <TextField  id='fields' key={"second" + idx} 
-                            label="Answer" 
+                            label="Correct Answer" 
                             onChange={(evt: any) => this.onAnswerChange(evt, idx)} 
                             value={val.answer} 
                             color='primary'
@@ -48,7 +49,7 @@ export class MCForm extends Form {
                 />
                 {val.choices.map((choice: string, ind: number) => <div>
                                                       <TextField id="choice"
-                                                                  label={`Choice ${ind}:`} 
+                                                                  label={`Wrong Answer ${ind+1}:`} 
                                                                   onChange={(evt:any) => this.onChoiceChange(evt, idx, ind)} 
                                                                   value={choice} 
                                                                   color='primary'
@@ -60,18 +61,38 @@ export class MCForm extends Form {
               </div>
             </div>)
           )}
-          <Button onClick={() => this.addQ()} variant="outlined" color="primary">Add</Button>
-          <Button onClick={() => this.deleteQ()} variant='outlined' color='primary'>Delete</Button>
-          <Button onClick={() => this.submit()} variant='outlined' color='primary'>Submit</Button>
-          <Button onClick={() => this.props.onBack()} variant='outlined' color='primary'>Back</Button>
+          {this.renderButtons()}
         </div>
     )
   }
 
   addQ() {
     this.setState((prev:FormState) => ({
-      questions: [...prev.questions, {prompts: "", answer: "", choices: ["", ""]}]
+      questions: [...prev.questions, {prompts: "", answer: "", choices: prev.questions[0].choices.map(() => "")}]
     }))
+  }
+
+  addChoice(idx: number) {
+    let newQs: any[] = this.state.questions.slice();
+
+    newQs[idx].choices.push("");
+
+    this.setState({
+      questions: newQs
+    });
+  }
+
+  deleteChoice(idx: number) {
+    if(this.state.questions[idx].choices.length !== 1) {
+      let newQs: any[] = this.state.questions.slice();
+
+      newQs[idx].choices = newQs[idx].choices.slice(0, newQs[idx].answer.length - 1);
+
+
+      this.setState({
+        questions: newQs
+      });
+    }
   }
 
   submit() {
