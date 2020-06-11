@@ -4,6 +4,7 @@ import { QuestionHandler } from './QuestionHandler';
 
 export class MultipleChoice extends QuestionHandler {
 
+    // populate answer choices from question object 
     renderChoices = () => {
 
         let options = this.props.question.choices.map((item: string) =>
@@ -18,6 +19,14 @@ export class MultipleChoice extends QuestionHandler {
             </FormControl>
         );
     }
+
+    /*
+    Format:
+    
+    Title
+    Answer Choices
+    Navigation buttons
+    */
     render() {
         let result = this.renderButtons();
         

@@ -6,23 +6,26 @@ let id = 0;
 
 export class MultiShortAnswers extends QuestionHandler {
 
+    // Saves answer string[] by replacing value at index with event.target.value
     changeAnswer= (event: any, index: number)=>{
         const newAnswers  = (this.props.answer as string[]).slice();
         newAnswers[index] = event.target.value;
         this.props.changeAnswer(newAnswers);
-
     }
 
-    
+    // Renders prompts and answer box pairs 
     renderQuestions= () =>{
         
-        let prompts = this.props.question.prompts;
-        let answers = this.props.answer;
+        let prompts = this.props.question.prompts; // list of prompts for the question
+        let answers = this.props.answer; // list of current answer for display purposes
+
+        // create list of numbers from 0 to size - 1 of prompts
         var list = [];
         for (var i = 0; i< prompts.length; i ++){
             list.push(i);
         }
 
+        // maps index to question answer box pairs
         let questions = list.map((index: number) =>
             <div>
                 {prompts[index]} <br/>
@@ -45,6 +48,14 @@ export class MultiShortAnswers extends QuestionHandler {
         );
 
     }
+
+    /*
+    Format:
+    
+    Title
+    [(Prompt, Answer Box), ...]
+    Navigation buttons
+    */
     render() {
         let result = this.renderButtons();
         

@@ -11,19 +11,20 @@ import { LongAnswer } from './QuestionHandler/LongAnswer';
 
 
 interface HandlerProps {
-  info : QuizInfo;
-  onBack: () => void;
+  info : QuizInfo; // Identification information of the quiz
+  onBack: () => void; // Go back to Quiz selection
 }
 
 interface HandlerState {
-  currentQuestion : number;
-  quiz: QuizInfo;
+  currentQuestion : number; // Current questions number
+  quiz: QuizInfo; // Identification information of the quiz
   incorrectAnswers: Map<string, [string, string]>;
-  answers: any[];
-  resultsPage: boolean;
+  answers: any[]; // Current answer responses
+  resultsPage: boolean; // True if showing results page
 }
 
 export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
+  
   constructor(props : any){
     super(props);
     let quizUID = this.props.info.uid
@@ -69,6 +70,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     );
   }
 
+  // change answer to ans for current question
   updateAnswer = (ans: string | string[]) => {
     const newAnswers = this.state.answers.slice();
     newAnswers[this.state.currentQuestion-1] = ans;
@@ -77,11 +79,14 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     });
   }
 
+  // Processing request to change question. 
+  // Positive num indicates move forward by given value and negative values for going back
   changeQuestion(num: number) {
     const stillGoing: boolean = (this.state.currentQuestion + num) <= this.state.quiz.questions.length;
     this.setState({currentQuestion : this.state.currentQuestion + num, resultsPage: !stillGoing});
   }
 
+  // Create new quiz with newQs (intended include subset of questions from current Qs)
   shrinkQs(newQs: any[]) {
     const newAns: any[] = this.populateAnswers(newQs);
     this.setState({
@@ -92,16 +97,20 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     });
   }
 
+  // returns "Zeroed Out" answers field based on given Qs
   populateAnswers(Qs: any[]){
     let count = Qs.length;
 
+    // Case that the answer can be captured with one string
     if (SINGLE.includes(this.props.info.type)){
       var singleString = new Array<string>(count);
       for (var i = 0; i< singleString.length; i++){
         singleString[i] = "";
       }
       return singleString;
-    } else {
+    } 
+    // Case that the answer has multiple components and need to be represented as an array
+    else {
       var multiString = new Array<string[]>(count);
       for (var i = 0; i< multiString.length; i++ ){
         multiString[i] = new Array<string>(Qs[i].prompts.length);

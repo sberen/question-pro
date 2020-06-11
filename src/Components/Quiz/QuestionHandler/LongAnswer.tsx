@@ -4,6 +4,13 @@ import { QuestionHandler } from './QuestionHandler';
 
 export class LongAnswer extends QuestionHandler {
 
+    /*
+    Format:
+    
+    Title
+    Answer Box
+    Navigation buttons
+    */
     render() {
         let result = this.renderButtons();
         
