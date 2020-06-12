@@ -5,6 +5,8 @@ import { QuizSelector } from './QuizSelector';
 import { QuizInfo } from '../Quiz/QuizInfo';
 import {QuizHandler} from '../Quiz/QuizHandler'
 import UploadQuiz from '../UploadQuiz/UploadQuiz';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 
 
 
@@ -34,35 +36,32 @@ export class MainPage extends React.Component<{}, MainPageState> {
   }
 
   componentDidMount() {
-    const firebase = require("firebase");
-        // Required for side-effects
-        require("firebase/firestore");
 
-        const firebaseConfig = {
-          apiKey: "AIzaSyBVtbyerfW6d_477bvl1ffMj1Wez75cakg",
-          authDomain: "questionpro-65223.firebaseapp.com",
-          databaseURL: "https://questionpro-65223.firebaseio.com",
-          projectId: "questionpro-65223",
-          storageBucket: "questionpro-65223.appspot.com",
-          messagingSenderId: "880645784876",
-          appId: "1:880645784876:web:c0aee748808ff73ab65889",
-          measurementId: "G-S6W8V13Y0E"
-        };
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVtbyerfW6d_477bvl1ffMj1Wez75cakg",
+      authDomain: "questionpro-65223.firebaseapp.com",
+      databaseURL: "https://questionpro-65223.firebaseio.com",
+      projectId: "questionpro-65223",
+      storageBucket: "questionpro-65223.appspot.com",
+      messagingSenderId: "880645784876",
+      appId: "1:880645784876:web:c0aee748808ff73ab65889",
+      measurementId: "G-S6W8V13Y0E"
+    };
 
-        firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
 
-        var db = firebase.firestore();
+    var db = firebase.firestore();
 
-        /*db.collection("users"). add({
-          first: "Sam",
-          last: "Berensohn",
-          born: 2000
-        }).then(function(docRef: any) {
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch(function(error: any) {
-            console.error("Error adding document: ", error);
-        })*/
+    // db.collection("users"). add({
+    //   first: "Sam",
+    //   last: "Berensohn",
+    //   born: 2000
+    // }).then(function(docRef: any) {
+    //   console.log("Document written with ID: ", docRef.id);
+    // })
+    // .catch(function(error: any) {
+    //     console.error("Error adding document: ", error);
+    // });
 
   }
   
