@@ -5,9 +5,6 @@ import { QuizSelector } from './QuizSelector';
 import { QuizInfo } from '../Quiz/QuizInfo';
 import {QuizHandler} from '../Quiz/QuizHandler'
 import UploadQuiz from '../UploadQuiz/UploadQuiz';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
-import { FIREBASECONFIG } from './FIrebaseConfig';
 
 
 
@@ -37,22 +34,6 @@ export class MainPage extends React.Component<{}, MainPageState> {
   }
 
   componentDidMount() {
-
-
-    firebase.initializeApp(FIREBASECONFIG);
-
-    var db = firebase.firestore();
-
-    // db.collection("users"). add({
-    //   first: "Sam",
-    //   last: "Berensohn",
-    //   born: 2000
-    // }).then(function(docRef: any) {
-    //   console.log("Document written with ID: ", docRef.id);
-    // })
-    // .catch(function(error: any) {
-    //     console.error("Error adding document: ", error);
-    // });
 
   }
   
