@@ -22,10 +22,9 @@ export const firestore : firebase.firestore.Firestore = firebase.firestore();
 export const firebaseUIConfig = {
     signInFlow: 'popup',
     signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID
     ], 
     Callbacks: {
-        signInSuccessfulWithAuthResult: () => false
+        signInSuccessWithAuthResult: () => {return false}
     }
 }

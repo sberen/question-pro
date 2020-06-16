@@ -29,9 +29,10 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   constructor(props : any){
     super(props);
     let Qs: any[] = this.props.info.questions;
+  
 
     var ans = this.populateAnswers(Qs);
-    console.log(ans);
+  
 
     this.state = {
       currentQuestion: 1,
