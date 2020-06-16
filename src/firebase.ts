@@ -15,6 +15,17 @@ const FIREBASECONFIG = {
 
 firebase.initializeApp(FIREBASECONFIG);
 
-export const auth = firebase.auth();
+export const auth : firebase.auth.Auth = firebase.auth();
 
-export const firestore = firebase.firestore();
+export const firestore : firebase.firestore.Firestore = firebase.firestore();
+
+export const firebaseUIConfig = {
+    signInFlow: 'popup',
+    signInOptions: [
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID
+    ], 
+    Callbacks: {
+        signInSuccessfulWithAuthResult: () => false
+    }
+}

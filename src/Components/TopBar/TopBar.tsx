@@ -5,6 +5,7 @@ import'./TopBar.css';
 interface TopBarProps {
   onQuizClick : () => any;
   makeQuiz: () => any;
+  user: any;
 }
 
 export class TopBar extends React.Component<TopBarProps, {}> {

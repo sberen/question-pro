@@ -15,6 +15,7 @@
     "firebase": "^7.15.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-firebaseui": "^4.1.0",
     "react-scripts": "3.4.1",
     "typescript": "^3.7.5"
   },
