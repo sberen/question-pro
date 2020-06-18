@@ -1,5 +1,5 @@
 import React from 'react';
-import { QuizInfo } from '../Quiz/QuizInfo';
+import { QuizInfoMini } from '../Quiz/QuizInfoMini';
 import { QUIZ_TYPES, QUIZ_INDICES } from '../Quiz/QuizTypes';
 import { Button, Grid } from '@material-ui/core';
 import {FormProps} from './Form';
@@ -9,7 +9,7 @@ import { SAForm } from './SAForm';
 import {MSAForm} from './MSAForm';
 
 interface UploadProps {
-  submit: (qz: QuizInfo) => void;
+  submit: (qz: QuizInfoMini) => void;
   afterSubmit: () => void;
 }
 

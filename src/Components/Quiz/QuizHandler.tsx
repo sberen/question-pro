@@ -28,6 +28,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
 
   constructor(props : any){
     super(props);
+    console.log(this.props.info);
     let Qs: any[] = this.props.info.questions;
   
 

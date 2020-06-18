@@ -10,7 +10,8 @@ export class SAForm extends Form {
       questions: [
         {
           prompts: "",
-          answer: ""
+          answer: "",
+          choices: []
         }
       ],
       title: ""

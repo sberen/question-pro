@@ -27,8 +27,10 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
                 {result}
             </Grid>);
   }
+
   async selectQuiz(quiz : string){
     let object = await firestore.collection("quizzes").doc(quiz).get();
-    this.props.changeQuiz(new QuizInfo(object.get("title"), object.get("type"), quiz, object.get("questions")));
+    let qz = new QuizInfo(object.get("title"), object.get("type"), quiz, object.get("questions"));
+    this.props.changeQuiz(qz);
   }
 }

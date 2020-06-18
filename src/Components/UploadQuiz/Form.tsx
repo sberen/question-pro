@@ -1,7 +1,9 @@
 import React from 'react';
-import { QuizInfo } from '../Quiz/QuizInfo';
 import {Button, TextField} from '@material-ui/core';
+import { firestore } from '../../firebase';
 import "./Form.css";
+import { QuizInfoMini } from '../Quiz/QuizInfoMini';
+import { auth } from '../../firebase';
 
 
 export interface FormState {
@@ -12,7 +14,7 @@ export interface FormState {
 export interface FormProps {
   quizType: string | undefined;
   onBack : () => void;
-  addQuiz: (qz: QuizInfo) => void;
+  addQuiz: (qz: QuizInfoMini) => void;
   afterSubmit: () => void;
 }
 
@@ -71,8 +73,21 @@ export default class Form extends React.Component<FormProps, FormState> {
     this.setState({questions: newQs});
   }
 
-  formSubmission(questions: any[]) {
-    this.props.addQuiz(new QuizInfo(this.state.title, this.props.quizType, "UID", questions));
+  async formSubmission(qs: any[]) {
+    var quizID: string = await firestore.collection("quizzes").add({
+      questions: qs,
+      title: this.state.title,
+      type: this.props.quizType
+    }).then((docRef) => {
+      this.props.addQuiz(new QuizInfoMini(this.state.title, this.props.quizType, docRef.id));
+      return docRef.id;
+    });
+
+    var key = `quizzes.${quizID}`;
+
+    firestore.collection("users").doc(auth.currentUser!.uid).update({
+      [key] : [this.state.title, this.props.quizType]
+    })
 
     this.props.afterSubmit();
   }
