@@ -18,11 +18,13 @@ export class TopBar extends React.Component<TopBarProps, {}> {
       <div>
         <AppBar position='static' style={{flexGrow: 1}}>
           <Toolbar>
-              <Typography variant="h5" id="header">Question Pro</Typography>
+            <Typography variant="h5" id="header" >Question Pro</Typography>
             <Button variant='text' color='secondary' onClick={() => this.props.onQuizClick()}>Quizzes</Button>
             <Button variant='text' color='secondary' onClick={() => this.props.makeQuiz()}>Make a Quiz</Button>
-
-            {this.props.user && <Button variant='text' color='secondary' onClick={() => auth.signOut()}>Sign Out</Button>} 
+            <div style={{flexGrow: 1}}/>
+            <div>
+              {this.props.user && <Button variant='text' color='secondary' onClick={() => auth.signOut()}>Sign Out</Button>} 
+            </div>
           </Toolbar>
         </AppBar>
       </div>
