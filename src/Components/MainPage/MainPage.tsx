@@ -9,13 +9,14 @@ import { auth, firebaseUIConfig, firestore } from '../../firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { lighten } from '@material-ui/core';
 import { analytics } from 'firebase';
+import { QuizInfoMini } from '../Quiz/QuizInfoMini';
 
 
 interface MainPageState {
   pageNum: number;  // the page to be displayed
   user: firebase.User | null;
   quiz : QuizInfo | null; // Information regarding chosen quiz, undefined if nothing has been chosen
-  quizzes: QuizInfo[];
+  quizzes: QuizInfoMini[];
 }
 
 export class MainPage extends React.Component<{}, MainPageState> {
@@ -50,7 +51,7 @@ export class MainPage extends React.Component<{}, MainPageState> {
   render() {
 
     const pages = [
-      <QuizSelector quizzes={this.state.quizzes} changeQuiz={(qz:QuizInfo) => {this.setPage(1); this.setState({quiz: qz})}}/>, 
+        <QuizSelector quizzes={this.state.quizzes} changeQuiz={(qz:QuizInfo) => {this.setPage(1); this.setState({quiz: qz})}}/>, 
         <QuizHandler info={this.state.quiz!} onBack={() => this.setPage(0)}/>,
         <UploadQuiz submit={(qz: QuizInfo) => this.addQuiz(qz)} afterSubmit={() => this.setPage(0)}/>
     ];
@@ -74,7 +75,7 @@ export class MainPage extends React.Component<{}, MainPageState> {
   addQuiz(qz: QuizInfo) {
     this.setState((prev: MainPageState) => ({
       quizzes: [...prev.quizzes, qz]
-    }))
+    }));
   }
 
 
@@ -83,19 +84,21 @@ export class MainPage extends React.Component<{}, MainPageState> {
   }
 
   async registerAuthListener(newUser: firebase.User | null) {
-    var stateQuizzes: QuizInfo[] = [];
+    var stateQuizzes: QuizInfoMini[] = [];
     if (newUser) {
       var user: firebase.firestore.DocumentReference = firestore.collection("users").doc(newUser.uid);
 
-      let quizzes: string[] = await user.get()
+      let quizzes: Map<string,string[]> = await user.get()
                                         .then((snap: firebase.firestore.DocumentData) => {
                                           return snap.get("quizzes");
                                         });
 
       if (quizzes) {
-        for (let quiz of quizzes) {
-          let object = await firestore.collection("quizzes").doc(quiz).get();
-          stateQuizzes.push(new QuizInfo(object.get("title"), object.get("type"), quiz, object.get("questions")));
+        for (let quiz in quizzes) {
+          let object: string[] = quizzes[quiz];
+          if (object){
+            stateQuizzes.push(new QuizInfoMini(object[0], object[1], quiz));
+          }
         }
       } else {
         let name : string[] = newUser.displayName!.split(' ');
@@ -103,7 +106,7 @@ export class MainPage extends React.Component<{}, MainPageState> {
         user.set({
           first: name[0],
           last: name.length !== 0 ? name[name.length - 1]: null,
-          quizzes: []
+          quizzes: {}
         }).then(() => {
           console.log("Document set properly");
         }).catch((error) => {
