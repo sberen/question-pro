@@ -143,7 +143,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   // returns "Zeroed Out" answers field based on given Qs
   populateAnswers(Qs: any[]){
     let count = Qs.length;
-
+    console.log(this.props.info);
     // Case that the answer can be captured with one string
     if (SINGLE.includes(this.props.info.type)){
       var singleString = new Array<string>(count);

@@ -21,7 +21,7 @@ export interface FormProps {
 export default class Form extends React.Component<FormProps, FormState> {
 
   title() {
-    return <TextField label="Quiz Title" onChange={(evt:any)=> this.setState({title: evt.target.value})}/>;
+    return <TextField label="Quiz Title" id={"title"} onChange={(evt:any)=> this.setState({title: evt.target.value})}/>;
   }
 
   renderButtons() {

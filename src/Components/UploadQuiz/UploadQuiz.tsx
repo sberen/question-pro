@@ -1,7 +1,7 @@
 import React from 'react';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
-import { QUIZ_TYPES, QUIZ_INDICES } from '../Quiz/QuizTypes';
-import { Button, Grid } from '@material-ui/core';
+import { QUIZ_TYPES, QUIZ_INDICES, QUIZ_DESC } from '../Quiz/QuizTypes';
+import { Button, Grid, CardActions, Card, CardContent, Typography } from '@material-ui/core';
 import {FormProps} from './Form';
 import "./UploadQuiz.css";
 import { MCForm } from './MCForm';
@@ -27,8 +27,18 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
   }
 
   render() {
-    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item id="button" spacing={3} xs={12}>
-                                                      <Button onClick={() => this.setState({quizType: val.shortName})} color='primary' variant='outlined'>{val.longName}</Button>
+    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item component={Card} id="button" spacing={3} xs={12}>
+                                                      <CardContent>
+                                                        <Typography variant="h6">
+                                                          {val.longName}
+                                                        </Typography>
+                                                        <Typography variant='body2'>
+                                                          {QUIZ_DESC.get(val.shortName)}
+                                                        </Typography>
+                                                      </CardContent>
+                                                      <CardActions>
+                                                        <Button onClick={() => this.setState({quizType: val.shortName})} color='primary' variant='text'>Make This Quiz</Button>
+                                                      </CardActions>
                                                     </Grid>);
 
     const props: FormProps = {
@@ -46,9 +56,11 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
     ];
     
     return ( !this.state.quizType
-                    ?  <div>
-                        <h3>New Quiz Type:</h3> 
-                        {buttons}
+                    ?  <div style={{margin: "10px"}}>
+                        <Typography variant='h5' color='primary'>New Quiz Type:</Typography> 
+                        <Grid container xs={12}>
+                          {buttons}
+                        </Grid>
                       </div>
                     : forms[QUIZ_INDICES.get(this.state.quizType) as number] ) ;
   }

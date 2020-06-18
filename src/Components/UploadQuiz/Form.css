@@ -1,3 +1,8 @@
 #buttons button {
   margin: 1px;
+  margin-bottom: 5px;
+}
+
+#title {
+  margin-top: 5px;
 }

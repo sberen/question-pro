@@ -1,7 +1,8 @@
 import React from 'react';
-import {Button, Grid} from '@material-ui/core';
+import {Button, Grid, Card, CardContent, Typography, CardActions} from '@material-ui/core';
 import './QuizSelector.css';
 import { QuizInfo } from '../Quiz/QuizInfo';
+import { QUIZ_INDICES, QUIZ_TYPES } from '../Quiz/QuizTypes';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
 import { firestore } from '../../firebase';
 
@@ -14,21 +15,25 @@ interface SelectorProps {
 export class QuizSelector extends React.Component<SelectorProps, {}> {
 
   render() {
-    const result : any[] = [];
-    for(let quiz of this.props.quizzes) {
-      result.push(
-        <Grid key={quiz.name} item id="button" spacing={3} xs={12}>
-          <Button onClick={() => this.selectQuiz(quiz.uid)} color='primary' variant='outlined'>{quiz.name}</Button>
+    const result : any[] = this.props.quizzes.map((quiz:QuizInfoMini, idx:number) => (
+        <Grid item component={Card} key={quiz.name} style={{margin: "10px"}} id="button" spacing={3} xs={12}>   
+          <CardContent>
+            <Typography variant='h6'>{quiz.name}</Typography>
+            <Typography variant='body2'>Type: {QUIZ_TYPES[QUIZ_INDICES.get(quiz.type) as number].longName}</Typography>
+          </CardContent>
+          <CardActions>
+            <Button key={idx} onClick={() => this.selectQuiz(quiz.uid)} color='primary' variant='text'>Take Quiz</Button>
+          </CardActions>
         </Grid>
-      )
-    }
-    return (<Grid container>
-                <h3>My Quizzes:</h3>
+      ));
+    return (<Grid container xs={12} md={3}>
+                <Typography style={{margin: "10px"}} variant='h5' color="primary">My Quizzes:</Typography>
                 {result}
             </Grid>);
   }
 
   async selectQuiz(quiz : string){
+    console.log(quiz);
     let object = await firestore.collection("quizzes").doc(quiz).get();
     let qz = new QuizInfo(object.get("title"), object.get("type"), quiz, object.get("questions"));
     this.props.changeQuiz(qz);

@@ -1,6 +1,6 @@
 import React from 'react';
 import Form, {FormState} from './Form';
-import {TextField, Button} from '@material-ui/core';
+import {TextField, Button, Container, Paper, Typography} from '@material-ui/core';
 
 
 export class MCForm extends Form {
@@ -23,11 +23,11 @@ export class MCForm extends Form {
 
     return (
     
-        <div>
+        <Container component={Paper}>
           {this.title()}
           {questions.map((val, idx) => 
             (<div>
-              <h3>Question {idx + 1}:</h3>
+              <Typography variant='h5'>Question {idx + 1}:</Typography>
               <div id="fields"> 
                 <TextField id='fields'key={idx} label="Question" 
                            onChange={(evt: any) => this.onQuestionChange(evt, idx)} 
@@ -35,11 +35,11 @@ export class MCForm extends Form {
                            color='primary' 
                            size ='small'
                 />
-                <Button style={{margin: "1px"}} onClick={() => this.addChoice(idx)} variant="outlined" color="primary">Add Choice</Button>
-                <Button style={{margin: "1px"}} onClick={() => this.deleteChoice(idx)} variant="outlined" color="primary">Delete Choice</Button>
+                <Button style={{margin: "5px"}} onClick={() => this.addChoice(idx)} variant="outlined" color="primary">Add Choice</Button>
+                <Button style={{margin: "5px"}} onClick={() => this.deleteChoice(idx)} variant="outlined" color="primary">Delete Choice</Button>
               </div>
               <div id="fields">
-                <TextField  id='fields' key={"second" + idx} 
+                <TextField  key={"second" + idx} 
                             label="Correct Answer" 
                             onChange={(evt: any) => this.onAnswerChange(evt, idx)} 
                             value={val.answer} 
@@ -47,7 +47,7 @@ export class MCForm extends Form {
                             variant={"outlined"}
                             size='small'
                 />
-                {val.choices.map((choice: string, ind: number) => <div>
+                {val.choices.map((choice: string, ind: number) => 
                                                       <TextField id="choice"
                                                                   label={`Wrong Answer ${ind+1}:`} 
                                                                   onChange={(evt:any) => this.onChoiceChange(evt, idx, ind)} 
@@ -56,13 +56,13 @@ export class MCForm extends Form {
                                                                   variant='outlined'
                                                                   size='small' 
                                                         />
-                                                  </div>)
+                                                  )
                 }
               </div>
             </div>)
           )}
           {this.renderButtons()}
-        </div>
+        </Container>
     )
   }
 

@@ -57,7 +57,9 @@ export class MainPage extends React.Component<{}, MainPageState> {
         <div id="toolbar">
           <TopBar user={auth.currentUser} onQuizClick={() => this.setPage(0)} makeQuiz={() => this.setPage(2)} onSignOut={() => this.signOut()}/>
         </div>
-        {auth.currentUser ? pages[this.state.pageNum] : <StyledFirebaseAuth uiConfig={firebaseUIConfig} firebaseAuth={auth} />}
+        <div id="app">
+          {auth.currentUser ? pages[this.state.pageNum] : <StyledFirebaseAuth uiConfig={firebaseUIConfig} firebaseAuth={auth} />}
+        </div>
       </div>
     )
   }
