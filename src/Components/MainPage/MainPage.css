@@ -1,3 +1,17 @@
 #toolbar {
   margin-bottom: 2%;
+
+}
+
+@media (min-width: 768px){
+  #toolbar{
+    width: 95%;
+    margin: auto;
+
+  }
+  .centered{
+    padding-top: 1rem;
+    width: 70%;
+    margin: auto;
+  }
 }

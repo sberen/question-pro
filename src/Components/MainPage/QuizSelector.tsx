@@ -16,7 +16,7 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
 
   render() {
     const result : any[] = this.props.quizzes.map((quiz:QuizInfoMini, idx:number) => (
-        <Grid item component={Card} key={quiz.name} style={{margin: "10px"}} id="button" spacing={3} xs={12}>   
+        <Grid item component={Card} key={quiz.name} style={{margin: "10px"}} id="button" spacing={3} xs={3}>   
           <CardContent>
             <Typography variant='h6'>{quiz.name}</Typography>
             <Typography variant='body2'>Type: {QUIZ_TYPES[QUIZ_INDICES.get(quiz.type) as number].longName}</Typography>
@@ -26,10 +26,14 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
           </CardActions>
         </Grid>
       ));
-    return (<Grid container xs={12} md={3}>
-                <Typography style={{margin: "10px"}} variant='h5' color="primary">My Quizzes:</Typography>
+    return (<div>
+              <Typography style={{margin: "10px"}} variant='h5' color="primary">My Quizzes:</Typography>
+            <Grid container spacing={3}>
                 {result}
-            </Grid>);
+            </Grid>
+
+            </div>
+            );
   }
 
   async selectQuiz(quiz : string){
