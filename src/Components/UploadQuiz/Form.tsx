@@ -77,7 +77,8 @@ export default class Form extends React.Component<FormProps, FormState> {
     var quizID: string = await firestore.collection("quizzes").add({
       questions: qs,
       title: this.state.title,
-      type: this.props.quizType
+      type: this.props.quizType,
+      author: auth.currentUser!.uid
     }).then((docRef) => {
       this.props.addQuiz(new QuizInfoMini(this.state.title, this.props.quizType, docRef.id));
       return docRef.id;
