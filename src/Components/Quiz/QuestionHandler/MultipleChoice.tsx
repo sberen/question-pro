@@ -1,13 +1,14 @@
 import React from 'react';
 import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
+import './MultipleChoice.css';
 
 export class MultipleChoice extends QuestionHandler {
 
     // populate answer choices from question object 
     renderChoices = () => {
         let options = this.props.question.choices.map((item: string) =>
-            <FormControlLabel value={item} control={<Radio />} label={item} />
+            <FormControlLabel value={item} control={<Radio />} label={item} color ='secondary'/>
         );
         return (
             <FormControl component="fieldset">
@@ -44,3 +45,4 @@ export class MultipleChoice extends QuestionHandler {
         </div>);
     }
 }
+
