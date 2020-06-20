@@ -27,10 +27,11 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
         </Grid>
       ));
     return (<div>
-              <Typography style={{margin: "10px"}} variant='h5' color="primary">My Quizzes:</Typography>
-            <Grid container spacing={3}>
-                {result}
-            </Grid>
+              <Typography style={{margin: "5px"}} variant='h5' color="primary">My Quizzes:</Typography>
+              <br/>
+              <Grid container spacing={3}>
+                  {result}
+              </Grid>
 
             </div>
             );
