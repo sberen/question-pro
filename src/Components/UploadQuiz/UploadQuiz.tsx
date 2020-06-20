@@ -82,7 +82,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
   }
 
   async validateQuiz(){
-    let quizID = this.state.quizID;
+    let quizID = this.state.quizID.trim();
     var quizDocRef: firebase.firestore.DocumentReference = firestore.collection("quizzes").doc(quizID);
     let quiz = await quizDocRef.get()
                             .then(doc => {
@@ -107,7 +107,8 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                                 .catch(err => {
                                   console.log('Error getting document', err);
                                 });
-      if(quizID in Object.keys(userQuizzes)){
+
+      if(quizID in userQuizzes){
         window.alert('You already have access to quiz');
       } else {
         var key = `quizzes.${quizID}`;
@@ -115,6 +116,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
         firestore.collection("users").doc(auth.currentUser!.uid).update({
           [key] : [quiz.title, quiz.type]
         });
+        this.props.submit(new QuizInfoMini(quiz.title, quiz.type, quizID));
       }
 
     }
