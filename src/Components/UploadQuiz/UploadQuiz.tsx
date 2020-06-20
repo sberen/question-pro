@@ -57,7 +57,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
     
     return ( !this.state.quizType
                     ?  <div style={{margin: "10px"}}>
-                        <Typography variant='h5' color='primary'>New Quiz Type:</Typography> 
+                        <Typography variant='h5' color='primary' style={{margin: "10px"}}>Quiz Types:</Typography> 
                         <Grid container xs={12}>
                           {buttons}
                         </Grid>

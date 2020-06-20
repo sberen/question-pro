@@ -8,6 +8,7 @@ import { firestore } from '../../firebase';
 
 interface SelectorProps {
   changeQuiz(qz : QuizInfo) : void;
+  makeQuiz: () => void;
   quizzes: QuizInfoMini[];
 }
 
@@ -29,7 +30,15 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
     return (<div>
               <Typography style={{margin: "10px"}} variant='h5' color="primary">My Quizzes:</Typography>
             <Grid container spacing={3}>
-                {result}
+                {result.length !== 0 ? result : 
+                <Grid item component={Card} style={{margin: "10px"}} spacing={3} xs={12} md={3} sm={6}>
+                  <CardContent>
+                    <Typography variant='h6'>You haven't made any quizzes yet!</Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button onClick={() => this.props.makeQuiz()} color="primary" variant='text'>Create A Quiz</Button>
+                  </CardActions>
+                </Grid>}
             </Grid>
 
             </div>

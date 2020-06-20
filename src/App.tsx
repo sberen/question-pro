@@ -6,7 +6,7 @@ import "./App.css";
 
 const theme : Theme = createMuiTheme({
   typography: {
-    fontFamily: 'Arial'
+    fontFamily: 'Arial,Roboto'
   },
   palette: {
     primary: green,
