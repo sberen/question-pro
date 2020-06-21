@@ -4,7 +4,7 @@ import Form from './Form';
 import './Form.css';
 
 
-export class SAForm extends Form {
+export class LAForm extends Form {
   constructor(props: any) {
     super(props);
     let arr : any[] = [];
@@ -39,15 +39,13 @@ export class SAForm extends Form {
                            onChange={(evt: any) => this.onQuestionChange(evt, ind)} 
                            value={val.prompts} color='primary' 
                            size ='small'
-                           style={{minWidth: "300px"}}
-                           variant={"outlined"}
+                           style={{marginBottom: "10px"}}
                 />
-                {this.props.quizType === "LA" ? <div/> : <span></span>}
                   <TextField 
                               key={"second" + ind} 
-                              style={{minWidth: "300px"}}
+                              style={{width: "100%"}}
                               rows={5} 
-                              multiline={this.props.quizType === "LA"} 
+                              multiline={true} 
                               label="Answer" 
                               onChange={(evt: any) => this.onAnswerChange(evt, ind)} 
                               value={val.answer} 

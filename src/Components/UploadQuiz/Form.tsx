@@ -21,14 +21,18 @@ export interface FormProps {
 export default class Form extends React.Component<FormProps, FormState> {
 
   title() {
-    return <TextField label="Quiz Title" id={"title"} onChange={(evt:any)=> this.setState({title: evt.target.value})}/>;
+    return (
+            <div id={"title"} style={{marginBottom: "10px"}}>
+              <TextField label="Quiz Title" id={"title"} onChange={(evt:any)=> this.setState({title: evt.target.value})}/>;
+            </div>
+    )
   }
 
   renderButtons() {
     return (
         <div id={"buttons"}>
           <Button onClick={() => this.addQ()} variant="outlined" color="primary">Add Question</Button>
-          <Button onClick={() => this.deleteQ()} variant='outlined' color='primary'>Delete</Button>
+          <Button onClick={() => this.deleteQ()} variant='outlined' color='primary'>Delete Question</Button>
           <Button onClick={() => this.submit()} variant='outlined' color='primary'>Submit</Button>
           <Button onClick={() => this.props.onBack()} variant='outlined' color='primary'>Back</Button>
         </div>
@@ -63,6 +67,8 @@ export default class Form extends React.Component<FormProps, FormState> {
 
   onAnswerChange(evt: any, qNum: number) {
     let newQs = this.state.questions.slice();
+
+    console.log(evt);
 
     newQs[qNum] = {
       prompts: newQs[qNum].prompts,
