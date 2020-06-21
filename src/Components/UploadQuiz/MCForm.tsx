@@ -6,14 +6,16 @@ import {TextField, Button, Container, Paper, Box, Typography, MenuItem} from '@m
 export class MCForm extends Form {
   constructor(props: any) {
     super(props);
+    let qs : any[] = [];
+    for (let i = 0; i < 2; i++) {
+      qs.push({
+        prompts: "",
+        answer: "",
+        choices: ["", "", ""]
+      })
+    }
     this.state = {
-      questions: [
-        {
-          prompts: "",
-          answer: "",
-          choices: ["", "", ""]
-        }
-      ], 
+      questions: qs, 
       title: ""
     }
   }
@@ -39,12 +41,13 @@ export class MCForm extends Form {
                             color='primary' 
                             size ='small'
                   />
-                  <Button style={{margin: "5px"}} onClick={() => this.addChoice(idx)} variant="outlined" color="primary">Add Choice</Button>
-                  <Button style={{margin: "5px"}} onClick={() => this.deleteChoice(idx)} variant="outlined" color="primary">Delete Choice</Button>
+                  <Button style={{marginLeft: "50px"}}  onClick={() => this.addChoice(idx)} variant="outlined" color="primary">Add Choice</Button>
+                  <Button style={{margin: "10px"}} onClick={() => this.deleteChoice(idx)} variant="outlined" color="primary">Delete Choice</Button>              
                 </div>
                 <div>
+                  <div>
                   {val.choices.map((choice: string, ind: number) => 
-                                                    (    <div style={{margin: "5px"}}>
+                                                    (   
                                                           <TextField id="choice"
                                                                       label={`Choice ${ind+1}:`} 
                                                                       onChange={(evt:any) => this.onChoiceChange(evt, idx, ind)} 
@@ -52,10 +55,12 @@ export class MCForm extends Form {
                                                                       color='primary'
                                                                       variant='outlined'
                                                                       size='small' 
+                                                                      className="mcGrid"
                                                             />
-                                                        </div> )
+                                                        )
                                                     )
                   }
+                  </div>
                   <TextField label={"Correct Answer"}
                             onChange={(evt) => this.onAnswerChange(evt, idx)}
                             color={"primary"}

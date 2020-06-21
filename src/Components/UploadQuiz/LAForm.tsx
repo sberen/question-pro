@@ -40,6 +40,7 @@ export class LAForm extends Form {
                            value={val.prompts} color='primary' 
                            size ='small'
                            style={{marginBottom: "10px"}}
+                           className='laPrompt'
                 />
                   <TextField 
                               key={"second" + ind} 

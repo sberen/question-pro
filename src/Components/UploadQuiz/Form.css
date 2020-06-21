@@ -3,10 +3,6 @@
   margin-bottom: 10px;
 }
 
-#buttons {
-  align-items: center;
-}
-
 #fields {
   min-width: 300px;
   margin: 1%;
@@ -18,5 +14,23 @@
 }
 
 .padRight {
-  padding-right: 15px !important;
+  padding-right: 50px !important;
+}
+
+.msaPairs {
+  padding-top: 10px !important;
+  min-width: 400px !important;
+}
+
+.buttons {
+  padding-left: 30px !important;
+}
+
+.mcGrid {
+  margin: 3px !important;
+  margin-top: 7px !important;
+}
+
+.laPrompt {
+  min-width: 50% !important;
 }

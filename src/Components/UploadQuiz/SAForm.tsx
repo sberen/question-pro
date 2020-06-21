@@ -39,14 +39,13 @@ export class SAForm extends Form {
                            onChange={(evt: any) => this.onQuestionChange(evt, ind)} 
                            value={val.prompts} color='primary' 
                            size ='small'
-                           style={{minWidth: "300px"}}
-                           variant={"outlined"}
+                           style={{minWidth: "400px"}}
                            className="padRight"
                 />
                 {this.props.quizType === "LA" ? <div/> : <span></span>}
                   <TextField 
                               key={"second" + ind} 
-                              style={{minWidth: "300px"}}
+                              style={{minWidth: "400px"}}
                               rows={5} 
                               multiline={this.props.quizType === "LA"} 
                               label="Answer" 
@@ -54,7 +53,7 @@ export class SAForm extends Form {
                               value={val.answer} 
                               color='primary'
                               size='small'
-                              variant="outlined"
+                              
                   />
               
               </div>

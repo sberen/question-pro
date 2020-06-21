@@ -44,17 +44,16 @@ export class MSAForm extends Form {
                               onChange={(evt: any) => this.onPromptChange(evt, idx, ind)} 
                               value={prompt} 
                               color='primary'
-                              style={{margin: "1%"}}
-                              variant="outlined"
                               size ='small'
+                              style={{paddingRight: "50px"}}
+                              className={"msaPairs"}
                     />
                     <TextField key={`Second ${ind}`} label="Answer" 
                               onChange={(evt: any) => this.onResponseChange(evt, idx, ind)} 
                               value={q.answer[ind]} 
                               color='primary'
-                              style={{margin: "1%"}} 
-                              variant="outlined"
                               size ='small'
+                              className={"msaPairs"}
                     />
                   </div>
                 ))}
