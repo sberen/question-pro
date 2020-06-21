@@ -20,7 +20,7 @@ export class TopBar extends React.Component<TopBarProps, {}> {
           <Toolbar>
             <Typography variant="h5" id="header" >Question Pro</Typography>
             <Button variant='text' color='secondary' onClick={() => this.props.onQuizClick()}>Quizzes</Button>
-            <Button variant='text' color='secondary' onClick={() => this.props.makeQuiz()}>Make a Quiz</Button>
+            <Button variant='text' color='secondary' onClick={() => this.props.makeQuiz()}>Add a Quiz</Button>
             <div style={{flexGrow: 1}}/>
             <div>
               {this.props.user && <Button variant='text' color='secondary' onClick={() => auth.signOut()}>Sign Out</Button>}

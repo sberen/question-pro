@@ -1,7 +1,7 @@
 import React from 'react';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
 import { QUIZ_TYPES, QUIZ_INDICES, QUIZ_DESC } from '../Quiz/QuizTypes';
-import { Button, Grid, CardActions, Card, CardContent, Typography, TextField } from '@material-ui/core';
+import { Button, Grid, CardActions, Card, Paper, CardContent, Typography, TextField } from '@material-ui/core';
 import {FormProps} from './Form';
 import "./UploadQuiz.css";
 import { MCForm } from './MCForm';
@@ -65,19 +65,29 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                         <br/>
                         <Grid container spacing={3} >
                           {buttons}
+                        <Grid item id={"viaID"} component={Card} xs={12} md={5}>
+                          <CardContent>
+                            <Typography variant='h6'>
+                              Add via Quiz ID
+                            </Typography>
+                            <Typography variant='body2'>
+                              Enter the quiz ID that was shared with you, and get back to studying!
+                            </Typography>
+                          </CardContent>
+                          <CardActions> 
+                            <TextField key={"second"} 
+                              rows={1} 
+                              label="QuizID" 
+                              onChange={(evt: any) => this.setState({quizID: evt.target.value})} 
+                              value={this.state.quizID} 
+                              color='primary'
+                              size='medium'
+                            />
+                            <div/>
+                            <Button style={{marginTop: "10px"}} onClick={() => this.validateQuiz()} variant="text" color="primary">Add Quiz</Button>
+                          </CardActions> 
                         </Grid>
-                        <br/>
-                        <TextField key={"second"} 
-                          rows={1} 
-                          label="QuizID" 
-                          onChange={(evt: any) => this.setState({quizID: evt.target.value})} 
-                          value={this.state.quizID} 
-                          color='primary'
-                          variant={"outlined"}
-                          size='medium'
-                       />
-                       <br/>
-                       <Button style={{marginTop: "10px"}} onClick={() => this.validateQuiz()} variant="outlined" color="primary">Add Quiz via QuizID</Button>
+                        </Grid>
                       </div>)
                     : <div>
                         <div>
