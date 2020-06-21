@@ -1,6 +1,7 @@
 import React from 'react';
 import Form, {FormState} from './Form';
-import {TextField, Button} from '@material-ui/core';
+import {TextField, Button, Container, Paper, Typography, Box} from '@material-ui/core';
+import "./Form.css"
 
 export class MSAForm extends Form {
   constructor(props: any) {
@@ -19,45 +20,49 @@ export class MSAForm extends Form {
     let { questions } = this.state;
 
     return (
-      <div>
-        {this.title()}
-        {questions.map((q: any, idx: number) => (
-          <div>
-            <h3>Question {idx+1}:</h3>
-            <div>
-            <TextField id='fields' key={idx} label="Question" 
-                           onChange={(evt: any) => this.onQuestionChange(evt, idx)} 
-                           value={q.title} 
-                           color='primary' 
-                           size ='small'
-                />
-            <Button style={{margin: "1px"}} onClick={() => this.addPrompt(idx)} variant="outlined" color="primary">Add Prompt</Button>
-            <Button style={{margin: "1px"}} onClick={() => this.deletePrompt(idx)} variant="outlined" color="primary">Delete Prompt</Button>
+      <Container component={Paper}>
+        <div>
+          {this.title()}
+          {questions.map((q: any, idx: number) => (
+            <div style={{margin: "5%"}}>
+              <Typography variant={"h6"} color={"primary"} style={{marginBottom: "10px"}}>
+                <Box fontWeight={"fontWeightBold"}>Question {idx+1}:</Box>
+              </Typography>
+              <div>
+              <TextField id='fields' key={idx} label="Question" 
+                            onChange={(evt: any) => this.onQuestionChange(evt, idx)} 
+                            value={q.title} 
+                            color='primary' 
+                            size ='small'
+                  />
+              <Button style={{margin: "1px"}} onClick={() => this.addPrompt(idx)} variant="outlined" color="primary">Add Prompt</Button>
+              <Button style={{margin: "1px"}} onClick={() => this.deletePrompt(idx)} variant="outlined" color="primary">Delete Prompt</Button>
+              </div>
+                {q.prompts.map((prompt: string, ind: number) => (
+                  <div>
+                    <TextField key={ind} label="Prompt/Tense" 
+                              onChange={(evt: any) => this.onPromptChange(evt, idx, ind)} 
+                              value={prompt} 
+                              color='primary'
+                              style={{margin: "1%"}}
+                              variant="outlined"
+                              size ='small'
+                    />
+                    <TextField key={`Second ${ind}`} label="Answer" 
+                              onChange={(evt: any) => this.onResponseChange(evt, idx, ind)} 
+                              value={q.answer[ind]} 
+                              color='primary'
+                              style={{margin: "1%"}} 
+                              variant="outlined"
+                              size ='small'
+                    />
+                  </div>
+                ))}
             </div>
-              {q.prompts.map((prompt: string, ind: number) => (
-                <div>
-                  <TextField id='fields'key={ind} label="Prompt/Tense" 
-                            onChange={(evt: any) => this.onPromptChange(evt, idx, ind)} 
-                            value={prompt} 
-                            color='primary'
-                            style={{margin: "1%"}}
-                            variant="outlined"
-                            size ='small'
-                  />
-                  <TextField id='fields'key={`Second ${ind}`} label="Answer" 
-                            onChange={(evt: any) => this.onResponseChange(evt, idx, ind)} 
-                            value={q.answer[ind]} 
-                            color='primary'
-                            style={{margin: "1%"}} 
-                            variant="outlined"
-                            size ='small'
-                  />
-                </div>
-              ))}
-          </div>
-        ))}
-        {this.renderButtons()}
-      </div>
+          ))}
+          {this.renderButtons()}
+        </div>
+      </Container>
     )
   }
 

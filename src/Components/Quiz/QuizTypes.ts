@@ -37,7 +37,7 @@ export const QUIZ_DESC: Map<string,string> = new Map<string,string>([
   ["SA", "This quiz is great for vocabulary testing, with a single prompt and an open ended response field."],
   ["MC", "This is your classic multiple choice quiz, with one question and a series of answer choices to choose from."],
   ["MSA", "This quiz type is great for foreign language conjugation. You'll be able to define a set of prompts for each question."],
-  ["LA", "This quiz is for problem sets that call for longer responses. It is very similar to Short Answer, but provides a larger response space."]
+  ["LA", "This quiz is for problem sets that call for longer responses. It is similar to Short Answer, but provides a larger response space."]
 ])
 
 export const SINGLE: string[] = ["MC", "SA", "LA"];

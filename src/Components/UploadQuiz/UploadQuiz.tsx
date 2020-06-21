@@ -7,6 +7,7 @@ import "./UploadQuiz.css";
 import { MCForm } from './MCForm';
 import { SAForm } from './SAForm';
 import {MSAForm} from './MSAForm';
+import {LAForm} from './LAForm';
 import { firestore, auth } from '../../firebase';
 
 interface UploadProps {
@@ -55,18 +56,18 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
       <SAForm {...props}/>,
       <MCForm {...props}/>,
       <MSAForm {...props}/>,
-      <SAForm {...props}/>
+      <LAForm {...props}/>
     ];
     
     return ( !this.state.quizType
-                    ?  <div style={{margin: "10px"}}>
+                    ?  (<div style={{margin: "10px"}}>
                         <Typography style={{margin: "5px"}} variant='h5' color='primary'>New Quiz Type:</Typography>
                         <br/>
                         <Grid container spacing={3} >
                           {buttons}
                         </Grid>
                         <br/>
-                        <TextField  id='fields' key={"second"} 
+                        <TextField key={"second"} 
                           rows={1} 
                           label="QuizID" 
                           onChange={(evt: any) => this.setState({quizID: evt.target.value})} 
@@ -76,9 +77,14 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                           size='medium'
                        />
                        <br/>
-                       <Button onClick={() => this.validateQuiz()} variant="outlined" color="primary">Add Quiz via QuizID</Button>
-                      </div>
-                    : forms[QUIZ_INDICES.get(this.state.quizType) as number] ) ;
+                       <Button style={{marginTop: "10px"}} onClick={() => this.validateQuiz()} variant="outlined" color="primary">Add Quiz via QuizID</Button>
+                      </div>)
+                    : <div>
+                        <div>
+                          <Typography variant={"h5"} color={"primary"}>Make a New {QUIZ_TYPES[QUIZ_INDICES.get(this.state.quizType) as number].longName} Quiz:</Typography>
+                        </div>
+                      {forms[QUIZ_INDICES.get(this.state.quizType) as number]}
+                    </div> );
   }
 
   async validateQuiz(){

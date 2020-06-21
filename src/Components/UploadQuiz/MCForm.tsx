@@ -1,6 +1,6 @@
 import React from 'react';
 import Form, {FormState} from './Form';
-import {TextField, Button, Container, Paper, Typography} from '@material-ui/core';
+import {TextField, Button, Container, Paper, Box, Typography, MenuItem} from '@material-ui/core';
 
 
 export class MCForm extends Form {
@@ -11,7 +11,7 @@ export class MCForm extends Form {
         {
           prompts: "",
           answer: "",
-          choices: ["", ""]
+          choices: ["", "", ""]
         }
       ], 
       title: ""
@@ -22,47 +22,54 @@ export class MCForm extends Form {
     let { questions } = this.state;
 
     return (
-    
-        <Container component={Paper}>
-          {this.title()}
-          {questions.map((val, idx) => 
-            (<div>
-              <Typography variant='h5'>Question {idx + 1}:</Typography>
-              <div id="fields"> 
-                <TextField id='fields'key={idx} label="Question" 
-                           onChange={(evt: any) => this.onQuestionChange(evt, idx)} 
-                           value={val.prompts} 
-                           color='primary' 
-                           size ='small'
-                />
-                <Button style={{margin: "5px"}} onClick={() => this.addChoice(idx)} variant="outlined" color="primary">Add Choice</Button>
-                <Button style={{margin: "5px"}} onClick={() => this.deleteChoice(idx)} variant="outlined" color="primary">Delete Choice</Button>
-              </div>
-              <div id="fields">
-                <TextField  key={"second" + idx} 
-                            label="Correct Answer" 
-                            onChange={(evt: any) => this.onAnswerChange(evt, idx)} 
-                            value={val.answer} 
-                            color='primary'
-                            variant={"outlined"}
-                            size='small'
-                />
-                {val.choices.map((choice: string, ind: number) => 
-                                                      <TextField id="choice"
-                                                                  label={`Wrong Answer ${ind+1}:`} 
-                                                                  onChange={(evt:any) => this.onChoiceChange(evt, idx, ind)} 
-                                                                  value={choice} 
-                                                                  color='primary'
-                                                                  variant='outlined'
-                                                                  size='small' 
-                                                        />
-                                                  )
-                }
+          <Container component={Paper}>
+            <div>
+            {this.title()}
+            </div>
+            {questions.map((val, idx) => 
+              (<div style={{margin: "5%"}}>
+              <div>
+                <Typography color="primary" variant={"h6"}>
+                  <Box fontWeight={"fontWeightBold"}>Question {idx + 1}:</Box>
+                </Typography>
+                <div> 
+                  <TextField id='fields'key={idx} label="Question" 
+                            onChange={(evt: any) => this.onQuestionChange(evt, idx)} 
+                            value={val.prompts} 
+                            color='primary' 
+                            size ='small'
+                  />
+                  <Button style={{margin: "5px"}} onClick={() => this.addChoice(idx)} variant="outlined" color="primary">Add Choice</Button>
+                  <Button style={{margin: "5px"}} onClick={() => this.deleteChoice(idx)} variant="outlined" color="primary">Delete Choice</Button>
+                </div>
+                <div>
+                  {val.choices.map((choice: string, ind: number) => 
+                                                    (    <div style={{margin: "5px"}}>
+                                                          <TextField id="choice"
+                                                                      label={`Choice ${ind+1}:`} 
+                                                                      onChange={(evt:any) => this.onChoiceChange(evt, idx, ind)} 
+                                                                      value={choice} 
+                                                                      color='primary'
+                                                                      variant='outlined'
+                                                                      size='small' 
+                                                            />
+                                                        </div> )
+                                                    )
+                  }
+                  <TextField label={"Correct Answer"}
+                            onChange={(evt) => this.onAnswerChange(evt, idx)}
+                            color={"primary"}
+                            value={this.state.questions[idx].answer}
+                            style={{minWidth: "150px"}}
+                            select>
+                              {this.state.questions[idx].choices.map((option:string, num:number) => <MenuItem value={this.state.questions[idx].choices[num]}>{`Choice ${num+1}`}</MenuItem>)}
+                  </TextField>
+                </div>
               </div>
             </div>)
-          )}
-          {this.renderButtons()}
-        </Container>
+            )}
+            {this.renderButtons()}
+          </Container>
     )
   }
 
@@ -93,19 +100,6 @@ export class MCForm extends Form {
         questions: newQs
       });
     }
-  }
-
-  submit() {
-    if (this.state.title === "") {
-      window.alert("Please title your quiz.");
-      return;
-    }
-
-    let newQs: any[] = this.state.questions.slice();
-
-    newQs.forEach((val) => val.choices.push(val.answer));
-
-    this.formSubmission(newQs);
   }
 
   onChoiceChange(evt: any, qNum: number, cNum: number) {

@@ -1,8 +1,18 @@
 #buttons button {
   margin: 1px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+#buttons {
+  align-items: center;
+}
+
+#fields {
+  min-width: 300px;
+  margin: 1%;
 }
 
 #title {
-  margin-top: 5px;
+  margin-top: 10px;
+  min-width: 300px;
 }
