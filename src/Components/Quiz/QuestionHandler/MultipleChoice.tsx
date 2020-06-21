@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Typography, Box } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
 import './MultipleChoice.css';
 
@@ -8,15 +8,22 @@ export class MultipleChoice extends QuestionHandler {
     // populate answer choices from question object 
     renderChoices = () => {
         let options = this.props.question.choices.map((item: string) =>
-            <FormControlLabel value={item} control={<Radio />} label={item} color ='secondary'/>
+            <FormControlLabel value={item} control={<Radio />} label={item} color ='primary'/>
         );
         return (
-            <FormControl component="fieldset">
-                <FormLabel component="legend">{this.props.question.prompts}</FormLabel>
-                <RadioGroup aria-label="question" name="question1" value={this.props.answer} onChange={this.onInputChange}>
+            <div>
+            <Typography variant='h5' color='primary'>
+                <Box fontWeight={"fontWeightBold"}>Question {this.props.index}:</Box>
+            </Typography>
+            <Typography variant='h6'>
+                    <Box>{this.props.question.prompts}</Box>
+            </Typography>
+            <FormControl component="fieldset" style={{paddingLeft: "3%"}}>
+                <RadioGroup aria-label="question" name="question1" value={this.props.answer} onChange={this.onInputChange} style={{marginLeft: "10px"}}>
                     {options}
                 </RadioGroup>
             </FormControl>
+            </div>
         );
     }
 
@@ -40,8 +47,8 @@ export class MultipleChoice extends QuestionHandler {
     */
     render() {
         return (
-        <div>
-            {this.renderChoices()} <br/>
+        <div style={{margin: "10px"}}>
+            {this.renderChoices()}
         </div>);
     }
 }

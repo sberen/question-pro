@@ -4,6 +4,7 @@ export interface QuestionProps {
     question: any,  // question object with fields dependent on type of quiz
     changeAnswer(ans: string | string[]): void,  // set answer to ans
     answer: string | string[] // current answer used to be displayed
+    index: number
 }
 
 

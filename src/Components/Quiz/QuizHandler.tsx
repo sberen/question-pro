@@ -6,7 +6,7 @@ import {Results} from './QuestionHandler/ResultsPage';
 import { MultipleChoice } from './QuestionHandler/MultipleChoice';
 import { MultiShortAnswers } from './QuestionHandler/MultiShortAnswer';
 import { LongAnswer } from './QuestionHandler/LongAnswer';
-import { Button } from '@material-ui/core';
+import { Button, Container, Paper, Typography, Box } from '@material-ui/core';
 // import * as quizes from '../../resources/Questions.json';
 
 
@@ -53,14 +53,26 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     }
     
     return (
-      !this.state.resultsPage ? <div>
-        <div><h5>{this.props.info.name}<br/>
-        Page: {Math.ceil(cur/perPage)} / {Math.ceil(this.state.quiz.questions.length/perPage)}
-        </h5></div>
-        {this.renderQuestions()}
-        {this.renderButtons()}
-        
-      </div> : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs), () => this.props.onBack())
+      <div>
+        <div>
+          <Typography color="primary" variant='h5'>
+            <Box>{this.props.info.name}</Box>
+          </Typography>
+        </div>
+        <Container component={Paper}>
+          {!this.state.resultsPage ? 
+          <div style={{paddingTop: "10px"}}>
+            {this.state.problemsPerPage !== -1 ? 
+            <Typography component={"div"} variant='body1'>
+              <Box fontWeight={"fontWeightBold"}>
+                Page: {Math.ceil(cur/perPage)} / {Math.ceil(this.state.quiz.questions.length/perPage)}
+              </Box> 
+            </Typography> : <span></span> }
+            {this.renderQuestions()}
+            {this.renderButtons()}
+          </div> : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs), () => this.props.onBack())}
+        </Container>
+      </div>
     );
   }
 
@@ -69,7 +81,8 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     return {
       question: this.state.quiz.questions[index],
       changeAnswer: (ans: string| string[]) => this.updateAnswer(index, ans),
-      answer: this.state.answers[index]
+      answer: this.state.answers[index],
+      index: index + 1
     }
   }
 
@@ -179,13 +192,17 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     }
     if (!isFirst){
         result.push(
-            <Button key='back' onClick={() => this.changeQuestion(-1 * qPerPage)} variant='outlined' color='primary'>Back</Button>
+            <Button key='back' style={{margin: "5px"}} onClick={() => this.changeQuestion(-1 * qPerPage)} variant='outlined' color='primary'>Back</Button>
         )
     }
     result.push(
         <Button key="next" onClick={() => {this.changeQuestion(1 * qPerPage)}} variant='outlined' color='primary'>
         {secondButton}</Button>
     )
-    return result;
+    return (
+      <div style={{padding: "10px"}}>
+        {result}
+      </div>
+    );
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { MainPage }  from './Components/MainPage/MainPage'
 import {Theme, createMuiTheme, ThemeProvider} from '@material-ui/core';
-import { green } from '@material-ui/core/colors';
+import { green, blue } from '@material-ui/core/colors';
 import "./App.css";
 
 const theme : Theme = createMuiTheme({
@@ -9,7 +9,9 @@ const theme : Theme = createMuiTheme({
     fontFamily: 'Arial,Roboto'
   },
   palette: {
-    primary: green,
+    primary: {
+      main: "#0d47a1"
+    },
     secondary: {
       main: "#fafafa"
     }

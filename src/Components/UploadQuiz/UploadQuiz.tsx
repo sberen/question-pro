@@ -9,6 +9,7 @@ import { SAForm } from './SAForm';
 import {MSAForm} from './MSAForm';
 import {LAForm} from './LAForm';
 import { firestore, auth } from '../../firebase';
+import "../MainPage/QuizSelector.css";
 
 interface UploadProps {
   submit: (qz: QuizInfoMini) => void;
@@ -31,7 +32,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
   }
 
   render() {
-    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item component={Card} style={{margin: "5px"}} id="button" xs={12} md ={5}>
+    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item component={Card} className={"card"} style={{margin: "5px"}} id="button" xs={12} md ={5}>
                                                       <CardContent>
                                                         <Typography variant="h6">
                                                           {val.longName}
@@ -65,7 +66,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                         <br/>
                         <Grid container spacing={3} >
                           {buttons}
-                        <Grid item id={"viaID"} component={Card} xs={12} md={5}>
+                        <Grid item className={"card"} style={{marginLeft: "5px"}} component={Card} xs={12} md={5}>
                           <CardContent>
                             <Typography variant='h6'>
                               Add via Quiz ID
