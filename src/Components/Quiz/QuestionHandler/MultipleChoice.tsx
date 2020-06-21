@@ -12,10 +12,10 @@ export class MultipleChoice extends QuestionHandler {
         );
         return (
             <div>
-            <Typography variant='h5' color='primary'>
+            <Typography variant='h6' color='primary'>
                 <Box fontWeight={"fontWeightBold"}>Question {this.props.index}:</Box>
             </Typography>
-            <Typography variant='h6'>
+            <Typography variant='body1'>
                     <Box>{this.props.question.prompts}</Box>
             </Typography>
             <FormControl component="fieldset" style={{paddingLeft: "3%"}}>

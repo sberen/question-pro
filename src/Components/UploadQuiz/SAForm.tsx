@@ -42,19 +42,16 @@ export class SAForm extends Form {
                            style={{minWidth: "400px"}}
                            className="padRight"
                 />
-                {this.props.quizType === "LA" ? <div/> : <span></span>}
-                  <TextField 
-                              key={"second" + ind} 
-                              style={{minWidth: "400px"}}
-                              rows={5} 
-                              multiline={this.props.quizType === "LA"} 
-                              label="Answer" 
-                              onChange={(evt: any) => this.onAnswerChange(evt, ind)} 
-                              value={val.answer} 
-                              color='primary'
-                              size='small'
-                              
-                  />
+                <TextField 
+                            key={"second" + ind} 
+                            style={{minWidth: "400px"}}
+                            label="Answer" 
+                            onChange={(evt: any) => this.onAnswerChange(evt, ind)} 
+                            value={val.answer} 
+                            color='primary'
+                            size='small'
+                            
+                />
               
               </div>
             </div>)

@@ -41,7 +41,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       quiz: this.props.info,
       answers: ans,
       resultsPage: false,
-      problemsPerPage: 2
+      problemsPerPage: -1
     }
   }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
+import { TextField, Typography, Box } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
 
 export class MultiShortAnswers extends QuestionHandler {
@@ -26,13 +26,12 @@ export class MultiShortAnswers extends QuestionHandler {
         // maps index to question answer box pairs
         let questions = list.map((index: number) =>
             <div>
-                <br/>
                 <TextField
                     rows={1}
                     label={prompts[index]}
                     onChange={e => this.changeAnswer(e, index)}
                     value={answers[index]}
-                    variant='outlined'
+                    style={{minWidth: "300px"}}
                     color='primary'
                     size='small'
                 /> 
@@ -58,8 +57,15 @@ export class MultiShortAnswers extends QuestionHandler {
         
         return (
         <div>
-            {this.props.question.title} <br/>
-            {this.renderQuestions()} <br/>
+            <Typography variant="h6" color="primary">
+                <Box fontWeight={"fontWeightBold"}>Question {this.props.index}:</Box>
+            </Typography>
+            <div>
+                <Typography variant='body1'>
+                    <Box>{this.props.question.title}</Box>
+                </Typography>
+                {this.renderQuestions()}
+            </div> 
         </div>);
     }
 }
