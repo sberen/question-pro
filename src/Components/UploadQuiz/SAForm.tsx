@@ -41,6 +41,7 @@ export class SAForm extends Form {
                            size ='small'
                            style={{minWidth: "300px"}}
                            variant={"outlined"}
+                           className="padRight"
                 />
                 {this.props.quizType === "LA" ? <div/> : <span></span>}
                   <TextField 
