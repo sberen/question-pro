@@ -16,3 +16,7 @@
   margin-top: 10px;
   min-width: 300px;
 }
+
+.padRight {
+  padding-right: 15px !important;
+}

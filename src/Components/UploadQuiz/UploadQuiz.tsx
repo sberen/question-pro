@@ -31,7 +31,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
   }
 
   render() {
-    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item component={Card} style={{margin: "5px"}} id="button" spacing={3} xs={12} md ={5}>
+    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item component={Card} style={{margin: "5px"}} id="button" xs={12} md ={5}>
                                                       <CardContent>
                                                         <Typography variant="h6">
                                                           {val.longName}
@@ -137,7 +137,6 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
 
     }
     
-
   }
 
 }
