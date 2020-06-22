@@ -4,7 +4,7 @@
 }
 
 .incorrectCard {
-  border-bottom: 5px solid rgba(183, 28, 28, 1) !important;
+  border-bottom: 5px solid rgba(211, 47, 47, 1) !important;
   margin: 10px !important;
 }
 
@@ -13,6 +13,15 @@
 }
 
 .incorrectText {
-  color: rgba(183, 28, 28, 1) !important;
+  color: rgba(211, 47, 47, 1) !important;
 }
 
+.goodTitle {
+  border: 5px solid rgba(76, 175, 80, 1) !important;
+  margin: 10px !important; 
+}
+
+.badTitle {
+  border: 5px solid rgba(211, 47, 47, 1) !important;
+  margin: 10px !important;
+}

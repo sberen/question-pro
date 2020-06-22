@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Grid, Typography, Box, CardContent } from '@material-ui/core';
+import { Button, Card, Grid, Typography, Box, CardContent, CardActions } from '@material-ui/core';
 import { SINGLE } from '../QuizTypes';
 import CountUp from 'react-countup';
 import {QuizInfo} from '../QuizInfo';
@@ -16,13 +16,19 @@ export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[
 
   let grade : number = Math.round(100 * ((responses.length - display[1].length) / responses.length));
   return (
-      <div>
-        <Typography variant='h5' className={grade >= 80 ? "correctText" : "incorrectText"}>
-         <Box fontWeight={"fontWeightBold"}>Grade: <CountUp start={0} end={grade} duration={2.5}/>%</Box>
-        </Typography>
+      <Grid container spacing={3}>
+        <Grid item component={Card} xs={12} md={12} sm={12} className={grade >= 80 ? "goodTitle" : "badTitle"}>
+          <CardContent>
+            <Typography variant='h5' className={grade >= 80 ? "correctText" : "incorrectText"}>
+            <Box fontWeight={"fontWeightBold"}>Grade: <CountUp start={0} end={grade} duration={2.5}/>%</Box>
+            </Typography>
+          </CardContent>
+          <CardActions>
+          {getButtons(display[1], shrinkQs, onBack)}
+          </CardActions>
+        </Grid>
         {display[0]}
-        {getButtons(display[1], shrinkQs, onBack)}
-      </div>
+      </Grid>
   )
 }
 
@@ -41,7 +47,7 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
       display.push(
         <Grid item component={Card} xs={12} sm={12} md={12} className={correct ? "correctCard" : "incorrectCard"}>
           <CardContent>
-            <Typography variant='h6'>
+            <Typography variant='h6' color={"primary"}>
               <Box fontWeight={"fontWeightBold"}>Question {i}: {quiz.questions[i-1].prompts}</Box>
             </Typography>
             <Typography variant='h6' className={correct ? "correctText" : "incorrectText"}>
@@ -50,7 +56,9 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
           </CardContent>
           <CardContent>
             <Typography>{`Your Answer: ${responses[i-1]}`}</Typography>
-            <Typography>{!correct ? `Correct Answer: ${quiz.questions[i-1].answer}` : 'Correct!'}</Typography>
+            <Typography className="correctText">
+              {!correct ? `Correct Answer: ${quiz.questions[i-1].answer}` : 'Correct!'}
+            </Typography>
           </CardContent>
         </Grid>
       )
@@ -58,11 +66,7 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
 
     
 
-    return [(
-          <Grid container spacing={3}>
-            {display} 
-          </Grid>
-    ), incorrect]
+    return [display , incorrect]
   }
 
   function MultiResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
@@ -77,32 +81,64 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
         let correct: boolean = quiz.questions[quest].answer[prompt] === responses[quest][prompt];
         if (!correct) {
           numIncorrectPrompts++;
-          incorrectPrompts.push(<div>
+          incorrectPrompts.push(<Box>
             {quiz.questions[quest].prompts[prompt]}: {quiz.questions[quest].answer[prompt]}
-          </div>)
+          </Box>);
         }
-        question.push(<div>
+
+        question.push(<Box>
           {quiz.questions[quest].prompts[prompt]}: {responses[quest][prompt]} 
-        </div>);
-      } 
+        </Box>);
+
+      }
+
       if (numIncorrectPrompts === 0) {
         numCorrect++;
       } else {
         incorrect.push(quiz.questions[quest]);
       }
-      display.push(<h5>
+
+      /*display.push(<h5>
         Question {quest+1}: {quiz.questions[quest].title}
         {question}
         {numIncorrectPrompts !== 0 ? <div> <br/> Should Have Been: {incorrectPrompts}</div> : <br/>}
-      </h5>)
+      </h5>);*/
+
+
+      let numCorrectPrompts: number = responses[quest].length - numIncorrectPrompts;
+
+      display.push(
+        <Grid item component={Card} xs={12} sm={12} md={12} className={numIncorrectPrompts === 0  ? "correctCard" : "incorrectCard"}>
+          <CardContent>
+            <Typography variant='h6' color={"primary"}>
+              <Box fontWeight={"fontWeightBold"}>Question {quest+1}: {quiz.questions[quest].title}</Box>
+            </Typography>
+            <Typography variant='h6' className={numIncorrectPrompts === 0 ? "correctText" : "incorrectText"}>
+              <Box fontWeight={"fontWeightBold"}>
+                {numIncorrectPrompts === 0 ? "Correct!" : `Incorrect: ${numCorrectPrompts}/${responses[quest].length} Prompts Correct`}
+              </Box>
+            </Typography>
+          </CardContent>
+          <CardContent>
+            <Typography className= {numIncorrectPrompts === 0 ? "correctText" : "incorrectText"}>
+              <Box fontWeight={"fontWeightBold"}>Your Answer:</Box>
+            </Typography>
+            <Typography style={{marginLeft: "4%"}} className={numIncorrectPrompts === 0 ? "correctText" : "incorrectText"}>
+              {question}
+            </Typography>
+            </CardContent>
+            <CardContent>
+            <Typography className={"correctText"}>
+              <Box fontWeight={"fontWeightBold"}>{numIncorrectPrompts !== 0 ? `Correct Answer:` : 'Correct!'}</Box>
+            </Typography>
+            {numIncorrectPrompts !== 0 ? <Typography className={"correctText"} style={{marginLeft: "4%"}}>{incorrectPrompts}</Typography> : <span></span>}
+          </CardContent>
+        </Grid>
+      );
+
     }
 
-    return [( 
-      <div>
-        <h3>Grade: {Math.round(100 * (numCorrect / responses.length))}% </h3>
-        {display}
-      </div>
-    ), incorrect];
+    return [display, incorrect];
   }
 
   function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void, onBack: () => void) {

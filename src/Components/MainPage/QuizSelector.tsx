@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Grid, Card, CardContent, Typography, CardActions, IconButton} from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon  from '@material-ui/icons/Delete';
 import './QuizSelector.css';
 import { QuizInfo } from '../Quiz/QuizInfo';
 import { QUIZ_INDICES, QUIZ_TYPES } from '../Quiz/QuizTypes';
@@ -27,7 +27,8 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
           </CardContent>
           <CardActions>
             <Button key={idx} onClick={() => this.selectQuiz(quiz.uid)} color='primary' variant='text'>Take Quiz</Button>
-            <IconButton aria-label="delete" style={{ color: "#e32636"}} onClick={() => this.removeQuiz(quiz.uid)}>
+            <div style={{flexGrow: 1}}/>
+            <IconButton aria-label="delete" style={{ color: "#808080"}} onClick={() => this.removeQuiz(quiz.uid)}>
               <DeleteIcon />
             </IconButton>
           </CardActions>
@@ -35,20 +36,18 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
       ));
     return (<div>
               <Typography style={{margin: "10px"}} variant='h5' color="primary">My Quizzes:</Typography>
-            <Grid container spacing={3}>
-                {result.length !== 0 ? result : 
-                <Grid item component={Card} style={{margin: "10px"}} spacing={3} xs={12} md={3} sm={12}>
-                  <CardContent>
-                    <Typography variant='h6'>You haven't made any quizzes yet!</Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={() => this.props.makeQuiz()} color="primary" variant='text'>Create A Quiz</Button>
-                  </CardActions>
-                </Grid>}
-            </Grid>
-
-            </div>
-            );
+              <Grid container spacing={3}>
+                  {result.length !== 0 ? result : 
+                  <Grid item component={Card} style={{margin: "10px"}} spacing={3} xs={12} md={3} sm={12}>
+                    <CardContent>
+                      <Typography variant='h6'>You haven't made any quizzes yet!</Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button onClick={() => this.props.makeQuiz()} color="primary" variant='text'>Create A Quiz</Button>
+                    </CardActions>
+                  </Grid>}
+              </Grid>
+            </div>);
   }
 
   async selectQuiz(quiz : string){
