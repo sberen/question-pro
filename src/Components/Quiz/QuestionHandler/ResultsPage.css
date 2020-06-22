@@ -1,0 +1,18 @@
+.correctCard {
+  border-bottom: 5px solid rgba(76, 175, 80, 1) !important;
+  margin: 10px !important;
+}
+
+.incorrectCard {
+  border-bottom: 5px solid rgba(183, 28, 28, 1) !important;
+  margin: 10px !important;
+}
+
+.correctText {
+  color:  rgba(76, 175, 80, 1) !important;
+}
+
+.incorrectText {
+  color: rgba(183, 28, 28, 1) !important;
+}
+

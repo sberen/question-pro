@@ -3,6 +3,7 @@
 }
 
 .card {
-  border-bottom: 5px solid rgba(13, 71, 161, 0.5) !important;
+  border-bottom: 5px solid rgba(13, 71, 161, 1) !important;
   margin: 10px !important;
 }
+

@@ -54,13 +54,12 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     
     return (
       <div>
+        {!this.state.resultsPage ?
         <div>
-          <Typography color="primary" variant='h5'>
-            <Box>{this.props.info.name}</Box>
-          </Typography>
-        </div>
-        <Container component={Paper}>
-          {!this.state.resultsPage ? 
+        <Typography color="primary" variant='h5'>
+          <Box>{this.props.info.name}</Box>
+        </Typography>
+        <Container component={Paper}> 
           <div style={{paddingTop: "10px"}}>
             {this.state.problemsPerPage !== -1 ? 
             <Typography component={"div"} variant='body1'>
@@ -70,8 +69,10 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
             </Typography> : <span></span> }
             {this.renderQuestions()}
             {this.renderButtons()}
-          </div> : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs), () => this.props.onBack())}
+          </div> 
         </Container>
+        </div>
+        : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs), () => this.props.onBack())}
       </div>
     );
   }

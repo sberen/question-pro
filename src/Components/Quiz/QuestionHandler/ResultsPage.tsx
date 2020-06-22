@@ -1,7 +1,9 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button, Card, Grid, Typography, Box, CardContent } from '@material-ui/core';
 import { SINGLE } from '../QuizTypes';
+import CountUp from 'react-countup';
 import {QuizInfo} from '../QuizInfo';
+import './ResultsPage.css'
 
 
 export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[]) => void, onBack: () => any) {
@@ -11,11 +13,16 @@ export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[
   } else {
     display = MultiResults(quiz, responses); 
   }
+
+  let grade : number = Math.round(100 * ((responses.length - display[1].length) / responses.length));
   return (
-    <div>
-      {display[0]}
-      {getButtons(display[1], shrinkQs, onBack)}
-    </div>
+      <div>
+        <Typography variant='h5' className={grade >= 80 ? "correctText" : "incorrectText"}>
+         <Box fontWeight={"fontWeightBold"}>Grade: <CountUp start={0} end={grade} duration={2.5}/>%</Box>
+        </Typography>
+        {display[0]}
+        {getButtons(display[1], shrinkQs, onBack)}
+      </div>
   )
 }
 
@@ -32,22 +39,29 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
         incorrect.push(quiz.questions[i-1]);
       }
       display.push(
-        <h5>
-          Question {i}: {quiz.questions[i-1].prompts} <br />
-          &ensp;{`Your Answer: ${responses[i-1]}`} <br/>
-          &ensp;{!correct ? `Correct Answer: ${quiz.questions[i-1].answer}` : 'Correct!'} <br/>
-          <br/>
-        </h5>
+        <Grid item component={Card} xs={12} sm={12} md={12} className={correct ? "correctCard" : "incorrectCard"}>
+          <CardContent>
+            <Typography variant='h6'>
+              <Box fontWeight={"fontWeightBold"}>Question {i}: {quiz.questions[i-1].prompts}</Box>
+            </Typography>
+            <Typography variant='h6' className={correct ? "correctText" : "incorrectText"}>
+              <Box fontWeight={"fontWeightBold"}>{correct ? "Correct!" : "Incorrect"}</Box>
+            </Typography>
+          </CardContent>
+          <CardContent>
+            <Typography>{`Your Answer: ${responses[i-1]}`}</Typography>
+            <Typography>{!correct ? `Correct Answer: ${quiz.questions[i-1].answer}` : 'Correct!'}</Typography>
+          </CardContent>
+        </Grid>
       )
     }
 
     
 
     return [(
-      <div>
-        <h3>Grade: {Math.round(100 * (numCorrect / responses.length))}%</h3>
-        {display} 
-      </div>
+          <Grid container spacing={3}>
+            {display} 
+          </Grid>
     ), incorrect]
   }
 
