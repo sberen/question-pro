@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, Typography, Box, FormLabel } from '@material-ui/core';
+import { TextField, Typography, Box } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
 
 export class ShortAnswer extends QuestionHandler {
