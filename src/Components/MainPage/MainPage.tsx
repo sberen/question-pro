@@ -47,7 +47,8 @@ export class MainPage extends React.Component<{}, MainPageState> {
   render() {
 
     const pages = [
-        <QuizSelector quizzes={this.state.quizzes} makeQuiz={() => this.setPage(2)} changeQuiz={(qz:QuizInfo) => {this.setState({quiz: qz, pageNum: 1})}}/>, 
+        <QuizSelector removeQuiz={(id:string)=> this.removeQuiz(id)} quizzes={this.state.quizzes} 
+            makeQuiz={() => this.setPage(2)} changeQuiz={(qz:QuizInfo) => {this.setState({quiz: qz, pageNum: 1})}}/>, 
         <QuizHandler info={this.state.quiz!} onBack={() => this.setPage(0)}/>,
         <UploadQuiz submit={(qz: QuizInfoMini) => this.addQuiz(qz)} afterSubmit={() => this.setPage(0)}/>
     ];
@@ -73,6 +74,12 @@ export class MainPage extends React.Component<{}, MainPageState> {
   addQuiz(qz: QuizInfoMini) {
     this.setState((prev: MainPageState) => ({
       quizzes: [...prev.quizzes, qz]
+    }));
+  }
+
+  removeQuiz(id: string){
+    this.setState((prev: MainPageState)=>({
+      quizzes: prev.quizzes.filter(function(value, index, arr){ return value.uid !== id;})
     }));
   }
 

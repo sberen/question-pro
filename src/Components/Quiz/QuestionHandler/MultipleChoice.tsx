@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Typography, Box } from '@material-ui/core';
+import { FormControl, RadioGroup, FormControlLabel, Radio, Typography, Box } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
 import './MultipleChoice.css';
 

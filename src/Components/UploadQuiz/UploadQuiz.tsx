@@ -1,7 +1,7 @@
 import React from 'react';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
 import { QUIZ_TYPES, QUIZ_INDICES, QUIZ_DESC } from '../Quiz/QuizTypes';
-import { Button, Grid, CardActions, Card, Paper, CardContent, Typography, TextField } from '@material-ui/core';
+import { Button, Grid, CardActions, Card, CardContent, Typography, TextField } from '@material-ui/core';
 import {FormProps} from './Form';
 import "./UploadQuiz.css";
 import { MCForm } from './MCForm';
