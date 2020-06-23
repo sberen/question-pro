@@ -111,7 +111,8 @@ export class MainPage extends React.Component<{}, MainPageState> {
         user.set({
           first: name[0],
           last: name.length !== 0 ? name[name.length - 1]: null,
-          quizzes: {}
+          quizzes: {},
+          quizResults: {}
         }).then(() => {
           console.log("Document set properly");
         }).catch((error) => {
