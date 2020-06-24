@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, TextField} from '@material-ui/core';
+import {Button, TextField, Grid, Card, CardActions} from '@material-ui/core';
 import { firestore } from '../../firebase';
 import "./Form.css";
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
@@ -114,5 +114,17 @@ export default class Form extends React.Component<FormProps, FormState> {
       return;
     }
     this.formSubmission(this.state.questions);
+  }
+
+  topCard() {
+    return (
+      <Grid item component={Card} xs={12} md={12} sm={12} className={"card"}>
+          <CardActions>
+            {this.title()}
+            <div style={{flexGrow: 1}}/>
+            {this.renderButtons()}
+          </CardActions>
+        </Grid>
+    )
   }
 }

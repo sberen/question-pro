@@ -13,8 +13,9 @@
   min-width: 300px;
 }
 
-.padRight {
+.padded {
   padding-right: 50px !important;
+  margin-left: 10px !important;
 }
 
 .msaPairs {

@@ -1,7 +1,9 @@
 import React from 'react';
 import Form, {FormState} from './Form';
-import {TextField, Button, Container, Paper, Typography, Box} from '@material-ui/core';
+import {TextField, Button, Grid, Card, CardActions, 
+        CardContent, Typography, Box} from '@material-ui/core';
 import "./Form.css"
+import "../MainPage/QuizSelector.css";
 
 export class MSAForm extends Form {
   constructor(props: any) {
@@ -20,26 +22,28 @@ export class MSAForm extends Form {
     let { questions } = this.state;
 
     return (
-      <Container component={Paper}>
-        <div>
-          {this.title()}
+      <Grid container spacing={3}>
+          {this.topCard()}
           {questions.map((q: any, idx: number) => (
-            <div style={{margin: "5%"}}>
-              <Typography variant={"h6"} color={"primary"} style={{marginBottom: "10px"}}>
-                <Box fontWeight={"fontWeightBold"}>Question {idx+1}:</Box>
-              </Typography>
-              <div>
-              <TextField id='fields' key={idx} label="Question" 
-                            onChange={(evt: any) => this.onQuestionChange(evt, idx)} 
-                            value={q.title} 
-                            color='primary' 
-                            size ='small'
-                  />
-              <Button style={{margin: "1px"}} onClick={() => this.addPrompt(idx)} variant="outlined" color="primary">Add Prompt</Button>
-              <Button style={{margin: "1px"}} onClick={() => this.deletePrompt(idx)} variant="outlined" color="primary">Delete Prompt</Button>
-              </div>
+            <Grid item component={Card} xs={12} sm={12} md={12} className='card'>
+              <CardContent>
+                <Typography variant={"h6"} color={"primary"} style={{marginBottom: "10px"}}>
+                  <Box fontWeight={"fontWeightBold"}>Question {idx+1}:</Box>
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <TextField id='fields' key={idx} label="Question" 
+                              onChange={(evt: any) => this.onQuestionChange(evt, idx)} 
+                              value={q.title} 
+                              color='primary' 
+                              size ='small'
+                    />
+                <div style={{flexGrow: 1}}/>
+                <Button style={{margin: "1px"}} onClick={() => this.addPrompt(idx)} variant="outlined" color="primary">Add Prompt</Button>
+                <Button style={{margin: "1px"}} onClick={() => this.deletePrompt(idx)} variant="outlined" color="primary">Delete Prompt</Button>
+              </CardActions>
                 {q.prompts.map((prompt: string, ind: number) => (
-                  <div>
+                  <CardActions>
                     <TextField key={ind} label="Prompt/Tense" 
                               onChange={(evt: any) => this.onPromptChange(evt, idx, ind)} 
                               value={prompt} 
@@ -55,13 +59,11 @@ export class MSAForm extends Form {
                               size ='small'
                               className={"msaPairs"}
                     />
-                  </div>
+                  </CardActions>
                 ))}
-            </div>
+            </Grid>
           ))}
-          {this.renderButtons()}
-        </div>
-      </Container>
+      </Grid>
     )
   }
 

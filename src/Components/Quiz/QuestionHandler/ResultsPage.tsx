@@ -39,12 +39,9 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
     const display: any[] = [];
     const incorrect: any[] = [];
     const incorrectIndex: number[] = [];
-    let numCorrect: number = 0;
     for (let i = 1; i <= quiz.questions.length; i++) {
       let correct : boolean = responses[i-1].trim() === quiz.questions[i-1].answer;
-      if (correct){
-         numCorrect++;
-      } else {
+      if (!correct) {
         incorrect.push(quiz.questions[i-1]);
         incorrectIndex.push(i-1);
       }
@@ -77,7 +74,7 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
     const display = [];
     const incorrect = [];
     const incorrectIndex : number[] = [];
-    let numCorrect: number = 0;
+
     for(let quest = 0; quest < responses.length; quest++) {
       const question: any[] = [];
       const incorrectPrompts: any[] = [];
@@ -97,19 +94,10 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
 
       }
 
-      if (numIncorrectPrompts === 0) {
-        numCorrect++;
-      } else {
+      if (numIncorrectPrompts !== 0) {
         incorrect.push(quiz.questions[quest]);
         incorrectIndex.push(quest);
       }
-
-      /*display.push(<h5>
-        Question {quest+1}: {quiz.questions[quest].title}
-        {question}
-        {numIncorrectPrompts !== 0 ? <div> <br/> Should Have Been: {incorrectPrompts}</div> : <br/>}
-      </h5>);*/
-
 
       let numCorrectPrompts: number = responses[quest].length - numIncorrectPrompts;
 

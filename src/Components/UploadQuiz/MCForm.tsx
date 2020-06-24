@@ -1,6 +1,8 @@
 import React from 'react';
 import Form, {FormState} from './Form';
-import {TextField, Button, Container, Paper, Box, Typography, MenuItem} from '@material-ui/core';
+import { TextField, Button, Grid, Card, CardContent, 
+        CardActions, Box, Typography, MenuItem } from '@material-ui/core';
+import '../MainPage/QuizSelector.css';
 
 
 export class MCForm extends Form {
@@ -24,28 +26,27 @@ export class MCForm extends Form {
     let { questions } = this.state;
 
     return (
-          <Container component={Paper}>
-            <div>
-            {this.title()}
-            </div>
+          <Grid container spacing={3}>
+            {this.topCard()}
             {questions.map((val, idx) => 
-              (<div style={{margin: "5%"}}>
-              <div>
-                <Typography color="primary" variant={"h6"}>
-                  <Box fontWeight={"fontWeightBold"}>Question {idx + 1}:</Box>
-                </Typography>
-                <div> 
+              (<Grid item component={Card} xs={12} sm={12} md={12} className={"card"}>
+                <CardContent>
+                  <Typography color="primary" variant={"h6"}>
+                    <Box fontWeight={"fontWeightBold"}>Question {idx + 1}:</Box>
+                  </Typography>
+                </CardContent> 
+                <CardActions>
                   <TextField id='fields'key={idx} label="Question" 
                             onChange={(evt: any) => this.onQuestionChange(evt, idx)} 
                             value={val.prompts} 
                             color='primary' 
                             size ='small'
                   />
+                  <div style={{flexGrow: 1}}/>
                   <Button style={{marginLeft: "50px"}}  onClick={() => this.addChoice(idx)} variant="outlined" color="primary">Add Choice</Button>
                   <Button style={{margin: "10px"}} onClick={() => this.deleteChoice(idx)} variant="outlined" color="primary">Delete Choice</Button>              
-                </div>
-                <div>
-                  <div>
+                </CardActions>
+                <CardActions>
                   {val.choices.map((choice: string, ind: number) => 
                                                     (   
                                                           <TextField id="choice"
@@ -60,7 +61,8 @@ export class MCForm extends Form {
                                                         )
                                                     )
                   }
-                  </div>
+                </CardActions>
+                <CardActions>
                   <TextField label={"Correct Answer"}
                             onChange={(evt) => this.onAnswerChange(evt, idx)}
                             color={"primary"}
@@ -69,12 +71,10 @@ export class MCForm extends Form {
                             select>
                               {this.state.questions[idx].choices.map((option:string, num:number) => <MenuItem value={this.state.questions[idx].choices[num]}>{`Choice ${num+1}`}</MenuItem>)}
                   </TextField>
-                </div>
-              </div>
-            </div>)
+                </CardActions>
+              </Grid>)
             )}
-            {this.renderButtons()}
-          </Container>
+          </Grid>
     )
   }
 

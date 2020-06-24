@@ -1,7 +1,8 @@
 import React from 'react';
-import {TextField, Container, Paper, Typography, Box} from '@material-ui/core';
+import {TextField, Grid, Card, CardContent, CardActions, Typography, Box} from '@material-ui/core';
 import Form from './Form';
 import './Form.css';
+import '../MainPage/QuizSelector.css'
 
 
 export class SAForm extends Form {
@@ -25,22 +26,23 @@ export class SAForm extends Form {
     let { questions } = this.state;
     
     return (
-      <Container component={Paper}>
-        <div>
-          {this.title()}
+      <Grid container spacing={3}>
+        {this.topCard()}
           {questions.map((val, ind) => 
-            (<div style={{margin: "5%"}}>
-              <Typography variant={"h6"} color={"primary"} style={{marginBottom: "10px"}}>
-                <Box fontWeight={"fontWeightBold"}>Question {ind + 1}:</Box>
+            (<Grid item component={Card} className={"card"} xs={12} sm={12} md={12}>
+              <CardContent>
+                <Typography variant={"h6"} color={"primary"}>
+                  <Box fontWeight={"fontWeightBold"}>Question {ind + 1}:</Box>
                 </Typography>
-              <div > 
+              </CardContent>
+              <CardActions > 
                 <TextField key={ind} 
                            label="Prompt" 
                            onChange={(evt: any) => this.onQuestionChange(evt, ind)} 
                            value={val.prompts} color='primary' 
                            size ='small'
                            style={{minWidth: "400px"}}
-                           className="padRight"
+                           className="padded"
                 />
                 <TextField 
                             key={"second" + ind} 
@@ -53,13 +55,11 @@ export class SAForm extends Form {
                             
                 />
               
-              </div>
-            </div>)
+              </CardActions>
+            </Grid>)
           )}
-          {this.renderButtons()}
-        </div>
-      </Container>
-    )
+      </Grid>
+    );
   }
 
 }

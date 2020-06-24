@@ -91,7 +91,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                         </Grid>
                       </div>)
                     : <div>
-                        <div>
+                        <div style={{margin: "10px"}}>
                           <Typography variant={"h5"} color={"primary"}>Make a New {QUIZ_TYPES[QUIZ_INDICES.get(this.state.quizType) as number].longName} Quiz:</Typography>
                         </div>
                       {forms[QUIZ_INDICES.get(this.state.quizType) as number]}
