@@ -36,23 +36,11 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     console.log(this.props.info);
     let Qs: any[] = this.props.info.questions;
 
-    let ans;
-    let quizIndex : Map<string, number> | undefined = undefined;
-    if (this.props.megaQs) { // if mega quiz, the get array of answers for each quiz
-      ans = [];
-      quizIndex = new Map<string, number>();
-      for (let i = 0; i < this.props.megaQs.length; i++) {
-        ans.push(this.populateAnswers(this.props.megaQs[i].questions));
-        quizIndex.set(this.props.megaQs[i].name, i);
-      }
-    } else {
-      ans = this.populateAnswers(this.props.info.questions);
-    }
-
-
+    let ans = this.populateAnswers(this.props.info.questions);
+  
     this.state = {
       currentQuestion: 1,
-      quizNameToMegaIndex: quizIndex,
+      quizNameToMegaIndex: undefined,
       quiz: this.props.info,
       answers: ans,
       resultsPage: false,
@@ -182,20 +170,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     let count = Qs.length;
     console.log(this.props.info);
     // Case that the answer can be captured with one string
-    let result : (string | string[])[]= [];
-    let quizSingle : boolean = SINGLE.includes(this.props.info.type);
-    for (let i = 0; i < count; i++) {
-      let singleCheck : boolean = Qs[i].questionType === this.props.info.type ? quizSingle : SINGLE.includes(Qs[i].questionType);
-      if (singleCheck) {
-        result[i] = "";
-      } else {
-        result[i] = [];
-        for (let j = 0; j < Qs[i].prompts.length; j++) {
-          (result[i] as string[]).push("");
-        }
-      }
-    }
-    /*if (SINGLE.includes(this.props.info.type)){
+    if (SINGLE.includes(this.props.info.type)){
       var singleString : string[] = new Array<string>(count);
       for (var i = 0; i< singleString.length; i++){
         singleString[i] = "";
@@ -212,8 +187,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
         }
       }
       return multiString;
-    }*/
-    return result;
+    }
   }
 
   renderButtons = () =>{
