@@ -21,7 +21,7 @@ interface HandlerProps {
 interface HandlerState {
   currentQuestion : number; // Current questions number
   quiz: QuizInfo; // Identification information of the quiz
-  quizNameToMegaIndex: Map<string, number> | undefined;
+  indicesMap: Map<any, [number, number]> | undefined; // maps a question to its index within the parent and the parent's index
   answers: any[]; // Current answer responses
   resultsPage: boolean; // True if showing results page
   problemsPerPage: number;
@@ -34,15 +34,33 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   constructor(props : any){
     super(props);
     console.log(this.props.info);
-    let Qs: any[] = this.props.info.questions;
 
-    let ans = this.populateAnswers(this.props.info.questions);
+    let result;
+    let map: Map<any, [number, number]> | undefined = undefined;
+
+    if (this.props.megaQs) {
+      map = new Map<any, [number, number]>();
+      result = [];
+      for (let i = 0; i < this.props.megaQs.length; i++) {
+        for (let j = 0; j < this.props.megaQs[i].questions.length; j++) {
+          map.set(this.props.megaQs[i].questions[j], [i, j]); //[parent's index, index within parent]
+          this.props.megaQs[i].questions[j].questionType = this.props.megaQs[i].type;
+        }
+        result.push(this.populateAnswers(this.props.megaQs[i]));
+      }
+    } else {
+      for (let i = 0; i < this.props.info.questions.length; i++) {
+        this.props.info.questions[i].questionType = this.props.info.type;
+      }
+      result = this.populateAnswers(this.props.info);
+    }
+
   
     this.state = {
       currentQuestion: 1,
-      quizNameToMegaIndex: undefined,
+      indicesMap: map,
       quiz: this.props.info,
-      answers: ans,
+      answers: result,
       resultsPage: false,
       problemsPerPage: -1,
       lastAttempt: -1,
@@ -94,11 +112,20 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   }
 
   // generates props for question at index
-  quizProps = (index: number) =>{
+  quizProps = (index: number) => {
+    let response;
+    if (this.props.megaQs) {
+      let question = this.state.quiz.questions[index];
+      let indices : [number, number] = this.state.indicesMap!.get(question)!;
+      console.log(indices);
+      response = this.state.answers[indices[0]][indices[1]];
+    } else {
+      response = this.state.answers[index];
+    }
     return {
       question: this.state.quiz.questions[index],
       changeAnswer: (ans: string| string[]) => this.updateAnswer(index, ans),
-      answer: this.state.answers[index],
+      answer: response,
       index: index + 1
     }
   }
@@ -115,9 +142,9 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
 
   renderQuestions = () =>{
     var startIndex = this.state.currentQuestion -1;
-    var endIndex = Math.min(startIndex + this.state.problemsPerPage, this.state.answers.length);
-    if (this.state.problemsPerPage === -1){
-      endIndex = this.state.answers.length;
+    var endIndex = Math.min(startIndex + this.state.problemsPerPage, this.state.quiz.questions.length);
+    if (this.state.problemsPerPage === -1) {
+      endIndex = this.state.quiz.questions.length;
     }
 
     var indices = []
@@ -135,7 +162,13 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   // change answer to ans for current question
   updateAnswer = (index:number, ans: string | string[]) => {
     const newAnswers = this.state.answers.slice();
-    newAnswers[index] = ans;
+    if (this.props.megaQs) {
+      let question = this.state.quiz.questions[index];
+      let indices : [number, number] = this.state.indicesMap!.get(question)!;
+      newAnswers[indices[0]][indices[1]] = ans;
+    } else {
+      newAnswers[index] = ans;
+    }
     this.setState({
       answers: newAnswers,
     });
@@ -153,7 +186,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
 
   // Create new quiz with newQs (intended include subset of questions from current Qs)
   shrinkQs(newQs: any[]) {
-    const newAns: any[] = this.populateAnswers(newQs);
+    const newAns: any[] = this.populateAnswers(new QuizInfo("", this.props.info.type, "", newQs));
     const id : string = (newQs.length === this.state.answers.length) ? this.state.quiz.uid : "";
     const name : string = (newQs.length === this.state.answers.length) ?
           this.state.quiz.name : this.state.quiz.name +" Modified";
@@ -166,11 +199,12 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   }
 
   // returns "Zeroed Out" answers field based on given Qs
-  populateAnswers(Qs: any[])  {
+  populateAnswers(quiz: QuizInfo)  {
+    let Qs: any[] = quiz.questions;
     let count = Qs.length;
-    console.log(this.props.info);
+
     // Case that the answer can be captured with one string
-    if (SINGLE.includes(this.props.info.type)){
+    if (SINGLE.includes(quiz.type)){
       var singleString : string[] = new Array<string>(count);
       for (var i = 0; i< singleString.length; i++){
         singleString[i] = "";

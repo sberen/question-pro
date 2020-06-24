@@ -17,6 +17,7 @@ export function Results(quiz: QuizInfo, responses: string[],
   } else {
     display = MultiResults(quiz, responses);
   }
+  
   console.log("here");
 
   let grade : number = Math.round(100 * ((responses.length - display[1].length) / responses.length));
