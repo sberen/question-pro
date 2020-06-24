@@ -7,7 +7,7 @@ import { MultipleChoice } from './QuestionHandler/MultipleChoice';
 import { MultiShortAnswers } from './QuestionHandler/MultiShortAnswer';
 import { LongAnswer } from './QuestionHandler/LongAnswer';
 import { Button, Grid, Card, Typography, Box, CardActions, CardContent } from '@material-ui/core';
-import '../MainPage/QuizSelector.css'; 
+import '../MainPage/QuizSelector.css';
 // import * as quizes from '../../resources/Questions.json';
 
 
@@ -31,10 +31,10 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     super(props);
     console.log(this.props.info);
     let Qs: any[] = this.props.info.questions;
-  
+
 
     var ans = this.populateAnswers(Qs);
-  
+
 
     this.state = {
       currentQuestion: 1,
@@ -52,25 +52,25 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     if (perPage === -1){
       perPage= this.state.quiz.questions.length;
     }
-    
+
     return !this.state.resultsPage ?
                         (<Grid container spacing={3}>
                           <Grid item component={Card} xs={12} md={12} sm={12} className={"card"}>
                             <CardContent>
                               <Typography color="primary" variant='h5'>
-                                <Box>{this.props.info.name}</Box>
+                                <Box>{this.state.quiz.name}</Box>
                               </Typography>
-                              {this.state.problemsPerPage !== -1 ? 
+                              {this.state.problemsPerPage !== -1 ?
                               <Typography component={"div"} variant='body1'>
                                 <Box fontWeight={"fontWeightBold"}>
                                   Page: {Math.ceil(cur/perPage)} / {Math.ceil(this.state.quiz.questions.length/perPage)}
-                                </Box> 
+                                </Box>
                               </Typography> : <span></span>}
                             </CardContent>
                             <CardActions>
                               {this.renderButtons()}
                             </CardActions>
-                              </Grid> 
+                              </Grid>
                           {this.renderQuestions()}
                         </Grid>)
                         : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs), () => this.props.onBack())
@@ -125,7 +125,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     });
   }
 
-  // Processing request to change question. 
+  // Processing request to change question.
   // Positive num indicates move forward by given value and negative values for going back
   changeQuestion(num: number) {
     let stillGoing: boolean = (this.state.currentQuestion + num) <= this.state.quiz.questions.length;
@@ -139,9 +139,11 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   shrinkQs(newQs: any[]) {
     const newAns: any[] = this.populateAnswers(newQs);
     const id : string = (newQs.length === this.state.answers.length) ? this.state.quiz.uid : "";
+    const name : string = (newQs.length === this.state.answers.length) ?
+          this.state.quiz.name : this.state.quiz.name +" Modified";
     this.setState({
-      currentQuestion: 1, 
-      quiz: new QuizInfo(this.state.quiz.name, this.state.quiz.type, id, newQs),
+      currentQuestion: 1,
+      quiz: new QuizInfo(name, this.state.quiz.type, id, newQs),
       answers: newAns,
       resultsPage: false
     });
@@ -158,7 +160,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
         singleString[i] = "";
       }
       return singleString;
-    } 
+    }
     // Case that the answer has multiple components and need to be represented as an array
     else {
       var multiString = new Array<string[]>(count);
@@ -176,7 +178,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     const result : any[] = [];
     var qPerPage = this.state.problemsPerPage;
     var isFirst: boolean = this.state.currentQuestion === 1;
-    var isLast: boolean = (qPerPage === -1 || 
+    var isLast: boolean = (qPerPage === -1 ||
       (this.state.currentQuestion + qPerPage) > this.state.quiz.questions.length);
     var secondButton:String;
     if(isLast){

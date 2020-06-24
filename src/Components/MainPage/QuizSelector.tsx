@@ -51,7 +51,6 @@ export class QuizSelector extends React.Component<SelectorProps, {}> {
   }
 
   async selectQuiz(quiz : string){
-    console.log(quiz);
     let object = await firestore.collection("quizzes").doc(quiz).get();
     let qz = new QuizInfo(object.get("title"), object.get("type"), quiz, object.get("questions"));
     this.props.changeQuiz(qz);
