@@ -1,7 +1,9 @@
 import React from 'react';
-import { FormControl, RadioGroup, FormControlLabel, Radio, Typography, Box } from '@material-ui/core';
+import { FormControl, RadioGroup, FormControlLabel, Radio, 
+        Typography, Box, Card, Grid, CardContent, CardActions} from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
 import './MultipleChoice.css';
+import '../../MainPage/QuizSelector.css';
 
 export class MultipleChoice extends QuestionHandler {
 
@@ -11,19 +13,23 @@ export class MultipleChoice extends QuestionHandler {
             <FormControlLabel value={item} control={<Radio />} label={item} color ='primary'/>
         );
         return (
-            <div>
-            <Typography variant='h6' color='primary'>
-                <Box fontWeight={"fontWeightBold"}>Question {this.props.index}:</Box>
-            </Typography>
-            <Typography variant='body1'>
-                    <Box>{this.props.question.prompts}</Box>
-            </Typography>
-            <FormControl component="fieldset" style={{paddingLeft: "3%"}}>
-                <RadioGroup aria-label="question" name="question1" value={this.props.answer} onChange={this.onInputChange} style={{marginLeft: "10px"}}>
-                    {options}
-                </RadioGroup>
-            </FormControl>
-            </div>
+            <Grid item component={Card} xs={12} md={12} sm={12} className={"card"}>
+                <CardContent>
+                    <Typography variant='h6' color='primary'>
+                        <Box fontWeight={"fontWeightBold"}>Question {this.props.index}:</Box>
+                    </Typography>
+                    <Typography variant='body1'>
+                            <Box>{this.props.question.prompts}</Box>
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <FormControl component="fieldset" style={{paddingLeft: "3%"}}>
+                        <RadioGroup aria-label="question" name="question1" value={this.props.answer} onChange={this.onInputChange} style={{marginLeft: "10px"}}>
+                            {options}
+                        </RadioGroup>
+                    </FormControl>
+                </CardActions>
+            </Grid>
         );
     }
 
@@ -46,10 +52,7 @@ export class MultipleChoice extends QuestionHandler {
     Answer Choices
     */
     render() {
-        return (
-        <div style={{margin: "10px"}}>
-            {this.renderChoices()}
-        </div>);
+        return this.renderChoices();
     }
 }
 

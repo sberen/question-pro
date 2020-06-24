@@ -1,18 +1,19 @@
 import React from 'react';
-import { TextField, Typography, Box } from '@material-ui/core';
+import { TextField, Typography, Box, Grid, CardContent, CardActions, Card } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
+import '../../MainPage/QuizSelector.css';
 
 export class MultiShortAnswers extends QuestionHandler {
 
     // Saves answer string[] by replacing value at index with event.target.value
-    changeAnswer= (event: any, index: number)=>{
+    changeAnswer = (event: any, index: number)=> {
         const newAnswers  = (this.props.answer as string[]).slice();
         newAnswers[index] = event.target.value;
         this.props.changeAnswer(newAnswers);
     }
 
     // Renders prompts and answer box pairs 
-    renderQuestions= () =>{
+    renderQuestions= () => {
         
         let prompts = this.props.question.prompts; // list of prompts for the question
         let answers = this.props.answer; // list of current answer for display purposes
@@ -38,12 +39,7 @@ export class MultiShortAnswers extends QuestionHandler {
             </div>
         );
         
-        return (
-            <div>
-                {questions}
-            </div>
-            
-        );
+        return <div>{questions}</div>;
 
     }
 
@@ -56,16 +52,18 @@ export class MultiShortAnswers extends QuestionHandler {
     render() {
         
         return (
-        <div>
-            <Typography variant="h6" color="primary">
-                <Box fontWeight={"fontWeightBold"}>Question {this.props.index}:</Box>
-            </Typography>
-            <div>
+        <Grid item component={Card} xs={12} md={12} sm={12} className={"card"}>
+            <CardContent>
+                <Typography variant="h6" color="primary">
+                    <Box fontWeight={"fontWeightBold"}>Question {this.props.index}:</Box>
+                </Typography>
                 <Typography variant='body1'>
                     <Box>{this.props.question.title}</Box>
                 </Typography>
+            </CardContent>
+            <CardActions>
                 {this.renderQuestions()}
-            </div> 
-        </div>);
+            </CardActions> 
+        </Grid>);
     }
 }
