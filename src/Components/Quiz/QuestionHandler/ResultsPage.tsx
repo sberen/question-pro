@@ -1,27 +1,19 @@
 import React from 'react';
 import { Button, Card, Grid, Typography, Box, CardContent, CardActions } from '@material-ui/core';
-import { SINGLE } from '../QuizTypes';
 import CountUp from 'react-countup';
 import {QuizInfo} from '../QuizInfo';
 import './ResultsPage.css'
-import { firestore, auth } from '../../../firebase';
-import firebase from 'firebase/app';
+import { QuizResult } from '../QuizResult';
 
 
-export function Results(quiz: QuizInfo, responses: string[],
-  shrinkQs: (Qs: any[]) => void, onBack: () => any, lastAttempt: number,
-  wrongQCnt: number[], update: (lastAttempt : number, wrongQCnt: number[]) => void) {
-  let display : [any, any[], number[]];
-  if(SINGLE.includes(quiz.type)) {
-    display = SingleResults(quiz, responses);
-  } else {
-    display = MultiResults(quiz, responses);
-  }
-  
-  console.log("here");
+export function Results(quiz: QuizInfo, responses: any[] ,result: QuizResult | undefined,
+  shrinkQs: (Qs: any[]) => void, onBack: () => any) {
+  let display: any = (result) ? result.display : undefined;
+  let incorrectQuestions: any = (result) ? result.incorrectQuestions : undefined;
 
-  let grade : number = Math.round(100 * ((responses.length - display[1].length) / responses.length));
+  let grade : number = (result) ? Math.round(100 * ((responses.length - incorrectQuestions.length) / responses.length)) : 0;
   return (
+    (!result) ? (<div> loading</div>) : (
       <Grid container spacing={3}>
         <Grid item component={Card} xs={12} md={12} sm={12} className={grade >= 80 ? "goodTitle" : "badTitle"}>
           <CardContent>
@@ -30,159 +22,31 @@ export function Results(quiz: QuizInfo, responses: string[],
             </Typography>
           </CardContent>
           <CardActions>
-          {getButtons(display[1], shrinkQs, onBack, quiz, display[2], lastAttempt, wrongQCnt, update)}
+          {getButtons(incorrectQuestions, shrinkQs, onBack, quiz)}
           </CardActions>
         </Grid>
-        {display[0]}
-      </Grid>
+        {display}
+      </Grid>)
   )
 }
 
 
-function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[], number[]] {
-    const display: any[] = [];
-    const incorrect: any[] = [];
-    const incorrectIndex: number[] = [];
-    for (let i = 1; i <= quiz.questions.length; i++) {
-      let correct : boolean = responses[i-1].trim() === quiz.questions[i-1].answer;
-      if (!correct) {
-        incorrect.push(quiz.questions[i-1]);
-        incorrectIndex.push(i-1);
-      }
-      display.push(
-        <Grid item component={Card} xs={12} sm={12} md={12} className={correct ? "correctCard" : "incorrectCard"}>
-          <CardContent>
-            <Typography variant='h6' color={"primary"}>
-              <Box fontWeight={"fontWeightBold"}>Question {i}: {quiz.questions[i-1].prompts}</Box>
-            </Typography>
-            <Typography variant='h6' className={correct ? "correctText" : "incorrectText"}>
-              <Box fontWeight={"fontWeightBold"}>{correct ? "Correct!" : "Incorrect"}</Box>
-            </Typography>
-          </CardContent>
-          <CardContent>
-            <Typography>{`Your Answer: ${responses[i-1]}`}</Typography>
-            <Typography className="correctText">
-              {!correct ? `Correct Answer: ${quiz.questions[i-1].answer}` : 'Correct!'}
-            </Typography>
-          </CardContent>
-        </Grid>
-      )
-    }
-
-    return [display , incorrect, incorrectIndex];
-  }
-
-  function MultiResults(quiz: QuizInfo, responses: string[]): [any, any[], number[]] {
-    const display = [];
-    const incorrect = [];
-    const incorrectIndex : number[] = [];
-
-    for(let quest = 0; quest < responses.length; quest++) {
-      const question: any[] = [];
-      const incorrectPrompts: any[] = [];
-      let numIncorrectPrompts: number = 0;
-      for(let prompt = 0; prompt < responses[quest].length; prompt++) {
-        let correct: boolean = quiz.questions[quest].answer[prompt] === responses[quest][prompt];
-        if (!correct) {
-          numIncorrectPrompts++;
-          incorrectPrompts.push(<Box>
-            {quiz.questions[quest].prompts[prompt]}: {quiz.questions[quest].answer[prompt]}
-          </Box>);
-        }
-
-        question.push(<Box>
-          {quiz.questions[quest].prompts[prompt]}: {responses[quest][prompt]}
-        </Box>);
-
-      }
-
-      if (numIncorrectPrompts !== 0) {
-        incorrect.push(quiz.questions[quest]);
-        incorrectIndex.push(quest);
-      }
-
-      let numCorrectPrompts: number = responses[quest].length - numIncorrectPrompts;
-
-      display.push(
-        <Grid item component={Card} xs={12} sm={12} md={12} className={numIncorrectPrompts === 0  ? "correctCard" : "incorrectCard"}>
-          <CardContent>
-            <Typography variant='h6' color={"primary"}>
-              <Box fontWeight={"fontWeightBold"}>Question {quest+1}: {quiz.questions[quest].title}</Box>
-            </Typography>
-            <Typography variant='h6' className={numIncorrectPrompts === 0 ? "correctText" : "incorrectText"}>
-              <Box fontWeight={"fontWeightBold"}>
-                {numIncorrectPrompts === 0 ? "Correct!" : `Incorrect: ${numCorrectPrompts}/${responses[quest].length} Prompts Correct`}
-              </Box>
-            </Typography>
-          </CardContent>
-          <CardContent>
-            <Typography className= {numIncorrectPrompts === 0 ? "correctText" : "incorrectText"}>
-              <Box fontWeight={"fontWeightBold"}>Your Answer:</Box>
-            </Typography>
-            <Typography style={{marginLeft: "4%"}} className={numIncorrectPrompts === 0 ? "correctText" : "incorrectText"}>
-              {question}
-            </Typography>
-            </CardContent>
-            <CardContent>
-            <Typography className={"correctText"}>
-              <Box fontWeight={"fontWeightBold"}>{numIncorrectPrompts !== 0 ? `Correct Answer:` : 'Correct!'}</Box>
-            </Typography>
-            {numIncorrectPrompts !== 0 ? <Typography className={"correctText"} style={{marginLeft: "4%"}}>{incorrectPrompts}</Typography> : <span></span>}
-          </CardContent>
-        </Grid>
-      );
-
-    }
-    return [display, incorrect, incorrectIndex];
-  }
-
-function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void, onBack: () => void,
-                   quiz: QuizInfo, incorrectIndex: number[], lastAttempt: number,
-                   wrongQCnt: number[], update: (lastAttempt : number, wrongQCnt: number[]) => void) {
+function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void, onBack: () => void, quiz: QuizInfo) {
   const buttons: any[] = [];
   if (quiz.uid !== ""){
     buttons.push(
-      <Button onClick={() => {shrinkQs(quiz.questions);
-        uploadResults(quiz, incorrectIndex, lastAttempt, wrongQCnt, update);}}
+      <Button onClick={() => {shrinkQs(quiz.questions);}}
         variant="outlined" color="primary">Retake the Test</Button>
     );
   }
 
   if (incorrect.length !== 0) buttons.push(
-    <Button onClick={() => {shrinkQs(incorrect);
-      uploadResults(quiz, incorrectIndex, lastAttempt, wrongQCnt, update);}}
+    <Button onClick={() => {shrinkQs(incorrect);}}
       variant="outlined" color="primary">Test Incorrect Answers</Button>
   );
 
-  buttons.push(<Button onClick={() => {onBack();
-    uploadResults(quiz, incorrectIndex, lastAttempt, wrongQCnt, update);}}
+  buttons.push(<Button onClick={() => {onBack();}}
     variant="outlined" color="primary">Home</Button>);
 
   return buttons;
-}
-
-function uploadResults(quiz: QuizInfo, incorrectIndex: number[], lastAttempt : number,
-  wrongQCnt: number[], update: (lastAttempt : number, wrongQCnt: number[]) => void){
-  //firebase.database.ServerValue.TIMESTAMP
-
-  if (quiz.uid !== ""){
-    let cur = (lastAttempt >=4) ? 0: lastAttempt +1;
-    let curQCnt = wrongQCnt;
-    for (let i = 0; i < incorrectIndex.length; i++){
-      curQCnt[incorrectIndex[i]] += 1;
-    }
-    const quizID = quiz.uid;
-    firestore.collection("users").doc(auth.currentUser!.uid).update({
-      [`quizResults.${quizID}.overall.attemptCnt`] : firebase.firestore.FieldValue.increment(1),
-      [`quizResults.${quizID}.overall.wrongCnt`] : firebase.firestore.FieldValue.increment(incorrectIndex.length),
-      [`quizResults.${quizID}.lastAttempt`] :cur,
-      [`quizResults.${quizID}.attempts.` + cur.toString()] :{
-        time : firebase.firestore.FieldValue.serverTimestamp(),
-        incorrectIndex : incorrectIndex
-      },
-      [`quizResults.${quizID}.wrongQCnt`] :curQCnt
-    });
-    update(cur, curQCnt);
-  }
-
 }

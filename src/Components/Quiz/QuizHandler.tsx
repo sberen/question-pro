@@ -8,7 +8,7 @@ import { MultiShortAnswers } from './QuestionHandler/MultiShortAnswer';
 import { LongAnswer } from './QuestionHandler/LongAnswer';
 import { Button, Grid, Card, Typography, Box, CardActions, CardContent } from '@material-ui/core';
 import '../MainPage/QuizSelector.css';
-import { firestore, auth } from '../../firebase';
+import { QuizResult } from './QuizResult';
 // import * as quizes from '../../resources/Questions.json';
 
 
@@ -25,8 +25,7 @@ interface HandlerState {
   answers: any[]; // Current answer responses
   resultsPage: boolean; // True if showing results page
   problemsPerPage: number;
-  lastAttempt: number;
-  wrongQCnt: number[];
+  result : QuizResult | undefined;
 }
 
 export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
@@ -56,7 +55,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       result = this.populateAnswers(this.props.info);
     }
 
-  
+
     this.state = {
       currentQuestion: 1,
       indicesMap: map,
@@ -64,20 +63,10 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       answers: result,
       resultsPage: false,
       problemsPerPage: -1,
-      lastAttempt: -1,
-      wrongQCnt: []
+      result: undefined
     }
   }
 
-  async componentDidMount()  {
-    let user = await firestore.collection("users").doc(auth.currentUser!.uid).get();
-    let last = user.get('quizResults.' + this.state.quiz.uid +'.lastAttempt');
-    let wrong = user.get('quizResults.' + this.state.quiz.uid +'.wrongQCnt')
-    this.setState({
-      lastAttempt: last,
-      wrongQCnt: wrong
-    });
-  }
 
   render() {
     let cur = this.state.currentQuestion;
@@ -106,13 +95,12 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
                               </Grid>
                           {this.renderQuestions()}
                         </Grid>)
-                        : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs),
-                        () => this.props.onBack(), this.state.lastAttempt, this.state.wrongQCnt,
-                        (lastAttempt : number, wrongQCnt: number[]) => this.updateStats(lastAttempt, wrongQCnt))
+                        : Results(this.state.quiz, this.state.answers, this.state.result, (Qs: any[]) => this.shrinkQs(Qs),
+                        () => this.props.onBack())
     ;
   }
 
-  // shuffles the questions in place, only done for 
+  // shuffles the questions in place, only done for
   // mega quizzes.
   shuffleQs(questions: any[]) {
     for (var i = questions.length - 1; i > 0; i--) {
@@ -189,10 +177,15 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
 
   // Processing request to change question.
   // Positive num indicates move forward by given value and negative values for going back
-  changeQuestion(num: number) {
+  async changeQuestion(num: number) {
     let stillGoing: boolean = (this.state.currentQuestion + num) <= this.state.quiz.questions.length;
     if (this.state.problemsPerPage === -1){
       stillGoing = false;
+      let temp : QuizResult |undefined = undefined;
+      await QuizResult.build(this.state.quiz, this.state.answers).then(function(info) {
+        temp = info;
+      });
+      this.setState({result : temp});
     }
     this.setState({currentQuestion : this.state.currentQuestion + num, resultsPage: !stillGoing});
   }
@@ -262,13 +255,5 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
         {secondButton}</Button>
     )
     return result;
-  }
-
-  // updates the statistics for this quiz
-  updateStats = (lastAttempt : number, wrongQCnt: number[]) =>{
-    this.setState({
-      lastAttempt: lastAttempt,
-      wrongQCnt: wrongQCnt
-    });
   }
 }
