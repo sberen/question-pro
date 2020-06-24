@@ -13,8 +13,9 @@ export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[
   if(SINGLE.includes(quiz.type)) {
     display = SingleResults(quiz, responses);
   } else {
-    display = MultiResults(quiz, responses); 
+    display = MultiResults(quiz, responses);
   }
+  console.log("here");
 
   let grade : number = Math.round(100 * ((responses.length - display[1].length) / responses.length));
   return (
@@ -68,7 +69,6 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
       )
     }
 
-    
     uploadResults(quiz, incorrectIndex);
     return [display , incorrect]
   }
@@ -92,7 +92,7 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
         }
 
         question.push(<Box>
-          {quiz.questions[quest].prompts[prompt]}: {responses[quest][prompt]} 
+          {quiz.questions[quest].prompts[prompt]}: {responses[quest][prompt]}
         </Box>);
 
       }
@@ -169,6 +169,5 @@ function uploadResults(quiz: QuizInfo, incorrectIndex: number[]){
       //       })
     });
   }
-  
 
 }

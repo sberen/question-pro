@@ -51,7 +51,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     if (perPage === -1){
       perPage= this.state.quiz.questions.length;
     }
-    
+    console.log(this.state);
     return (
       <div>
         {!this.state.resultsPage ?
