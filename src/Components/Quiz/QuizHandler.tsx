@@ -138,9 +138,10 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   // Create new quiz with newQs (intended include subset of questions from current Qs)
   shrinkQs(newQs: any[]) {
     const newAns: any[] = this.populateAnswers(newQs);
+    const id : string = (newQs.length === this.state.answers.length) ? this.state.quiz.uid : "";
     this.setState({
       currentQuestion: 1, 
-      quiz: new QuizInfo(this.state.quiz.name, this.state.quiz.type, this.state.quiz.uid, newQs),
+      quiz: new QuizInfo(this.state.quiz.name, this.state.quiz.type, id, newQs),
       answers: newAns,
       resultsPage: false
     });

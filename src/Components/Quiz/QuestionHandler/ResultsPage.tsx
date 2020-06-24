@@ -4,6 +4,8 @@ import { SINGLE } from '../QuizTypes';
 import CountUp from 'react-countup';
 import {QuizInfo} from '../QuizInfo';
 import './ResultsPage.css'
+import { firestore, auth } from '../../../firebase';
+import firebase from 'firebase/app';
 
 
 export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[]) => void, onBack: () => any) {
@@ -36,6 +38,7 @@ export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[
 function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
     const display: any[] = [];
     const incorrect: any[] = [];
+    const incorrectIndex: number[] = [];
     let numCorrect: number = 0;
     for (let i = 1; i <= quiz.questions.length; i++) {
       let correct : boolean = responses[i-1].trim() === quiz.questions[i-1].answer;
@@ -43,6 +46,7 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
          numCorrect++;
       } else {
         incorrect.push(quiz.questions[i-1]);
+        incorrectIndex.push(i-1);
       }
       display.push(
         <Grid item component={Card} xs={12} sm={12} md={12} className={correct ? "correctCard" : "incorrectCard"}>
@@ -65,13 +69,14 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
     }
 
     
-
+    uploadResults(quiz, incorrectIndex);
     return [display , incorrect]
   }
 
   function MultiResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
     const display = [];
     const incorrect = [];
+    const incorrectIndex : number[] = [];
     let numCorrect: number = 0;
     for(let quest = 0; quest < responses.length; quest++) {
       const question: any[] = [];
@@ -96,6 +101,7 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
         numCorrect++;
       } else {
         incorrect.push(quiz.questions[quest]);
+        incorrectIndex.push(quest);
       }
 
       /*display.push(<h5>
@@ -137,14 +143,32 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
       );
 
     }
-
+    uploadResults(quiz, incorrectIndex);
     return [display, incorrect];
   }
 
-  function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void, onBack: () => void) {
-    const buttons: any[] = [];
-    if (incorrect.length !== 0) buttons.push(<Button onClick={() => shrinkQs(incorrect)}  variant="outlined" color="primary">Test Incorrect Answers</Button>)
-    buttons.push(<Button onClick={() => onBack()}  variant="outlined" color="primary">Home</Button>);
+function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void, onBack: () => void) {
+  const buttons: any[] = [];
+  if (incorrect.length !== 0) buttons.push(<Button onClick={() => shrinkQs(incorrect)}  variant="outlined" color="primary">Test Incorrect Answers</Button>)
+  buttons.push(<Button onClick={() => onBack()}  variant="outlined" color="primary">Home</Button>);
 
-    return buttons;
+  return buttons;
+}
+
+function uploadResults(quiz: QuizInfo, incorrectIndex: number[]){
+  //firebase.database.ServerValue.TIMESTAMP
+
+  if (quiz.uid !== ""){
+    const quizID = quiz.uid;
+    firestore.collection("users").doc(auth.currentUser!.uid).update({
+      [`quizResults.${quizID}.overall.attemptCnt`] : firebase.firestore.FieldValue.increment(1),
+      [`quizResults.${quizID}.overall.wrongCnt`] : firebase.firestore.FieldValue.increment(incorrectIndex.length),
+      // [`quizResults.${quizID}.attempts`] :firebase.firestore.FieldValue.arrayUnion({
+      //         ['time'] : firebase.firestore.FieldValue.serverTimestamp(),
+      //         ['wrongIndices']: incorrectIndex
+      //       })
+    });
   }
+  
+
+}

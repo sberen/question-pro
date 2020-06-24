@@ -94,7 +94,16 @@ export default class Form extends React.Component<FormProps, FormState> {
 
     firestore.collection("users").doc(auth.currentUser!.uid).update({
       [key] : [this.state.title, this.props.quizType]
-    })
+    });
+
+    const wrongCnt: number[] = new Array(qs.length).fill(0);
+
+    firestore.collection("users").doc(auth.currentUser!.uid).update({
+      [`quizResults.${quizID}.overall.attemptCnt`] : 0,
+      [`quizResults.${quizID}.overall.wrongCnt`] : 0,
+      [`quizResults.${quizID}.attempts`] :[],
+      [`quizResults.${quizID}.wrongQCnt`] :wrongCnt
+    });
 
     this.props.afterSubmit();
   }
