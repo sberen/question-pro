@@ -4,6 +4,7 @@ import DeleteIcon  from '@material-ui/icons/Delete';
 import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import InfoIcon from '@material-ui/icons/Info';
 import './QuizSelector.css';
 import { QuizInfo } from '../Quiz/QuizInfo';
 import { QUIZ_INDICES, QUIZ_TYPES } from '../Quiz/QuizTypes';
@@ -17,6 +18,7 @@ interface SelectorProps {
   removeQuiz(id : string) : void;
   setMega: (qz: QuizInfo, arr: QuizInfo[]) => void;
   quizzes: QuizInfoMini[];
+  getData: (qz: QuizInfoMini) => void;
 }
 
 interface SelectorState {
@@ -45,7 +47,9 @@ export class QuizSelector extends React.Component<SelectorProps, SelectorState> 
             <IconButton aria-label="Take Quiz" style={{ color: "#808080"}} onClick={() => this.selectQuiz(quiz.uid)}>
               <FormatListNumberedIcon />
             </IconButton>
-            <div style={{flexGrow: 1}}/>
+            <IconButton aria-label="to Stats" style={{ color: "#808080"}} onClick={() => this.props.getData(quiz)}>
+              <InfoIcon />
+            </IconButton>
             {this.state.groupQuizzes.includes(quiz) ? 
                                                         <IconButton aria-label="remove" 
                                                                     style={{ color: "#808080"}} 
@@ -71,9 +75,7 @@ export class QuizSelector extends React.Component<SelectorProps, SelectorState> 
           <CardContent>
             <Typography variant='h6' color={'primary'}>
               <Box>
-                {this.state.groupQuizzes.length ?
-                                                  "Mega Quiz Includes:"
-                                                : 'Take a "Mega Quiz"'}
+                {this.state.groupQuizzes.length ? "Mega Quiz Includes:" : 'Take a "Mega Quiz"'}
               </Box>
             </Typography>
             <Typography variant={'body1'}>
@@ -95,7 +97,7 @@ export class QuizSelector extends React.Component<SelectorProps, SelectorState> 
     return (<div>
               <Typography style={{margin: "10px"}} variant='h5' color="primary">My Quizzes:</Typography>
               <Grid container spacing={3}>
-                  {result.length !== 0 ? result : 
+                  {result.length > 1 ? result : 
                   <Grid item component={Card} style={{margin: "10px"}} xs={12} md={3} sm={12}>
                     <CardContent>
                       <Typography variant='h6'>You haven't made any quizzes yet!</Typography>
@@ -108,7 +110,7 @@ export class QuizSelector extends React.Component<SelectorProps, SelectorState> 
             </div>);
   }
 
-  async selectQuiz(quiz : string){
+  async selectQuiz(quiz : string) {
     let qz : QuizInfo = await this.retreiveQuiz(quiz);
     this.props.changeQuiz(qz);
   }

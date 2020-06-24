@@ -15,7 +15,7 @@ import { firestore, auth } from '../../firebase';
 interface HandlerProps {
   info : QuizInfo; // Identification information of the quiz
   onBack: () => void; // Go back to Quiz selection
-  megaQs: QuizInfo[] | undefined;
+  megaQs: QuizInfo[] | null;
 }
 
 interface HandlerState {
@@ -43,11 +43,12 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       result = [];
       for (let i = 0; i < this.props.megaQs.length; i++) {
         for (let j = 0; j < this.props.megaQs[i].questions.length; j++) {
-          map.set(this.props.megaQs[i].questions[j], [i, j]); //[parent's index, index within parent]
           this.props.megaQs[i].questions[j].questionType = this.props.megaQs[i].type;
+          map.set(this.props.megaQs[i].questions[j], [i, j]); //[parent's index, index within parent]
         }
         result.push(this.populateAnswers(this.props.megaQs[i]));
       }
+      this.shuffleQs(this.props.info.questions);
     } else {
       for (let i = 0; i < this.props.info.questions.length; i++) {
         this.props.info.questions[i].questionType = this.props.info.type;
@@ -111,6 +112,17 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     ;
   }
 
+  // shuffles the questions in place, only done for 
+  // mega quizzes.
+  shuffleQs(questions: any[]) {
+    for (var i = questions.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = questions[i];
+      questions[i] = questions[j];
+      questions[j] = temp;
+    }
+  }
+
   // generates props for question at index
   quizProps = (index: number) => {
     let response;
@@ -139,7 +151,8 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     ]
   }
 
-
+  // renders the questions for this quiz based on the questionType property
+  // on each question.
   renderQuestions = () =>{
     var startIndex = this.state.currentQuestion -1;
     var endIndex = Math.min(startIndex + this.state.problemsPerPage, this.state.quiz.questions.length);
@@ -184,7 +197,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     this.setState({currentQuestion : this.state.currentQuestion + num, resultsPage: !stillGoing});
   }
 
-  // Create new quiz with newQs (intended include subset of questions from current Qs)
+  // Create new quiz with newQs (intended includes subset of questions from current Qs)
   shrinkQs(newQs: any[]) {
     const newAns: any[] = this.populateAnswers(new QuizInfo("", this.props.info.type, "", newQs));
     const id : string = (newQs.length === this.state.answers.length) ? this.state.quiz.uid : "";
@@ -224,6 +237,9 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     }
   }
 
+  // renders the buttons for the quiz, either one or two depending
+  // on where they are at in the quiz and the number of problems
+  // per page.
   renderButtons = () =>{
     const result : any[] = [];
     var qPerPage = this.state.problemsPerPage;
@@ -248,6 +264,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     return result;
   }
 
+  // updates the statistics for this quiz
   updateStats = (lastAttempt : number, wrongQCnt: number[]) =>{
     this.setState({
       lastAttempt: lastAttempt,

@@ -3,6 +3,8 @@ import './MainPage.css';
 import { TopBar } from '../TopBar/TopBar';
 import { QuizSelector } from './QuizSelector';
 import { QuizInfo } from '../Quiz/QuizInfo';
+import { QuizStats, QuizSummary } from '../StatsPage/QuizStats';
+import { Stats } from '../StatsPage/Stats';
 import {QuizHandler} from '../Quiz/QuizHandler'
 import UploadQuiz from '../UploadQuiz/UploadQuiz';
 import { auth, firebaseUIConfig, firestore } from '../../firebase';
@@ -14,7 +16,8 @@ interface MainPageState {
   pageNum: number;  // the page to be displayed
   quiz : QuizInfo | null; // Information regarding chosen quiz, undefined if nothing has been chosen
   quizzes: QuizInfoMini[];
-  groupQuizzes : QuizInfo[] | undefined;
+  groupQuizzes : QuizInfo[] | null;
+  statsQuiz: QuizStats | null
 }
 
 export class MainPage extends React.Component<{}, MainPageState> {
@@ -25,7 +28,8 @@ export class MainPage extends React.Component<{}, MainPageState> {
       quiz: null,
       pageNum: 0,
       quizzes: [],
-      groupQuizzes: undefined
+      groupQuizzes: null,
+      statsQuiz: null
     }
   }
 
@@ -41,10 +45,12 @@ export class MainPage extends React.Component<{}, MainPageState> {
 
     const pages = [
         <QuizSelector removeQuiz={(id:string)=> this.removeQuiz(id)} quizzes={this.state.quizzes} 
-            makeQuiz={() => this.setPage(2)} changeQuiz={(qz:QuizInfo) => {this.setState({quiz: qz, pageNum: 1, groupQuizzes: undefined})}}
-            setMega={(qz: QuizInfo, grouped: QuizInfo[]) => this.setState({quiz: qz, groupQuizzes: grouped, pageNum: 1})}/>, 
+            makeQuiz={() => this.setPage(2)} changeQuiz={(qz:QuizInfo) => {this.setState({quiz: qz, pageNum: 1, groupQuizzes: null})}}
+            setMega={(qz: QuizInfo, grouped: QuizInfo[]) => this.setState({quiz: qz, groupQuizzes: grouped, pageNum: 1})}
+            getData={(qz: QuizInfoMini) => this.getData(qz)}/>, 
         <QuizHandler info={this.state.quiz!} megaQs={this.state.groupQuizzes} onBack={() => this.setPage(0)}/>,
-        <UploadQuiz submit={(qz: QuizInfoMini) => this.addQuiz(qz)} afterSubmit={() => this.setPage(0)}/>
+        <UploadQuiz submit={(qz: QuizInfoMini) => this.addQuiz(qz)} afterSubmit={() => this.setPage(0)}/>,
+        <Stats quiz={this.state.statsQuiz!}/>
     ];
 
     return (
@@ -58,6 +64,8 @@ export class MainPage extends React.Component<{}, MainPageState> {
       </div>
     )
   }
+
+
 
   setPage(page: number) {
     if (auth.currentUser) {
@@ -75,6 +83,23 @@ export class MainPage extends React.Component<{}, MainPageState> {
     this.setState((prev: MainPageState)=>({
       quizzes: prev.quizzes.filter(function(value, index, arr){ return value.uid !== id;})
     }));
+  }
+
+  async getData(qz: QuizInfoMini) {
+    let object = await firestore.collection("users").doc(auth.currentUser!.uid).get();
+    let pathParams : [string, any, number, QuizSummary, number[]]= [
+      qz.uid,
+      object.get(`quizResults.${qz.uid}.attempts`),
+      object.get(`quizResults.${qz.uid}.lastAttempt`),
+      object.get(`quizResults.${qz.uid}.overall`) as QuizSummary,
+      object.get(`quizResults.${qz.uid}.wrongQCnt`)
+    ]
+    let stats : QuizStats = new QuizStats(...pathParams);
+
+    console.log(stats);
+
+    this.setState({statsQuiz: stats, groupQuizzes: null, pageNum: 3});
+
   }
 
 
