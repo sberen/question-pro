@@ -1,23 +1,23 @@
-interface Attempt {
+export interface Attempt {
   incorrectIndex: number[];
   time: firebase.firestore.Timestamp;
 }
 
 export interface QuizSummary {
-  attemptCount: number;
-  wrongCount: number;
+  attemptCnt: number;
+  wrongCnt: number;
 }
 
 
 export class QuizStats {
-  uid: string;
+  name: string;
   attempts: any;
   lastAttempt: number;
   overall: QuizSummary;
   wrongQCount: number[];
 
-  constructor(uid:string, attempts: any, lastAttempt: number, overall: QuizSummary, wrongQCount: number[]) {
-    this.uid = uid;
+  constructor(name:string, attempts: any, lastAttempt: number, overall: QuizSummary, wrongQCount: number[]) {
+    this.name = name;
     this.attempts = attempts;
     this.lastAttempt = lastAttempt;
     this.overall = overall;

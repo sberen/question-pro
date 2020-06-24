@@ -88,7 +88,7 @@ export class MainPage extends React.Component<{}, MainPageState> {
   async getData(qz: QuizInfoMini) {
     let object = await firestore.collection("users").doc(auth.currentUser!.uid).get();
     let pathParams : [string, any, number, QuizSummary, number[]]= [
-      qz.uid,
+      object.get(`quizzes.${qz.uid}`)[0],
       object.get(`quizResults.${qz.uid}.attempts`),
       object.get(`quizResults.${qz.uid}.lastAttempt`),
       object.get(`quizResults.${qz.uid}.overall`) as QuizSummary,
