@@ -14,7 +14,8 @@ export class LAForm extends Form {
       arr.push({
         prompts: "",
         answer: "",
-        choices: []
+        choices: [],
+        questionType: "LA"
       })
     }
     this.state = {

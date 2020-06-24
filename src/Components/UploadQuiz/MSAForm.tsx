@@ -13,7 +13,8 @@ export class MSAForm extends Form {
       questions: [{
         title: "",
         prompts: ["", "", "", ""],
-        answer: ["", "", "", ""]
+        answer: ["", "", "", ""],
+        questionType: "MSA"
       }], title: ""
     }
   }
@@ -97,7 +98,8 @@ export class MSAForm extends Form {
       questions: [...prevState.questions, {
                                           title: "", 
                                           prompts: prevState.questions[0].prompts.slice(), 
-                                          answer: prevState.questions[0].prompts.map(() => "")
+                                          answer: prevState.questions[0].prompts.map(() => ""),
+                                          questionType: "MSA"
                                         }]
     }));
   }
@@ -109,6 +111,7 @@ export class MSAForm extends Form {
       title: evt.target.value,
       prompts: newQs[idx].prompts,
       answer: newQs[idx].answer,
+      questionType: "MSA"
     }
 
     this.setState({questions: newQs});
@@ -123,7 +126,8 @@ export class MSAForm extends Form {
     newQs[qNum] = {
       title: newQs[qNum].title,
       prompts: newPrompts,
-      answer: newQs[qNum].answer
+      answer: newQs[qNum].answer,
+      questionType: "MSA"
     }
 
     this.setState({questions: newQs});
@@ -138,7 +142,8 @@ export class MSAForm extends Form {
     newQs[qNum] ={
       title: newQs[qNum].title,
       prompts: newQs[qNum].prompts,
-      answer: newAns
+      answer: newAns,
+      questionType: "MSA"
     }
 
     this.setState({questions: newQs});

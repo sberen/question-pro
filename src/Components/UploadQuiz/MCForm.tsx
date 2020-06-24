@@ -13,7 +13,8 @@ export class MCForm extends Form {
       qs.push({
         prompts: "",
         answer: "",
-        choices: ["", "", ""]
+        choices: ["", "", ""],
+        questionType: "MC"
       })
     }
     this.state = {
@@ -69,7 +70,12 @@ export class MCForm extends Form {
                             value={this.state.questions[idx].answer}
                             style={{minWidth: "150px"}}
                             select>
-                              {this.state.questions[idx].choices.map((option:string, num:number) => <MenuItem value={this.state.questions[idx].choices[num]}>{`Choice ${num+1}`}</MenuItem>)}
+                    {this.state.questions[idx].choices.map((option:string, num:number) => (
+                                                                              <MenuItem value={this.state.questions[idx].choices[num]}>
+                                                                                {`Choice ${num+1}`}
+                                                                              </MenuItem>
+                                                                            )          
+                                                          )}
                   </TextField>
                 </CardActions>
               </Grid>)
@@ -80,7 +86,13 @@ export class MCForm extends Form {
 
   addQ() {
     this.setState((prev:FormState) => ({
-      questions: [...prev.questions, {prompts: "", answer: "", choices: prev.questions[0].choices.map(() => "")}]
+      questions: [...prev.questions, {
+                                        prompts: "", 
+                                        answer: "", 
+                                        choices: prev.questions[0].choices.map(() => ""), 
+                                        questionType: "MC"
+                                      }
+                 ]
     }))
   }
 
@@ -116,7 +128,8 @@ export class MCForm extends Form {
     newQs[qNum] = {
       prompts: newQs[qNum].prompts,
       answer: newQs[qNum].answer,
-      choices: newChoices
+      choices: newChoices,
+      questionType: "MC"
     }
 
     this.setState({questions: newQs})

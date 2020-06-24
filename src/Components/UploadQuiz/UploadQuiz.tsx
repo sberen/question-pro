@@ -1,9 +1,12 @@
 import React from 'react';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
 import { QUIZ_TYPES, QUIZ_INDICES, QUIZ_DESC } from '../Quiz/QuizTypes';
-import { Button, Grid, CardActions, Card, CardContent, Typography, TextField } from '@material-ui/core';
+import { Button, Grid, CardActions, Card, CardContent, 
+         Typography, TextField, IconButton } from '@material-ui/core';
 import {FormProps} from './Form';
 import "./UploadQuiz.css";
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
 import { MCForm } from './MCForm';
 import { SAForm } from './SAForm';
 import {MSAForm} from './MSAForm';
@@ -32,7 +35,10 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
   }
 
   render() {
-    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item component={Card} className={"card"} style={{margin: "5px"}} id="button" xs={12} md ={5}>
+    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item component={Card} 
+                                                              className={"card"} 
+                                                              style={{margin: "5px"}} 
+                                                              id="button" xs={12} md ={5}>
                                                       <CardContent>
                                                         <Typography variant="h6">
                                                           {val.longName}
@@ -42,7 +48,11 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                                                         </Typography>
                                                       </CardContent>
                                                       <CardActions>
-                                                        <Button onClick={() => this.setState({quizType: val.shortName})} color='primary' variant='text'>Make This Quiz</Button>
+                                                        <IconButton aria-label={"Make Quiz"} 
+                                                              onClick={() => this.setState({quizType: val.shortName})} 
+                                                              style={{color: "#808080"}}>
+                                                          <EditIcon />
+                                                        </IconButton>
                                                       </CardActions>
                                                     </Grid>);
 
@@ -81,11 +91,16 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                               label="QuizID" 
                               onChange={(evt: any) => this.setState({quizID: evt.target.value})} 
                               value={this.state.quizID} 
+                              style={{width: "90%"}}
                               color='primary'
                               size='medium'
                             />
-                            <div/>
-                            <Button style={{marginTop: "10px"}} onClick={() => this.validateQuiz()} variant="text" color="primary">Add Quiz</Button>
+                            <div style={{flexGrow: 1}}/>
+                            <IconButton aria-label={"Add Shared Quiz"} 
+                                        onClick={() => this.validateQuiz()} 
+                                        style={{color: "#808080"}}>
+                              <AddIcon/>
+                            </IconButton>
                           </CardActions> 
                         </Grid>
                         </Grid>

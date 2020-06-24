@@ -6,7 +6,7 @@ import '../../MainPage/QuizSelector.css';
 export class MultiShortAnswers extends QuestionHandler {
 
     // Saves answer string[] by replacing value at index with event.target.value
-    changeAnswer = (event: any, index: number)=> {
+    changeAnswer = (event: any, index: number) => {
         const newAnswers  = (this.props.answer as string[]).slice();
         newAnswers[index] = event.target.value;
         this.props.changeAnswer(newAnswers);

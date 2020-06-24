@@ -13,7 +13,8 @@ export class SAForm extends Form {
       arr.push({
         prompts: "",
         answer: "",
-        choices: []
+        choices: [],
+        questionType: "SA"
       })
     }
     this.state = {

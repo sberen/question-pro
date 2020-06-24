@@ -14,12 +14,13 @@ import '../MainPage/QuizSelector.css';
 interface HandlerProps {
   info : QuizInfo; // Identification information of the quiz
   onBack: () => void; // Go back to Quiz selection
+  megaQs: QuizInfo[] | undefined;
 }
 
 interface HandlerState {
   currentQuestion : number; // Current questions number
   quiz: QuizInfo; // Identification information of the quiz
-  incorrectAnswers: Map<string, [string, string]>;
+  quizNameToMegaIndex: Map<string, number> | undefined;
   answers: any[]; // Current answer responses
   resultsPage: boolean; // True if showing results page
   problemsPerPage: number;
@@ -32,13 +33,23 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     console.log(this.props.info);
     let Qs: any[] = this.props.info.questions;
 
-
-    var ans = this.populateAnswers(Qs);
+    let ans;
+    let quizIndex : Map<string, number> | undefined = undefined;
+    if (this.props.megaQs) { // if mega quiz, the get array of answers for each quiz
+      ans = [];
+      quizIndex = new Map<string, number>();
+      for (let i = 0; i < this.props.megaQs.length; i++) {
+        ans.push(this.populateAnswers(this.props.megaQs[i].questions));
+        quizIndex.set(this.props.megaQs[i].name, i);
+      }
+    } else {
+      ans = this.populateAnswers(this.props.info.questions);
+    }
 
 
     this.state = {
       currentQuestion: 1,
-      incorrectAnswers: new Map(),
+      quizNameToMegaIndex: quizIndex,
       quiz: this.props.info,
       answers: ans,
       resultsPage: false,
@@ -110,7 +121,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     }
 
     let questions = indices.map((index: number) =>
-                    this.quizTypes(this.quizProps(index))[QUIZ_INDICES.get(this.props.info.type) as number]
+                    this.quizTypes(this.quizProps(index))[QUIZ_INDICES.get(this.props.info.questions[index].questionType) as number]
     );
 
     return questions
@@ -150,12 +161,25 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   }
 
   // returns "Zeroed Out" answers field based on given Qs
-  populateAnswers(Qs: any[]){
+  populateAnswers(Qs: any[])  {
     let count = Qs.length;
     console.log(this.props.info);
     // Case that the answer can be captured with one string
-    if (SINGLE.includes(this.props.info.type)){
-      var singleString = new Array<string>(count);
+    let result : (string | string[])[]= [];
+    let quizSingle : boolean = SINGLE.includes(this.props.info.type);
+    for (let i = 0; i < count; i++) {
+      let singleCheck : boolean = Qs[i].questionType === this.props.info.type ? quizSingle : SINGLE.includes(Qs[i].questionType);
+      if (singleCheck) {
+        result[i] = "";
+      } else {
+        result[i] = [];
+        for (let j = 0; j < Qs[i].prompts.length; j++) {
+          (result[i] as string[]).push("");
+        }
+      }
+    }
+    /*if (SINGLE.includes(this.props.info.type)){
+      var singleString : string[] = new Array<string>(count);
       for (var i = 0; i< singleString.length; i++){
         singleString[i] = "";
       }
@@ -163,7 +187,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     }
     // Case that the answer has multiple components and need to be represented as an array
     else {
-      var multiString = new Array<string[]>(count);
+      var multiString : string[][] = new Array<string[]>(count);
       for (i = 0; i< multiString.length; i++ ) {
         multiString[i] = new Array<string>(Qs[i].prompts.length);
         for(let j = 0; j< Qs[i].prompts.length; j ++){
@@ -171,7 +195,8 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
         }
       }
       return multiString;
-    }
+    }*/
+    return result;
   }
 
   renderButtons = () =>{

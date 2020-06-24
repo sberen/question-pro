@@ -14,25 +14,18 @@ interface MainPageState {
   pageNum: number;  // the page to be displayed
   quiz : QuizInfo | null; // Information regarding chosen quiz, undefined if nothing has been chosen
   quizzes: QuizInfoMini[];
+  groupQuizzes : QuizInfo[] | undefined;
 }
 
 export class MainPage extends React.Component<{}, MainPageState> {
   constructor(props: any) {
     super(props);
 
-    /*let fromFile = require("../../resources/Questions.json");
-
-    const newQuizzes: QuizInfo[] = [];
-
-    for(let quiz of fromFile) {
-      newQuizzes.push(new QuizInfo(quiz.title, quiz.type, quiz.uid, quiz.questions));
-    }
-    */
-
     this.state = {
       quiz: null,
       pageNum: 0,
-      quizzes: []
+      quizzes: [],
+      groupQuizzes: undefined
     }
   }
 
@@ -48,8 +41,9 @@ export class MainPage extends React.Component<{}, MainPageState> {
 
     const pages = [
         <QuizSelector removeQuiz={(id:string)=> this.removeQuiz(id)} quizzes={this.state.quizzes} 
-            makeQuiz={() => this.setPage(2)} changeQuiz={(qz:QuizInfo) => {this.setState({quiz: qz, pageNum: 1})}}/>, 
-        <QuizHandler info={this.state.quiz!} onBack={() => this.setPage(0)}/>,
+            makeQuiz={() => this.setPage(2)} changeQuiz={(qz:QuizInfo) => {this.setState({quiz: qz, pageNum: 1, groupQuizzes: undefined})}}
+            setMega={(qz: QuizInfo, grouped: QuizInfo[]) => this.setState({quiz: qz, groupQuizzes: grouped, pageNum: 1})}/>, 
+        <QuizHandler info={this.state.quiz!} megaQs={this.state.groupQuizzes} onBack={() => this.setPage(0)}/>,
         <UploadQuiz submit={(qz: QuizInfoMini) => this.addQuiz(qz)} afterSubmit={() => this.setPage(0)}/>
     ];
 

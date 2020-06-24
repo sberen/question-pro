@@ -41,7 +41,7 @@ export default class Form extends React.Component<FormProps, FormState> {
   
   addQ() {
     this.setState((prevState:FormState) => ({
-      questions: [...prevState.questions, {prompts: "", answer: ""}]
+      questions: [...prevState.questions, {prompts: "", answer: "", questionType: this.props.quizType}]
     }));
   }
 
@@ -59,7 +59,8 @@ export default class Form extends React.Component<FormProps, FormState> {
     newQs[qNum] = {
       prompts: evt.target.value,
       answer: newQs[qNum].answer,
-      choices: newQs[qNum].choices
+      choices: newQs[qNum].choices,
+      questionType: this.props.quizType
     }
 
     this.setState({questions: newQs});
@@ -73,7 +74,8 @@ export default class Form extends React.Component<FormProps, FormState> {
     newQs[qNum] = {
       prompts: newQs[qNum].prompts,
       answer: evt.target.value,
-      choices: newQs[qNum].choices
+      choices: newQs[qNum].choices,
+      quizType: this.props.quizType
     }
 
     this.setState({questions: newQs});
