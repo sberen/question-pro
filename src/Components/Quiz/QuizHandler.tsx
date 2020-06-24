@@ -8,6 +8,7 @@ import { MultiShortAnswers } from './QuestionHandler/MultiShortAnswer';
 import { LongAnswer } from './QuestionHandler/LongAnswer';
 import { Button, Grid, Card, Typography, Box, CardActions, CardContent } from '@material-ui/core';
 import '../MainPage/QuizSelector.css';
+import { QuizResult } from './QuizResult';
 // import * as quizes from '../../resources/Questions.json';
 
 
@@ -24,6 +25,7 @@ interface HandlerState {
   answers: any[]; // Current answer responses
   resultsPage: boolean; // True if showing results page
   problemsPerPage: number;
+  result : QuizResult | undefined;
 }
 
 export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
@@ -61,6 +63,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       answers: result,
       resultsPage: false,
       problemsPerPage: -1,
+      result: undefined
     }
   }
 
@@ -92,7 +95,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
                               </Grid>
                           {this.renderQuestions()}
                         </Grid>)
-                        : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs),
+                        : Results(this.state.quiz, this.state.answers, this.state.result, (Qs: any[]) => this.shrinkQs(Qs),
                         () => this.props.onBack())
     ;
   }
@@ -174,10 +177,15 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
 
   // Processing request to change question.
   // Positive num indicates move forward by given value and negative values for going back
-  changeQuestion(num: number) {
+  async changeQuestion(num: number) {
     let stillGoing: boolean = (this.state.currentQuestion + num) <= this.state.quiz.questions.length;
     if (this.state.problemsPerPage === -1){
       stillGoing = false;
+      let temp : QuizResult |undefined = undefined;
+      await QuizResult.build(this.state.quiz, this.state.answers).then(function(info) {
+        temp = info;
+      });
+      this.setState({result : temp});
     }
     this.setState({currentQuestion : this.state.currentQuestion + num, resultsPage: !stillGoing});
   }

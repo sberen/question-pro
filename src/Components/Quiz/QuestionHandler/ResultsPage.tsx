@@ -6,21 +6,14 @@ import './ResultsPage.css'
 import { QuizResult } from '../QuizResult';
 
 
-export function Results(quiz: QuizInfo, responses: string[],
+export function Results(quiz: QuizInfo, responses: any[] ,result: QuizResult | undefined,
   shrinkQs: (Qs: any[]) => void, onBack: () => any) {
-  let display: any;
-  let incorrectQuestions: any;
-  let incorrectIndices: number[];
+  let display: any = (result) ? result.display : undefined;
+  let incorrectQuestions: any = (result) ? result.incorrectQuestions : undefined;
 
-  QuizResult.build(quiz, responses).then(function(result) {
-    display = result.display;
-    incorrectQuestions = result.incorrectQuestions;
-    incorrectIndices = result.incorrectIndices;
-  });
-
-  let grade : number = Math.round(100 * ((responses.length - display[1].length) / responses.length));
+  let grade : number = (result) ? Math.round(100 * ((responses.length - incorrectQuestions.length) / responses.length)) : 0;
   return (
-      (!display) ?(<div>loading...</div>) : (
+    (!result) ? (<div> loading</div>) : (
       <Grid container spacing={3}>
         <Grid item component={Card} xs={12} md={12} sm={12} className={grade >= 80 ? "goodTitle" : "badTitle"}>
           <CardContent>
