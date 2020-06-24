@@ -1,7 +1,7 @@
 import React from 'react';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
 import { QUIZ_TYPES, QUIZ_INDICES, QUIZ_DESC } from '../Quiz/QuizTypes';
-import { Button, Grid, CardActions, Card, CardContent, 
+import { Grid, CardActions, Card, CardContent,
          Typography, TextField, IconButton } from '@material-ui/core';
 import {FormProps} from './Form';
 import "./UploadQuiz.css";
@@ -35,9 +35,9 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
   }
 
   render() {
-    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item component={Card} 
-                                                              className={"card"} 
-                                                              style={{margin: "5px"}} 
+    const buttons: any[] = QUIZ_TYPES.map((val) => <Grid item component={Card}
+                                                              className={"card"}
+                                                              style={{margin: "5px"}}
                                                               id="button" xs={12} md ={5}>
                                                       <CardContent>
                                                         <Typography variant="h6">
@@ -48,8 +48,8 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                                                         </Typography>
                                                       </CardContent>
                                                       <CardActions>
-                                                        <IconButton aria-label={"Make Quiz"} 
-                                                              onClick={() => this.setState({quizType: val.shortName})} 
+                                                        <IconButton aria-label={"Make Quiz"}
+                                                              onClick={() => this.setState({quizType: val.shortName})}
                                                               style={{color: "#808080"}}>
                                                           <EditIcon />
                                                         </IconButton>
@@ -85,23 +85,23 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                               Enter the quiz ID that was shared with you, and get back to studying!
                             </Typography>
                           </CardContent>
-                          <CardActions> 
-                            <TextField key={"second"} 
-                              rows={1} 
-                              label="QuizID" 
-                              onChange={(evt: any) => this.setState({quizID: evt.target.value})} 
-                              value={this.state.quizID} 
+                          <CardActions>
+                            <TextField key={"second"}
+                              rows={1}
+                              label="QuizID"
+                              onChange={(evt: any) => this.setState({quizID: evt.target.value})}
+                              value={this.state.quizID}
                               style={{width: "90%"}}
                               color='primary'
                               size='medium'
                             />
                             <div style={{flexGrow: 1}}/>
-                            <IconButton aria-label={"Add Shared Quiz"} 
-                                        onClick={() => this.validateQuiz()} 
+                            <IconButton aria-label={"Add Shared Quiz"}
+                                        onClick={() => this.validateQuiz()}
                                         style={{color: "#808080"}}>
                               <AddIcon/>
                             </IconButton>
-                          </CardActions> 
+                          </CardActions>
                         </Grid>
                         </Grid>
                       </div>)

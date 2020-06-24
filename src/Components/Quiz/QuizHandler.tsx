@@ -8,7 +8,6 @@ import { MultiShortAnswers } from './QuestionHandler/MultiShortAnswer';
 import { LongAnswer } from './QuestionHandler/LongAnswer';
 import { Button, Grid, Card, Typography, Box, CardActions, CardContent } from '@material-ui/core';
 import '../MainPage/QuizSelector.css';
-import { firestore, auth } from '../../firebase';
 // import * as quizes from '../../resources/Questions.json';
 
 
@@ -25,8 +24,6 @@ interface HandlerState {
   answers: any[]; // Current answer responses
   resultsPage: boolean; // True if showing results page
   problemsPerPage: number;
-  lastAttempt: number;
-  wrongQCnt: number[];
 }
 
 export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
@@ -37,7 +34,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     let Qs: any[] = this.props.info.questions;
 
     let ans = this.populateAnswers(this.props.info.questions);
-  
+
     this.state = {
       currentQuestion: 1,
       quizNameToMegaIndex: undefined,
@@ -45,20 +42,9 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       answers: ans,
       resultsPage: false,
       problemsPerPage: -1,
-      lastAttempt: -1,
-      wrongQCnt: []
     }
   }
 
-  async componentDidMount()  {
-    let user = await firestore.collection("users").doc(auth.currentUser!.uid).get();
-    let last = user.get('quizResults.' + this.state.quiz.uid +'.lastAttempt');
-    let wrong = user.get('quizResults.' + this.state.quiz.uid +'.wrongQCnt')
-    this.setState({
-      lastAttempt: last,
-      wrongQCnt: wrong
-    });
-  }
 
   render() {
     let cur = this.state.currentQuestion;
@@ -88,8 +74,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
                           {this.renderQuestions()}
                         </Grid>)
                         : Results(this.state.quiz, this.state.answers, (Qs: any[]) => this.shrinkQs(Qs),
-                        () => this.props.onBack(), this.state.lastAttempt, this.state.wrongQCnt,
-                        (lastAttempt : number, wrongQCnt: number[]) => this.updateStats(lastAttempt, wrongQCnt))
+                        () => this.props.onBack())
     ;
   }
 
@@ -212,12 +197,5 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
         {secondButton}</Button>
     )
     return result;
-  }
-
-  updateStats = (lastAttempt : number, wrongQCnt: number[]) =>{
-    this.setState({
-      lastAttempt: lastAttempt,
-      wrongQCnt: wrongQCnt
-    });
   }
 }
