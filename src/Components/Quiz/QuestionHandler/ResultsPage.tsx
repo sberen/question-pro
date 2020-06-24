@@ -8,7 +8,9 @@ import { firestore, auth } from '../../../firebase';
 import firebase from 'firebase/app';
 
 
-export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[]) => void, onBack: () => any) {
+export function Results(quiz: QuizInfo, responses: string[],
+  shrinkQs: (Qs: any[]) => void, onBack: () => any, lastAttempt: number,
+  wrongQCnt: number[], update: (lastAttempt : number, wrongQCnt: number[]) => void) {
   let display : [any, any[], number[]];
   if(SINGLE.includes(quiz.type)) {
     display = SingleResults(quiz, responses);
@@ -27,7 +29,7 @@ export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[
             </Typography>
           </CardContent>
           <CardActions>
-          {getButtons(display[1], shrinkQs, onBack, quiz, display[2])}
+          {getButtons(display[1], shrinkQs, onBack, quiz, display[2], lastAttempt, wrongQCnt, update)}
           </CardActions>
         </Grid>
         {display[0]}
@@ -146,39 +148,52 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[], number
   }
 
 function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void, onBack: () => void,
-                   quiz: QuizInfo, incorrectIndex: number[]) {
+                   quiz: QuizInfo, incorrectIndex: number[], lastAttempt: number,
+                   wrongQCnt: number[], update: (lastAttempt : number, wrongQCnt: number[]) => void) {
   const buttons: any[] = [];
   if (quiz.uid !== ""){
     buttons.push(
-      <Button onClick={() => {shrinkQs(quiz.questions); uploadResults(quiz, incorrectIndex);}}
+      <Button onClick={() => {shrinkQs(quiz.questions);
+        uploadResults(quiz, incorrectIndex, lastAttempt, wrongQCnt, update);}}
         variant="outlined" color="primary">Retake the Test</Button>
     );
   }
 
   if (incorrect.length !== 0) buttons.push(
-    <Button onClick={() => {shrinkQs(incorrect); uploadResults(quiz, incorrectIndex);}}
+    <Button onClick={() => {shrinkQs(incorrect);
+      uploadResults(quiz, incorrectIndex, lastAttempt, wrongQCnt, update);}}
       variant="outlined" color="primary">Test Incorrect Answers</Button>
   );
 
-  buttons.push(<Button onClick={() => {onBack(); uploadResults(quiz, incorrectIndex);}}
+  buttons.push(<Button onClick={() => {onBack();
+    uploadResults(quiz, incorrectIndex, lastAttempt, wrongQCnt, update);}}
     variant="outlined" color="primary">Home</Button>);
 
   return buttons;
 }
 
-function uploadResults(quiz: QuizInfo, incorrectIndex: number[]){
+function uploadResults(quiz: QuizInfo, incorrectIndex: number[], lastAttempt : number,
+  wrongQCnt: number[], update: (lastAttempt : number, wrongQCnt: number[]) => void){
   //firebase.database.ServerValue.TIMESTAMP
 
   if (quiz.uid !== ""){
+    let cur = (lastAttempt >=4) ? 0: lastAttempt +1;
+    let curQCnt = wrongQCnt;
+    for (let i = 0; i < incorrectIndex.length; i++){
+      curQCnt[incorrectIndex[i]] += 1;
+    }
     const quizID = quiz.uid;
     firestore.collection("users").doc(auth.currentUser!.uid).update({
       [`quizResults.${quizID}.overall.attemptCnt`] : firebase.firestore.FieldValue.increment(1),
       [`quizResults.${quizID}.overall.wrongCnt`] : firebase.firestore.FieldValue.increment(incorrectIndex.length),
-      // [`quizResults.${quizID}.attempts`] :firebase.firestore.FieldValue.arrayUnion({
-      //         ['time'] : firebase.firestore.FieldValue.serverTimestamp(),
-      //         ['wrongIndices']: incorrectIndex
-      //       })
+      [`quizResults.${quizID}.lastAttempt`] :cur,
+      [`quizResults.${quizID}.attempts.` + cur.toString()] :{
+        time : firebase.firestore.FieldValue.serverTimestamp(),
+        incorrectIndex : incorrectIndex
+      },
+      [`quizResults.${quizID}.wrongQCnt`] :curQCnt
     });
+    update(cur, curQCnt);
   }
 
 }

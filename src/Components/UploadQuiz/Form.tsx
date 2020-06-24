@@ -9,7 +9,7 @@ import { auth } from '../../firebase';
 export interface FormState {
   questions: any[];
   title: string;
-} 
+}
 
 export interface FormProps {
   quizType: string | undefined;
@@ -38,7 +38,7 @@ export default class Form extends React.Component<FormProps, FormState> {
         </div>
     )
   }
-  
+
   addQ() {
     this.setState((prevState:FormState) => ({
       questions: [...prevState.questions, {prompts: "", answer: ""}]
@@ -91,18 +91,15 @@ export default class Form extends React.Component<FormProps, FormState> {
     });
 
     var key = `quizzes.${quizID}`;
-
-    firestore.collection("users").doc(auth.currentUser!.uid).update({
-      [key] : [this.state.title, this.props.quizType]
-    });
-
     const wrongCnt: number[] = new Array(qs.length).fill(0);
 
     firestore.collection("users").doc(auth.currentUser!.uid).update({
+      [key] : [this.state.title, this.props.quizType],
       [`quizResults.${quizID}.overall.attemptCnt`] : 0,
       [`quizResults.${quizID}.overall.wrongCnt`] : 0,
-      [`quizResults.${quizID}.attempts`] :[],
-      [`quizResults.${quizID}.wrongQCnt`] :wrongCnt
+      [`quizResults.${quizID}.attempts`] :{},
+      [`quizResults.${quizID}.wrongQCnt`] :wrongCnt,
+      [`quizResults.${quizID}.lastAttempt`] :0
     });
 
     this.props.afterSubmit();

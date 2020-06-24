@@ -47,7 +47,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                                                     </Grid>);
 
     const props: FormProps = {
-      quizType: this.state.quizType, 
+      quizType: this.state.quizType,
       afterSubmit: this.props.afterSubmit,
       addQuiz: this.props.submit,
       onBack: () => this.setState({quizType: undefined})
@@ -59,7 +59,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
       <MSAForm {...props}/>,
       <LAForm {...props}/>
     ];
-    
+
     return ( !this.state.quizType
                     ?  (<div style={{margin: "10px"}}>
                         <Typography style={{margin: "5px"}} variant='h5' color='primary'>New Quiz Type:</Typography>
@@ -75,18 +75,18 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                               Enter the quiz ID that was shared with you, and get back to studying!
                             </Typography>
                           </CardContent>
-                          <CardActions> 
-                            <TextField key={"second"} 
-                              rows={1} 
-                              label="QuizID" 
-                              onChange={(evt: any) => this.setState({quizID: evt.target.value})} 
-                              value={this.state.quizID} 
+                          <CardActions>
+                            <TextField key={"second"}
+                              rows={1}
+                              label="QuizID"
+                              onChange={(evt: any) => this.setState({quizID: evt.target.value})}
+                              value={this.state.quizID}
                               color='primary'
                               size='medium'
                             />
                             <div/>
                             <Button style={{marginTop: "10px"}} onClick={() => this.validateQuiz()} variant="text" color="primary">Add Quiz</Button>
-                          </CardActions> 
+                          </CardActions>
                         </Grid>
                         </Grid>
                       </div>)
@@ -129,15 +129,22 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
         window.alert('You already have access to quiz');
       } else {
         var key = `quizzes.${quizID}`;
+        const wrongCnt: number[] = new Array(quiz.questions.length).fill(0);
         window.alert('You successfully added quiz to your collection!');
         firestore.collection("users").doc(auth.currentUser!.uid).update({
-          [key] : [quiz.title, quiz.type]
+          [key] : [quiz.title, quiz.type],
+          [`quizResults.${quizID}.overall.attemptCnt`] : 0,
+          [`quizResults.${quizID}.overall.wrongCnt`] : 0,
+          [`quizResults.${quizID}.attempts`] :{},
+          [`quizResults.${quizID}.wrongQCnt`] :wrongCnt,
+          [`quizResults.${quizID}.lastAttempt`] :0
         });
+
         this.props.submit(new QuizInfoMini(quiz.title, quiz.type, quizID));
       }
 
     }
-    
+
   }
 
 }
