@@ -9,7 +9,7 @@ import firebase from 'firebase/app';
 
 
 export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[]) => void, onBack: () => any) {
-  let display : [any, any[]];
+  let display : [any, any[], number[]];
   if(SINGLE.includes(quiz.type)) {
     display = SingleResults(quiz, responses);
   } else {
@@ -27,7 +27,7 @@ export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[
             </Typography>
           </CardContent>
           <CardActions>
-          {getButtons(display[1], shrinkQs, onBack)}
+          {getButtons(display[1], shrinkQs, onBack, quiz, display[2])}
           </CardActions>
         </Grid>
         {display[0]}
@@ -36,7 +36,7 @@ export function Results(quiz: QuizInfo, responses: string[], shrinkQs: (Qs: any[
 }
 
 
-function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
+function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[], number[]] {
     const display: any[] = [];
     const incorrect: any[] = [];
     const incorrectIndex: number[] = [];
@@ -69,11 +69,10 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
       )
     }
 
-    uploadResults(quiz, incorrectIndex);
-    return [display , incorrect]
+    return [display , incorrect, incorrectIndex];
   }
 
-  function MultiResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
+  function MultiResults(quiz: QuizInfo, responses: string[]): [any, any[], number[]] {
     const display = [];
     const incorrect = [];
     const incorrectIndex : number[] = [];
@@ -143,14 +142,26 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[]] {
       );
 
     }
-    uploadResults(quiz, incorrectIndex);
-    return [display, incorrect];
+    return [display, incorrect, incorrectIndex];
   }
 
-function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void, onBack: () => void) {
+function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void, onBack: () => void,
+                   quiz: QuizInfo, incorrectIndex: number[]) {
   const buttons: any[] = [];
-  if (incorrect.length !== 0) buttons.push(<Button onClick={() => shrinkQs(incorrect)}  variant="outlined" color="primary">Test Incorrect Answers</Button>)
-  buttons.push(<Button onClick={() => onBack()}  variant="outlined" color="primary">Home</Button>);
+  if (quiz.uid !== ""){
+    buttons.push(
+      <Button onClick={() => {shrinkQs(quiz.questions); uploadResults(quiz, incorrectIndex);}}
+        variant="outlined" color="primary">Retake the Test</Button>
+    );
+  }
+
+  if (incorrect.length !== 0) buttons.push(
+    <Button onClick={() => {shrinkQs(incorrect); uploadResults(quiz, incorrectIndex);}}
+      variant="outlined" color="primary">Test Incorrect Answers</Button>
+  );
+
+  buttons.push(<Button onClick={() => {onBack(); uploadResults(quiz, incorrectIndex);}}
+    variant="outlined" color="primary">Home</Button>);
 
   return buttons;
 }

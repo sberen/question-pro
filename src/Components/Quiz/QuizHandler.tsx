@@ -58,7 +58,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
                           <Grid item component={Card} xs={12} md={12} sm={12} className={"card"}>
                             <CardContent>
                               <Typography color="primary" variant='h5'>
-                                <Box>{this.props.info.name}</Box>
+                                <Box>{this.state.quiz.name}</Box>
                               </Typography>
                               {this.state.problemsPerPage !== -1 ?
                               <Typography component={"div"} variant='body1'>
@@ -139,9 +139,11 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   shrinkQs(newQs: any[]) {
     const newAns: any[] = this.populateAnswers(newQs);
     const id : string = (newQs.length === this.state.answers.length) ? this.state.quiz.uid : "";
+    const name : string = (newQs.length === this.state.answers.length) ?
+          this.state.quiz.name : this.state.quiz.name +" Modified";
     this.setState({
       currentQuestion: 1,
-      quiz: new QuizInfo(this.state.quiz.name, this.state.quiz.type, id, newQs),
+      quiz: new QuizInfo(name, this.state.quiz.type, id, newQs),
       answers: newAns,
       resultsPage: false
     });
