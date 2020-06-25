@@ -10,7 +10,6 @@ import UploadQuiz from '../UploadQuiz/UploadQuiz';
 import { auth, firebaseUIConfig, firestore } from '../../firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
-import { MuiThemeProvider } from '@material-ui/core';
 
 
 interface MainPageState {
@@ -38,17 +37,17 @@ export class MainPage extends React.Component<{}, MainPageState> {
     auth.signOut();
   }
 
-  componentDidMount()  {   
+  componentDidMount()  {
     auth.onAuthStateChanged((newUser) => this.registerAuthListener(newUser));
   }
-  
+
   render() {
 
     const pages = [
-        <QuizSelector removeQuiz={(id:string)=> this.removeQuiz(id)} quizzes={this.state.quizzes} 
+        <QuizSelector removeQuiz={(id:string)=> this.removeQuiz(id)} quizzes={this.state.quizzes}
             makeQuiz={() => this.setPage(2)} changeQuiz={(qz:QuizInfo) => {this.setState({quiz: qz, pageNum: 1, groupQuizzes: null})}}
             setMega={(qz: QuizInfo, grouped: QuizInfo[]) => this.setState({quiz: qz, groupQuizzes: grouped, pageNum: 1})}
-            getData={(qz: QuizInfoMini) => this.getData(qz)}/>, 
+            getData={(qz: QuizInfoMini) => this.getData(qz)}/>,
         <QuizHandler info={this.state.quiz!} megaQs={this.state.groupQuizzes} onBack={() => this.setPage(0)}/>,
         <UploadQuiz submit={(qz: QuizInfoMini) => this.addQuiz(qz)} afterSubmit={() => this.setPage(0)}/>,
         <Stats quiz={this.state.statsQuiz!}/>
@@ -144,7 +143,7 @@ export class MainPage extends React.Component<{}, MainPageState> {
       }
 
       console.log(stateQuizzes)
-    } 
+    }
 
     this.setState({quizzes: stateQuizzes, quiz: null, pageNum: 0});
   }
