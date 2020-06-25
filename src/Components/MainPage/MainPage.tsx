@@ -56,7 +56,7 @@ export class MainPage extends React.Component<{}, MainPageState> {
 
     return (
       <div>
-        <div id="toolbar">
+        <div style={{marginBottom: "2%"}}>
           <TopBar user={auth.currentUser} onQuizClick={() => this.setPage(0)} makeQuiz={() => this.setPage(2)} onSignOut={() => this.signOut()}/>
         </div>
         <div id="app" className="centered">

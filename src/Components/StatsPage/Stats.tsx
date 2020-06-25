@@ -86,21 +86,22 @@ export class Stats extends React.Component<StatsProps, StatsState> {
                   : <span></span>}
             </Grid>
           </Grid>
-            {this.state.attempts.length !== 0 && <Typography variant ='h5' color='primary' style={{margin: "10px"}}>
+          </Grid>
+            <div style={{margin: "3%"}}>
+              {this.chart()}
+            </div>
+          {this.state.attempts.length !== 0 && <Typography variant ='h5' color='primary' style={{marginLeft: "3%"}}>
+              <Box fontWeight={"fontWeightBold"}>Most Missed Questions:</Box>
+            </Typography>}
+            <Grid container spacing={3} style={{margin:"3%"}}>
+              {this.mostMissed()}
+            </Grid>
+            {this.state.attempts.length !== 0 && <Typography variant ='h5' color='primary' style={{marginLeft: "3%"}}>
               <Box fontWeight={"fontWeightBold"}>Recent Attempts:</Box>
             </Typography>}
+        <Grid container spacing={3} style={{margin: "3%"}}>
             {this.attempts()}
         </Grid>
-        <div>
-          {this.chart()}
-        </div>
-        {this.state.attempts.length !== 0 && <Typography variant ='h5' color='primary' style={{marginTop: "15px"}}>
-          <Box fontWeight={"fontWeightBold"}>Most Missed Questions:</Box>
-        </Typography>}
-        <Grid container spacing={3} style={{marginTop: "10px"}}>
-          {this.mostMissed()}
-        </Grid>
-
       </div>
     )
   }
