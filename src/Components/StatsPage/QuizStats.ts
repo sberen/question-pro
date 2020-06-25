@@ -15,12 +15,14 @@ export class QuizStats {
   lastAttempt: number;
   overall: QuizSummary;
   wrongQCount: number[];
+  questions: any[];
 
-  constructor(name:string, attempts: any, lastAttempt: number, overall: QuizSummary, wrongQCount: number[]) {
+  constructor(name:string, attempts: any, lastAttempt: number, overall: QuizSummary, wrongQCount: number[], questions:any[]) {
     this.name = name;
     this.attempts = attempts;
     this.lastAttempt = lastAttempt;
     this.overall = overall;
     this.wrongQCount = wrongQCount;
+    this.questions = questions;
   }
 }
