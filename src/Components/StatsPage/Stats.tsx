@@ -24,7 +24,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
     super(props);
 
     let attempts: Attempt[] = Object.keys(this.props.quiz.attempts).map((val) => {
-      
+
       let indices = this.props.quiz.attempts[val].incorrectIndex;
       let grade = Math.round(100*((this.props.quiz.wrongQCount.length - indices.length) /this.props.quiz.wrongQCount.length));
 
@@ -59,29 +59,37 @@ export class Stats extends React.Component<StatsProps, StatsState> {
 
     return (
       <div>
-        <Grid container spacing={3}> 
+        <Grid container spacing={3}>
           <Grid item component={Card} xs={12} md={12} sm={12} className={"card"}>
-              <Typography variant='h5' color='primary'>
-                <Box fontWeight={"fontWeightBold"}>{this.props.quiz.name}</Box>
-              </Typography>
-            
-            {this.state.attempts.length !== 0 
+            <Grid container spacing={3}>
+              <Grid item>
+                <Typography variant='h5' color='primary'>
+                  <Box fontWeight={"fontWeightBold"}>{this.props.quiz.name}</Box>
+                </Typography>
+              </Grid>
+
+              {this.state.attempts.length !== 0
                   ?
-                  <div>
+                  <Grid item >
                     <Typography  variant='h6' className={average >= 80 ? "correctText" : "incorrectText"}>
                       <Box fontWeight={"fontWeightBold"}>Average: <CountUp start={0} end={average} duration={2.5}/>%</Box>
                     </Typography>
-                    <div style={{flexGrow: 1}}/>
+                  </Grid>
+                  : <span></span>}
+              {this.state.attempts.length !== 0
+                  ?
+                  <Grid item >
                     <Typography variant='h6' color='primary'>
                       <Box fontWeight="fontWeightBold">Attempts: {this.props.quiz.overall.attemptCnt}</Box>
                     </Typography>
-                  </div>
+                  </Grid>
                   : <span></span>}
+            </Grid>
           </Grid>
-          {this.state.attempts.length !== 0 && <Typography variant ='h5' color='primary' style={{margin: "10px"}}>
-          <Box fontWeight={"fontWeightBold"}>Recent Attempts:</Box>
-        </Typography>}
-          {this.attempts()}
+            {this.state.attempts.length !== 0 && <Typography variant ='h5' color='primary' style={{margin: "10px"}}>
+              <Box fontWeight={"fontWeightBold"}>Recent Attempts:</Box>
+            </Typography>}
+            {this.attempts()}
         </Grid>
         <div>
           {this.chart()}
@@ -92,7 +100,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
         <Grid container spacing={3} style={{marginTop: "10px"}}>
           {this.mostMissed()}
         </Grid>
-        
+
       </div>
     )
   }
@@ -112,7 +120,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
             borderColor: "#0d47a1",
             backgroundColor: "rgba(13, 71, 161, .5)",
             fill: true
-          }] 
+          }]
         }} />
         </div>
       )
@@ -137,7 +145,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
               )
             }
             break;
-          } 
+          }
           result.push(
             <Grid item component={Card} xs={12} sm={12} md={3} className={"incorrectCard"}>
               <CardContent>
@@ -146,8 +154,8 @@ export class Stats extends React.Component<StatsProps, StatsState> {
                 </Typography>
                 <Typography variant='body1' className='incorrectText'>
                   <Box fontWeight="fontWeightBold">
-                    {quiz.type === "MSA" ?  
-                                        quiz.questions[this.state.sortedMissed[i]].title 
+                    {quiz.type === "MSA" ?
+                                        quiz.questions[this.state.sortedMissed[i]].title
 
                                       : quiz.questions[this.state.sortedMissed[i]].prompts}
                   </Box>
@@ -158,13 +166,13 @@ export class Stats extends React.Component<StatsProps, StatsState> {
                   <Box fontWeight={"fontWeightBold"}>Missed on {this.state.indicesMap.get(this.state.sortedMissed[i])}/{quiz.overall.attemptCnt} Attempts</Box>
                 </Typography>
               </CardContent>
-            </Grid> 
+            </Grid>
           )
         }
     }
     return result;
   }
-  
+
 
   attempts() : JSX.Element | JSX.Element[] {
     let quiz : QuizStats = this.props.quiz;
