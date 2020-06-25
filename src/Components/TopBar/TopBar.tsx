@@ -16,7 +16,7 @@ export class TopBar extends React.Component<TopBarProps, {}> {
   render() {
     return (
       <div>
-        <AppBar position='static' style={{flexGrow: 1}}>
+        <AppBar position='fixed' style={{flexGrow: 1}}>
           <Toolbar>
             <Typography variant="h5" id="header" >Question Pro</Typography>
             <Button variant='text' color={"secondary"} onClick={() => this.props.onQuizClick()}>Quizzes</Button>
@@ -27,6 +27,7 @@ export class TopBar extends React.Component<TopBarProps, {}> {
             </div>
           </Toolbar>
         </AppBar>
+        <Toolbar style={{marginBottom: "10px"}}/>
       </div>
     )
   }

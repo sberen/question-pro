@@ -5,7 +5,7 @@ import React from "react";
 import { SINGLE } from "./QuizTypes";
 import firebase from 'firebase/app';
 
-export class QuizResult{
+export class QuizResult {
   display: any;
   incorrectQuestions: any;
   incorrectIndices: number[];
