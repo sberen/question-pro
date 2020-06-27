@@ -10,10 +10,6 @@ import UploadQuiz from '../UploadQuiz/UploadQuiz';
 import { auth, firebaseUIConfig, firestore } from '../../firebase';
 import { FrontPage } from './FrontPage';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
-<<<<<<< HEAD
-
-=======
->>>>>>> 987f29df372704db43ac3ac19523b129c505c4ab
 
 
 interface MainPageState {
