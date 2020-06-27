@@ -10,4 +10,9 @@
     width: 70%;
     margin: auto;
   }
+  
+  .frontPage {
+    padding: 15rem;
+    width: 70%
+  }
 }

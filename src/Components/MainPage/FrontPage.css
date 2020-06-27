@@ -1,0 +1,13 @@
+.title {
+  display: flex !important;
+  justify-content: center !important;
+  flex-direction: row !important;
+}
+
+@media (min-width: 1064px) {
+.frontCard {
+  margin-top: 15% !important;
+  margin-right: 30% !important;
+  margin-left: 30% !important;
+}
+}

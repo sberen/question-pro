@@ -8,9 +8,9 @@ import { Stats } from '../StatsPage/Stats';
 import {QuizHandler} from '../Quiz/QuizHandler'
 import UploadQuiz from '../UploadQuiz/UploadQuiz';
 import { auth, firebaseUIConfig, firestore } from '../../firebase';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import { FrontPage } from './FrontPage';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
-import { MuiThemeProvider } from '@material-ui/core';
+
 
 
 interface MainPageState {
@@ -59,8 +59,8 @@ export class MainPage extends React.Component<{}, MainPageState> {
         <div style={{marginBottom: "2%"}}>
           <TopBar user={auth.currentUser} onQuizClick={() => this.setPage(0)} makeQuiz={() => this.setPage(2)} onSignOut={() => this.signOut()}/>
         </div>
-        <div id="app" className="centered">
-          {auth.currentUser ? pages[this.state.pageNum] : <StyledFirebaseAuth uiConfig={firebaseUIConfig} firebaseAuth={auth} />}
+        <div className={"centered"}>
+          {auth.currentUser ? pages[this.state.pageNum] : <FrontPage />}
         </div>
       </div>
     )

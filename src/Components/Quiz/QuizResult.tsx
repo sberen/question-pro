@@ -11,7 +11,7 @@ export class QuizResult {
   incorrectIndices: number[];
 
 
-  constructor(quiz: QuizInfo, responses: string[], user: any){
+  constructor(quiz: QuizInfo, responses: string[], user: any) {
 
     let info : [any, any[], number[]];
     if(SINGLE.includes(quiz.type)) {
@@ -19,7 +19,7 @@ export class QuizResult {
     } else {
       info = MultiResults(quiz, responses);
     }
-
+    console.log(quiz);
     uploadResults(quiz, user, info[2]);
 
     this.display = info[0];
@@ -135,7 +135,7 @@ function uploadResults(quiz: QuizInfo, user: any, incorrectIndex :number[]){
   let usersQuiz: string = 'quizResults.' + quiz.uid;
   let lastAttempt = user.get(usersQuiz + '.lastAttempt');
   let wrongQCnt = user.get(usersQuiz + '.wrongQCnt');
-
+  
   if (quiz.uid !== ""){
     let cur = (lastAttempt >=4) ? 0: lastAttempt +1;
     let curQCnt = wrongQCnt;

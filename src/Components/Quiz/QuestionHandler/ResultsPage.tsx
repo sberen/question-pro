@@ -4,14 +4,15 @@ import CountUp from 'react-countup';
 import {QuizInfo} from '../QuizInfo';
 import './ResultsPage.css'
 import { QuizResult } from '../QuizResult';
+import { findAllByTestId } from '@testing-library/react';
 
 
-export function Results(quiz: QuizInfo, responses: any[] ,result: QuizResult | undefined,
-  shrinkQs: (Qs: any[]) => void, onBack: () => any) {
+export function Results(quiz: QuizInfo, result: QuizResult | undefined,
+  shrinkQs: any , onBack: () => any, fromMega : boolean) {
   let display: any = (result) ? result.display : undefined;
   let incorrectQuestions: any = (result) ? result.incorrectQuestions : undefined;
 
-  let grade : number = (result) ? Math.round(100 * ((responses.length - incorrectQuestions.length) / responses.length)) : 0;
+  let grade : number = (result) ? Math.round(100 * ((quiz.questions.length - incorrectQuestions.length) / quiz.questions.length)) : 0;
   return (
     (!result) ? (<div> loading</div>) : (
       <Grid container spacing={3}>
@@ -22,7 +23,7 @@ export function Results(quiz: QuizInfo, responses: any[] ,result: QuizResult | u
             </Typography>
           </CardContent>
           <CardActions>
-          {getButtons(incorrectQuestions, shrinkQs, onBack, quiz)}
+          {getButtons(incorrectQuestions, shrinkQs, onBack, quiz, fromMega)}
           </CardActions>
         </Grid>
         {display}
@@ -30,23 +31,25 @@ export function Results(quiz: QuizInfo, responses: any[] ,result: QuizResult | u
   )
 }
 
-
-function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void, onBack: () => void, quiz: QuizInfo) {
+function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void | undefined, onBack: () => void, quiz: QuizInfo, fromMega : boolean) {
   const buttons: any[] = [];
-  if (quiz.uid !== ""){
+
+  fromMega ? fromMega = true : fromMega = false;
+
+  if (quiz.uid !== "") {
     buttons.push(
       <Button onClick={() => {shrinkQs(quiz.questions);}}
         variant="outlined" color="primary">Retake the Test</Button>
     );
   }
 
-  if (incorrect.length !== 0) buttons.push(
+  if (incorrect.length !== 0 && !fromMega) buttons.push(
     <Button onClick={() => {shrinkQs(incorrect);}}
       variant="outlined" color="primary">Test Incorrect Answers</Button>
   );
 
   buttons.push(<Button onClick={() => {onBack();}}
-    variant="outlined" color="primary">Home</Button>);
+    variant="outlined" color="primary">{fromMega ? "Back" : "Home"}</Button>);
 
   return buttons;
 }

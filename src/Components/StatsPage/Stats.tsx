@@ -108,15 +108,16 @@ export class Stats extends React.Component<StatsProps, StatsState> {
 
   chart() {
     if(this.state.attempts.length > 1) {
+      let attmpts : Attempt[] = this.state.attempts.slice().reverse();
       return (
         <div style={{marginTop: "15px"}}>
         <Typography variant='h5' color="primary">
           <Box fontWeight="fontWeightBold">Score Chart:</Box>
         </Typography>
         <Line data={{
-          labels: this.state.attempts.reverse().map((atmpt:Attempt) => atmpt.time.toDate().toLocaleString()),
+          labels: attmpts.map((atmpt:Attempt) => atmpt.time.toDate().toLocaleString()),
           datasets: [{
-            data: this.state.attempts.map((atmpt: Attempt) => atmpt.grade),
+            data: attmpts.map((atmpt: Attempt) => atmpt.grade),
             label: "Percent",
             borderColor: "#0d47a1",
             backgroundColor: "rgba(13, 71, 161, .5)",

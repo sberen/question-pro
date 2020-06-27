@@ -9,8 +9,8 @@ import { LongAnswer } from './QuestionHandler/LongAnswer';
 import { Button, Grid, Card, Typography, Box, CardActions, CardContent } from '@material-ui/core';
 import '../MainPage/QuizSelector.css';
 import { QuizResult } from './QuizResult';
-// import * as quizes from '../../resources/Questions.json';
-
+import { MegaResults } from './QuestionHandler/MegaResults';
+import { REFUSED } from 'dns';
 
 interface HandlerProps {
   info : QuizInfo; // Identification information of the quiz
@@ -25,14 +25,13 @@ interface HandlerState {
   answers: any[]; // Current answer responses
   resultsPage: boolean; // True if showing results page
   problemsPerPage: number;
-  result : QuizResult | undefined;
+  result : QuizResult | QuizResult[] | undefined;
 }
 
 export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
 
   constructor(props : any){
     super(props);
-    console.log(this.props.info);
 
     let result;
     let map: Map<any, [number, number]> | undefined = undefined;
@@ -92,12 +91,15 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
                             <CardActions>
                               {this.renderButtons()}
                             </CardActions>
-                              </Grid>
+                          </Grid>
                           {this.renderQuestions()}
+                          <Grid item component={Card} xs={12} sm={12} md={12} className={'card'}>
+                            <CardActions>
+                              {this.renderButtons()}
+                            </CardActions>
+                          </Grid>
                         </Grid>)
-                        : Results(this.state.quiz, this.state.answers, this.state.result, (Qs: any[]) => this.shrinkQs(Qs),
-                        () => this.props.onBack())
-    ;
+                        : this.results();
   }
 
   // shuffles the questions in place, only done for
@@ -109,6 +111,21 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       questions[i] = questions[j];
       questions[j] = temp;
     }
+  }
+
+  results() {
+    return this.state.quiz.type === "Mega" 
+            ? <MegaResults megaQ={this.state.quiz}
+                           quizzes={this.props.megaQs!} 
+                           results={this.state.result as QuizResult[]}
+                           retake={(Qs: any[]) => this.shrinkQs(Qs)}
+                           toNormal={(qz:QuizInfo ) => this.changeQuiz(qz)}
+                           onBack={() => this.props.onBack()}
+                           />
+            :  Results(this.state.quiz, 
+                        this.state.result as QuizResult,
+                        (Qs: any) => this.shrinkQs(Qs),
+                        () => this.props.onBack(), false)
   }
 
   // generates props for question at index
@@ -163,7 +180,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   // change answer to ans for current question
   updateAnswer = (index:number, ans: string | string[]) => {
     const newAnswers = this.state.answers.slice();
-    if (this.props.megaQs) {
+    if (this.state.quiz.type === "Mega") {
       let question = this.state.quiz.questions[index];
       let indices : [number, number] = this.state.indicesMap!.get(question)!;
       newAnswers[indices[0]][indices[1]] = ans;
@@ -179,15 +196,22 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   // Positive num indicates move forward by given value and negative values for going back
   async changeQuestion(num: number) {
     let stillGoing: boolean = (this.state.currentQuestion + num) <= this.state.quiz.questions.length;
+    let temp : QuizResult | QuizResult[] | undefined = undefined;
     if (this.state.problemsPerPage === -1){
       stillGoing = false;
-      let temp : QuizResult |undefined = undefined;
-      await QuizResult.build(this.state.quiz, this.state.answers).then(function(info) {
-        temp = info;
-      });
-      this.setState({result : temp});
+      if (this.state.quiz.type !== "Mega") {
+        await QuizResult.build(this.state.quiz, this.state.answers).then(function(info) {
+          temp = info;
+        });
+      } else {
+        temp = [];
+        for(let i = 0; i < this.props.megaQs!.length; i++) {
+          let quiz: QuizResult = await QuizResult.build(this.props.megaQs![i], this.state.answers[i]);
+          temp.push(quiz);
+        }
+      }
     }
-    this.setState({currentQuestion : this.state.currentQuestion + num, resultsPage: !stillGoing});
+    this.setState({currentQuestion : this.state.currentQuestion + num, resultsPage: !stillGoing, result : temp});
   }
 
   // Create new quiz with newQs (intended includes subset of questions from current Qs)
@@ -202,6 +226,16 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
       answers: newAns,
       resultsPage: false
     });
+  }
+
+  changeQuiz(qz: QuizInfo) {
+    const newAns : any[] = this.populateAnswers(qz);
+    this.setState({
+      quiz: qz,
+      currentQuestion: 1,
+      answers: newAns,
+      resultsPage: false
+    })
   }
 
   // returns "Zeroed Out" answers field based on given Qs
