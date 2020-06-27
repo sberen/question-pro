@@ -7,18 +7,11 @@ export interface QuestionProps {
     index: number
 }
 
-
+// The parent class for each single question representation.
 export class QuestionHandler extends React.Component<QuestionProps, {}> {
     
     // change answer to reflect given target value for given event
     onInputChange = (event: any) => {
         this.props.changeAnswer(event.target.value);
-    }
-
-    render() {
-
-        return (
-        <div>
-        </div>);
     }
 }

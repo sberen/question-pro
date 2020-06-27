@@ -10,7 +10,6 @@ import { Button, Grid, Card, Typography, Box, CardActions, CardContent } from '@
 import '../MainPage/QuizSelector.css';
 import { QuizResult } from './QuizResult';
 import { MegaResults } from './QuestionHandler/MegaResults';
-import { REFUSED } from 'dns';
 
 interface HandlerProps {
   info : QuizInfo; // Identification information of the quiz
@@ -28,6 +27,8 @@ interface HandlerState {
   result : QuizResult | QuizResult[] | undefined;
 }
 
+// The quiz handling component that renders and manages
+// a single quiz, as well as the results for that quiz
 export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
 
   constructor(props : any){
@@ -36,8 +37,8 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     let result;
     let map: Map<any, [number, number]> | undefined = undefined;
 
-    if (this.props.megaQs) {
-      map = new Map<any, [number, number]>();
+    if (this.props.megaQs) { // if we have megaQs, then create an array of responses
+      map = new Map<any, [number, number]>(); // wherein each element is an array of that quiz's answers
       result = [];
       for (let i = 0; i < this.props.megaQs.length; i++) {
         for (let j = 0; j < this.props.megaQs[i].questions.length; j++) {
@@ -113,6 +114,8 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     }
   }
 
+  // returns the correct results component based 
+  // on the current type of quiz
   results() {
     return this.state.quiz.type === "Mega" 
             ? <MegaResults megaQ={this.state.quiz}
@@ -131,10 +134,10 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   // generates props for question at index
   quizProps = (index: number) => {
     let response;
-    if (this.props.megaQs) {
+    if (this.state.quiz.type === "Mega") {
       let question = this.state.quiz.questions[index];
       let indices : [number, number] = this.state.indicesMap!.get(question)!;
-      console.log(indices);
+
       response = this.state.answers[indices[0]][indices[1]];
     } else {
       response = this.state.answers[index];
@@ -171,7 +174,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     }
 
     let questions = indices.map((index: number) =>
-                    this.quizTypes(this.quizProps(index))[QUIZ_INDICES.get(this.props.info.questions[index].questionType) as number]
+                    this.quizTypes(this.quizProps(index))[QUIZ_INDICES.get(this.state.quiz.questions[index].questionType) as number]
     );
 
     return questions
@@ -203,7 +206,7 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
         await QuizResult.build(this.state.quiz, this.state.answers).then(function(info) {
           temp = info;
         });
-      } else {
+      } else { // need results for each sub-quiz, looping over array
         temp = [];
         for(let i = 0; i < this.props.megaQs!.length; i++) {
           let quiz: QuizResult = await QuizResult.build(this.props.megaQs![i], this.state.answers[i]);
@@ -215,11 +218,19 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   }
 
   // Create new quiz with newQs (intended includes subset of questions from current Qs)
+  // ONLY CALLED IF NEW Qs IS OF SAME TYPE AS CURRENT QUIZ (ie. single to single and mega to mega)
+  // *** use changeQuiz to change from a mega to a single) ***
   shrinkQs(newQs: any[]) {
-    const newAns: any[] = this.populateAnswers(new QuizInfo("", this.props.info.type, "", newQs));
-    const id : string = (newQs.length === this.state.answers.length) ? this.state.quiz.uid : "";
-    const name : string = (newQs.length === this.state.answers.length) ?
+    const newAns : any[] = [];
+    if (this.state.quiz.type === "Mega") { // re-set mega answers in order to handle mega retest
+      this.props.megaQs!.forEach((val) => newAns.push(this.populateAnswers(val)));
+    } else {
+      newAns.push(this.populateAnswers(new QuizInfo("", this.state.quiz.type, "", newQs)));
+    }
+    const id : string = (newQs.length === this.state.quiz.questions.length) ? this.state.quiz.uid : "";
+    const name : string = (newQs.length === this.state.quiz.questions.length) ?
           this.state.quiz.name : this.state.quiz.name +" Modified";
+    
     this.setState({
       currentQuestion: 1,
       quiz: new QuizInfo(name, this.state.quiz.type, id, newQs),
@@ -228,13 +239,17 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
     });
   }
 
+  // changes the current quiz from a mega to a normal quiz.
+  // important for the case in which a user decides to retake
+  // a sub quiz from a mega quiz.
   changeQuiz(qz: QuizInfo) {
     const newAns : any[] = this.populateAnswers(qz);
+    
     this.setState({
       quiz: qz,
       currentQuestion: 1,
       answers: newAns,
-      resultsPage: false
+      resultsPage: false, 
     })
   }
 

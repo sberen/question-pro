@@ -1,3 +1,5 @@
+// this class represents all the information
+// necessary to take a single quiz.
 export class QuizInfo {
     name : string;
     type : string;

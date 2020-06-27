@@ -5,6 +5,7 @@ import { QuestionHandler } from './QuestionHandler';
 import './MultipleChoice.css';
 import '../../MainPage/QuizSelector.css';
 
+// A single MC question within a quiz.
 export class MultipleChoice extends QuestionHandler {
 
     // populate answer choices from question object 

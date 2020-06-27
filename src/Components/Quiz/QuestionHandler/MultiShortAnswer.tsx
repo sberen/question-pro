@@ -3,6 +3,7 @@ import { TextField, Typography, Box, Grid, CardContent, CardActions, Card } from
 import { QuestionHandler } from './QuestionHandler';
 import '../../MainPage/QuizSelector.css';
 
+// A single MSA question within a quiz.
 export class MultiShortAnswers extends QuestionHandler {
 
     // Saves answer string[] by replacing value at index with event.target.value

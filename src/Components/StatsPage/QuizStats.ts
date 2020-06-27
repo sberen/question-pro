@@ -9,7 +9,9 @@ export interface QuizSummary {
   wrongCnt: number;
 }
 
-
+// represents all of the statistics
+// that are associated with a single
+// quiz for that user.
 export class QuizStats {
   name: string;
   attempts: any;

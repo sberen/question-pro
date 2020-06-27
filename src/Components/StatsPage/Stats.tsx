@@ -18,6 +18,8 @@ interface StatsState {
   indicesMap: Map<number, number>;
 }
 
+// This class renders the current user's statistics for the 
+// specified quiz.
 export class Stats extends React.Component<StatsProps, StatsState> {
 
   constructor(props: StatsProps) {
@@ -54,8 +56,6 @@ export class Stats extends React.Component<StatsProps, StatsState> {
 
     let totalQs : number = this.props.quiz.overall.attemptCnt * this.props.quiz.wrongQCount.length;
     let average : number = Math.round(100 * ((totalQs - this.props.quiz.overall.wrongCnt) / totalQs));
-
-    let name : string = this.state.attempts.length && average >= 80 ? "goodTitle" : (this.state.attempts.length ? "badTitle" : "card")
 
     return (
       <div>
@@ -106,6 +106,9 @@ export class Stats extends React.Component<StatsProps, StatsState> {
     )
   }
 
+  // renders the line chart that displays a graph
+  // of the five most recent scores. Will not display
+  // anything if the user does not have more than 1 attempt.
   chart() {
     if(this.state.attempts.length > 1) {
       let attmpts : Attempt[] = this.state.attempts.slice().reverse();
@@ -129,6 +132,9 @@ export class Stats extends React.Component<StatsProps, StatsState> {
     }
   }
 
+  // renders a display of the top missed questions
+  // for this quiz. It will display a message indicating
+  // perfect scores if the user has never missed a question
   mostMissed() : JSX.Element[] {
     let result : JSX.Element[] = [];
     if (this.state.attempts.length) {
@@ -175,9 +181,9 @@ export class Stats extends React.Component<StatsProps, StatsState> {
     return result;
   }
 
-
+  // renders the list of the five most recent
+  // attempts the user has for this quiz.
   attempts() : JSX.Element | JSX.Element[] {
-    let quiz : QuizStats = this.props.quiz;
 
     let result = [];
     for (let i = 0; i < Math.min(ATTEMPTS, this.state.attempts.length); i++) {

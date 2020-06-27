@@ -5,7 +5,7 @@ import Form from './Form';
 import './Form.css';
 import '../MainPage/QuizSelector.css';
 
-
+// the form for a Long Answer Test
 export class LAForm extends Form {
   constructor(props: any) {
     super(props);

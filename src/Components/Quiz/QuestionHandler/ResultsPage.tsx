@@ -4,9 +4,9 @@ import CountUp from 'react-countup';
 import {QuizInfo} from '../QuizInfo';
 import './ResultsPage.css'
 import { QuizResult } from '../QuizResult';
-import { findAllByTestId } from '@testing-library/react';
 
-
+// Given the results and the quiz itself, this function displays
+// the results of a single quiz.
 export function Results(quiz: QuizInfo, result: QuizResult | undefined,
   shrinkQs: any , onBack: () => any, fromMega : boolean) {
   let display: any = (result) ? result.display : undefined;
@@ -31,6 +31,7 @@ export function Results(quiz: QuizInfo, result: QuizResult | undefined,
   )
 }
 
+// Renders the buttons to be displayed on the results page of a single quiz.
 function getButtons(incorrect: any[], shrinkQs: (Qs: any[]) => void | undefined, onBack: () => void, quiz: QuizInfo, fromMega : boolean) {
   const buttons: any[] = [];
 

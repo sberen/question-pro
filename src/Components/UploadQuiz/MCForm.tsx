@@ -4,7 +4,7 @@ import { TextField, Button, Grid, Card, CardContent,
         CardActions, Box, Typography, MenuItem } from '@material-ui/core';
 import '../MainPage/QuizSelector.css';
 
-
+// The form for a MC test
 export class MCForm extends Form {
   constructor(props: any) {
     super(props);
@@ -84,6 +84,8 @@ export class MCForm extends Form {
     )
   }
 
+  // Adds a question with the same number of answer choices
+  // as the first question on the form
   addQ() {
     this.setState((prev:FormState) => ({
       questions: [...prev.questions, {
@@ -96,6 +98,7 @@ export class MCForm extends Form {
     }))
   }
 
+  // Adds a choice to the desired question
   addChoice(idx: number) {
     let newQs: any[] = this.state.questions.slice();
 
@@ -106,6 +109,7 @@ export class MCForm extends Form {
     });
   }
 
+  // deletes a choice from the desired question.
   deleteChoice(idx: number) {
     if(this.state.questions[idx].choices.length !== 1) {
       let newQs: any[] = this.state.questions.slice();
@@ -119,6 +123,8 @@ export class MCForm extends Form {
     }
   }
 
+  // changes the value of a single choice within a 
+  // question
   onChoiceChange(evt: any, qNum: number, cNum: number) {
     let newQs: any = this.state.questions.slice();
     let newChoices: any = newQs[qNum].choices.slice();

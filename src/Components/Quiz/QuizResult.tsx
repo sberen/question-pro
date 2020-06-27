@@ -5,6 +5,9 @@ import React from "react";
 import { SINGLE } from "./QuizTypes";
 import firebase from 'firebase/app';
 
+// this class represents the necessary information
+// to grade, display and update the db with the results of a single 
+// quiz.
 export class QuizResult {
   display: any;
   incorrectQuestions: any;
@@ -27,6 +30,7 @@ export class QuizResult {
     this.incorrectIndices = info[2];
   }
 
+  // Static factory that should be used primarily for creation.
   static async build(quiz: QuizInfo, responses: string[]){
     let user = await firestore.collection("users").doc(auth.currentUser!.uid).get();
     return new QuizResult(quiz, responses, user);
@@ -34,6 +38,9 @@ export class QuizResult {
 
 }
 
+// grades a quiz that has only one answer per question (ie. SA, MC, LA) and returns
+// the display, an array of the incorrect questions, and an array of the incorrect
+// question indices.
 function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[], number[]] {
   const display: any[] = [];
   const incorrect: any[] = [];
@@ -67,11 +74,14 @@ function SingleResults(quiz: QuizInfo, responses: string[]): [any, any[], number
   return [display , incorrect, incorrectIndex];
 }
 
+// grades a quiz that has multiple answers per question (ie. MSA) and returns
+// the display, an array of the incorrect questions, and an array of the incorrect
+// question indices.
 function MultiResults(quiz: QuizInfo, responses: string[]): [any, any[], number[]] {
   const display = [];
   const incorrect = [];
   const incorrectIndex : number[] = [];
-
+  
   for(let quest = 0; quest < responses.length; quest++) {
     const question: any[] = [];
     const incorrectPrompts: any[] = [];
@@ -98,6 +108,8 @@ function MultiResults(quiz: QuizInfo, responses: string[]): [any, any[], number[
 
     let numCorrectPrompts: number = responses[quest].length - numIncorrectPrompts;
 
+    console.log(quest);
+    console.log(quiz.questions[quest])
     display.push(
       <Grid item component={Card} xs={12} sm={12} md={12} className={numIncorrectPrompts === 0  ? "correctCard" : "incorrectCard"}>
         <CardContent>
@@ -131,7 +143,9 @@ function MultiResults(quiz: QuizInfo, responses: string[]): [any, any[], number[
   return [display, incorrect, incorrectIndex];
 }
 
-function uploadResults(quiz: QuizInfo, user: any, incorrectIndex :number[]){
+// updates the results of the quiz to the database, and inputs all of the 
+// statistics necessary
+function uploadResults(quiz: QuizInfo, user: any, incorrectIndex :number[]) {
   let usersQuiz: string = 'quizResults.' + quiz.uid;
   let lastAttempt = user.get(usersQuiz + '.lastAttempt');
   let wrongQCnt = user.get(usersQuiz + '.wrongQCnt');

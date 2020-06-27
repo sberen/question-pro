@@ -2,14 +2,9 @@ import React from 'react';
 import { TextField, Box, Typography, Grid, Card, CardContent, CardActions } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
 
+// A single Long Answer question within a quiz.
 export class LongAnswer extends QuestionHandler {
 
-    /*
-    Format:
-    
-    Title
-    Answer Box
-    */
     render() {
         return (
             <Grid item component={Card} xs={12} md={12} sm={12} className={"card"}>

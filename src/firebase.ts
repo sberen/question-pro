@@ -2,6 +2,11 @@ import 'firebase/firestore';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
+/*
+Utility class for all of the firebase references and 
+configuration objects.
+*/
+
 const FIREBASECONFIG = {
     apiKey: "AIzaSyBVtbyerfW6d_477bvl1ffMj1Wez75cakg",
     authDomain: "questionpro-65223.firebaseapp.com",
@@ -22,8 +27,7 @@ export const firestore : firebase.firestore.Firestore = firebase.firestore();
 export const firebaseUIConfig = {
     signInFlow: 'popup',
     signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID
     ], 
     Callbacks: {
         signInSuccessWithAuthResult: () => {return false}

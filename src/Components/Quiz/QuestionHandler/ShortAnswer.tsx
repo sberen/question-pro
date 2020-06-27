@@ -2,15 +2,8 @@ import React from 'react';
 import { TextField, Typography, Box, Grid, Card, CardContent, CardActions } from '@material-ui/core';
 import { QuestionHandler } from './QuestionHandler';
 
-
+// A single Short Answer question within a quiz.
 export class ShortAnswer extends QuestionHandler {
-
-    /*
-    Format:
-    
-    Title
-    Answer Box
-    */
     render() {
         
         return (

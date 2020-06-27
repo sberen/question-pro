@@ -17,7 +17,8 @@ const theme : Theme = createMuiTheme({
   }
 });
 
-
+// The top level component that displays the
+// Application and defines the theme
 export class App extends React.Component {
   render() {
     return (

@@ -10,6 +10,7 @@ interface TopBarProps {
   user: any;
 }
 
+// Renders the top navigation bar for the application
 export class TopBar extends React.Component<TopBarProps, {}> {
 
   

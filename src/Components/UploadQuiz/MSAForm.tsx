@@ -5,6 +5,7 @@ import {TextField, Button, Grid, Card, CardActions,
 import "./Form.css"
 import "../MainPage/QuizSelector.css";
 
+// The form for a single MSA form
 export class MSAForm extends Form {
   constructor(props: any) {
     super(props);
@@ -68,6 +69,7 @@ export class MSAForm extends Form {
     )
   }
 
+  // deletes a prompt for a MSA question
   deletePrompt(idx: number) {
     if(this.state.questions[idx].prompts.length !== 1) {
       let newQs: any[] = this.state.questions.slice();
@@ -82,6 +84,7 @@ export class MSAForm extends Form {
     }
   }
 
+  // adds a prompt to a single question
   addPrompt(idx: number) {
     let newQs: any[] = this.state.questions.slice();
     
@@ -93,6 +96,8 @@ export class MSAForm extends Form {
     });
   }
 
+  // adds a question with the same number and title of 
+  // prompts as the first question.
   addQ() {
     this.setState((prevState: FormState) => ({
       questions: [...prevState.questions, {
@@ -104,6 +109,7 @@ export class MSAForm extends Form {
     }));
   }
 
+  // changes the value of the title of a MSA question
   onQuestionChange(evt: any, idx: number) {
     let newQs: any[] = this.state.questions.slice();
 
@@ -117,6 +123,7 @@ export class MSAForm extends Form {
     this.setState({questions: newQs});
   }
 
+  // changes a single prompt for an MSA question in the form
   onPromptChange(evt: any, qNum: number, pNum: number) {
     let newQs: any[] = this.state.questions.slice();
     let newPrompts: string[] = newQs[qNum].prompts.slice();
@@ -133,6 +140,8 @@ export class MSAForm extends Form {
     this.setState({questions: newQs});
   }
 
+  // changes the value of a single response within an MSA 
+  // question
   onResponseChange(evt: any, qNum: number, pNum: number) {
     let newQs: any[] = this.state.questions.slice();
     let newAns: string[] = newQs[qNum].answer.slice();

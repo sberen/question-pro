@@ -25,7 +25,9 @@ interface SelectorState {
   groupQuizzes: QuizInfoMini[];
 }
 
-
+// Component displays the user's quizzes that they have
+// access to, and allows them to choose a variety of actions
+// for each.
 export class QuizSelector extends React.Component<SelectorProps, SelectorState> {
 
   constructor(props: SelectorProps) {
@@ -110,17 +112,23 @@ export class QuizSelector extends React.Component<SelectorProps, SelectorState> 
             </div>);
   }
 
+  // retrieves the desired quiz and sets it
+  // as the current quiz to be taken
   async selectQuiz(quiz : string) {
     let qz : QuizInfo = await this.retreiveQuiz(quiz);
     this.props.changeQuiz(qz);
   }
 
+  // simply retrieves and returns a promise of the 
+  // desired QuizInfo from the database
   async retreiveQuiz(quiz : string) : Promise<QuizInfo> {
     let object = await firestore.collection("quizzes").doc(quiz).get();
     let qz = new QuizInfo(object.get("title"), object.get("type"), quiz, object.get("questions"));
     return qz;
   }
 
+  // retrieves the group of tests to be taken in a 
+  // "mega" format and sets them as the current group
   async getGroup() {
     let result : QuizInfo[] = [];
     let questions: any[] = [];
@@ -132,12 +140,11 @@ export class QuizSelector extends React.Component<SelectorProps, SelectorState> 
 
     let megaQuiz : QuizInfo = new QuizInfo("Mega Quiz", "Mega", "XXXX", questions);
 
-    console.log(megaQuiz);
-    console.log(questions);
-
     this.props.setMega(megaQuiz, result);
   }
 
+  // removes the selected quiz from the data base 
+  // and subsequently updates the user interface.
   removeQuiz(quiz : string){
     let object = firestore.collection("users").doc(auth.currentUser!.uid);
     var key = `quizzes.${quiz}`;
@@ -147,6 +154,7 @@ export class QuizSelector extends React.Component<SelectorProps, SelectorState> 
     this.props.removeQuiz(quiz);
   }
 
+  // adds a quiz to the desired group of quizzes
   addGroupQuiz(quiz: QuizInfoMini) {
     let temp : QuizInfoMini[] = this.state.groupQuizzes.slice();
 
@@ -155,6 +163,8 @@ export class QuizSelector extends React.Component<SelectorProps, SelectorState> 
     this.setState({groupQuizzes: temp});
   }
 
+  // removes a quiz from the current list of mega quiz
+  // "participant" quizzes
   removeGroupQuiz(quiz: QuizInfoMini) {
     let temp : QuizInfoMini[] = this.state.groupQuizzes.slice();
 

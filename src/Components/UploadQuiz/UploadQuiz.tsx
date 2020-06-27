@@ -25,6 +25,7 @@ interface UploadState {
   quizID: string;
 }
 
+// this class renders the form needed to create a new quiz.
 export default class UploadQuiz extends React.Component<UploadProps, UploadState> {
   constructor(props: any) {
     super(props);
@@ -70,7 +71,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
       <LAForm {...props}/>
     ];
 
-    return ( !this.state.quizType
+    return ( !this.state.quizType // if no type is selected, display the possible options
                     ?  (<div style={{margin: "10px"}}>
                         <Typography style={{margin: "5px"}} variant='h5' color='primary'>New Quiz Type:</Typography>
                         <br/>
@@ -113,6 +114,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                     </div> );
   }
 
+  // validates the quiz ID entered into the "Add a Quiz by ID" field
   async validateQuiz(){
     let quizID = this.state.quizID.trim();
     var quizDocRef: firebase.firestore.DocumentReference = firestore.collection("quizzes").doc(quizID);
@@ -129,7 +131,7 @@ export default class UploadQuiz extends React.Component<UploadProps, UploadState
                             .catch(err => {
                               console.log('Error getting document', err);
                             });
-    console.log(quiz);
+    
     if (quiz){
       var userDocRef : firebase.firestore.DocumentReference = firestore.collection("users").doc(auth.currentUser!.uid);
       let userQuizzes = await userDocRef.get()

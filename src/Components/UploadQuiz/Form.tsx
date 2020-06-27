@@ -18,6 +18,8 @@ export interface FormProps {
   afterSubmit: () => void;
 }
 
+// the parent class for the various forms used to create a new
+// quiz.
 export default class Form extends React.Component<FormProps, FormState> {
 
   title() {
@@ -28,6 +30,8 @@ export default class Form extends React.Component<FormProps, FormState> {
     )
   }
 
+  // renders the buttons to add, delete, submit questions and go back
+  // to the choosing page
   renderButtons() {
     return (
         <div id={"buttons"}>
@@ -39,12 +43,14 @@ export default class Form extends React.Component<FormProps, FormState> {
     )
   }
 
+  // adds a question to be rendered
   addQ() {
     this.setState((prevState:FormState) => ({
       questions: [...prevState.questions, {prompts: "", answer: "", questionType: this.props.quizType}]
     }));
   }
 
+  // deletes a single question
   deleteQ() {
     if(this.state.questions.length !== 1) {
       this.setState((prev:FormState) => ({
@@ -53,6 +59,7 @@ export default class Form extends React.Component<FormProps, FormState> {
     }
   }
 
+  // callback to change the prompt of a question.
   onQuestionChange(evt:any, qNum: number) {
     let newQs: any = this.state.questions.slice();
 
@@ -66,6 +73,7 @@ export default class Form extends React.Component<FormProps, FormState> {
     this.setState({questions: newQs});
   }
 
+  // callback to change the answer of a question.
   onAnswerChange(evt: any, qNum: number) {
     let newQs = this.state.questions.slice();
 
@@ -81,6 +89,9 @@ export default class Form extends React.Component<FormProps, FormState> {
     this.setState({questions: newQs});
   }
 
+  // submits the quiz to the database
+  // and calls the function passed in through
+  // props to return to the main page
   async formSubmission(qs: any[]) {
     var quizID: string = await firestore.collection("quizzes").add({
       questions: qs,
@@ -107,6 +118,8 @@ export default class Form extends React.Component<FormProps, FormState> {
     this.props.afterSubmit();
   }
 
+  // provides error handling for a lack 
+  // of titling a quiz
   submit() {
     if (this.state.title === "") {
       window.alert("Please title your quiz.");
@@ -115,6 +128,7 @@ export default class Form extends React.Component<FormProps, FormState> {
     this.formSubmission(this.state.questions);
   }
 
+  // returns the top title card for a form.
   topCard() {
     return (
       <Grid item component={Card} xs={12} md={12} sm={12} className={"card"}>

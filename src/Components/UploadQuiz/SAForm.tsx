@@ -4,7 +4,7 @@ import Form from './Form';
 import './Form.css';
 import '../MainPage/QuizSelector.css'
 
-
+// the form for a single Short Answer upload form
 export class SAForm extends Form {
   constructor(props: any) {
     super(props);

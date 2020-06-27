@@ -20,6 +20,7 @@ interface MegaState {
   grade: number;
 }
 
+// this class renders the by quiz results for a mega quiz
 export class MegaResults extends React.Component<MegaProps, MegaState> {
   constructor(props: MegaProps) {
     super(props);
@@ -43,7 +44,7 @@ export class MegaResults extends React.Component<MegaProps, MegaState> {
 
   render() {
 
-    let { quizzes, results, toNormal, onBack } = this.props;
+    let { quizzes, results, toNormal } = this.props;
     let { resultIndex } = this.state;
 
     return (resultIndex !== undefined ? Results(quizzes[resultIndex], 
@@ -61,6 +62,9 @@ export class MegaResults extends React.Component<MegaProps, MegaState> {
     )
   }
 
+  // renders each of the cards for the subquizzes that shows the
+  // grade and an option to see question by question information
+  // for that subquiz
   cards() {
     return this.props.results.map((val, idx) => {
           let grade : number = this.grade(val.incorrectIndices.length, this.props.quizzes[idx].questions.length);
@@ -84,6 +88,8 @@ export class MegaResults extends React.Component<MegaProps, MegaState> {
         )})
   }
 
+  // renders the title card that has the overall grade
+  // and buttons to retake the mega quiz and go back home
   title() {
 
     return (
@@ -102,11 +108,18 @@ export class MegaResults extends React.Component<MegaProps, MegaState> {
                     onClick={() => this.props.retake(this.props.megaQ.questions)}
                     >Retake Quiz
             </Button>
+            <Button variant='outlined'
+                    color='primary'
+                    onClick={() => this.props.onBack()}
+                    > Home
+            </Button>
           </CardActions>
         </Grid>
     )
   }
 
+  // calculates the grade for a quiz given
+  // the number of wrong and the length of the quiz.
   grade(wrong : number, length: number) {
     return Math.round(100*((length - wrong) / length))
   }

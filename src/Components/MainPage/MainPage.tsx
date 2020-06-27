@@ -7,7 +7,7 @@ import { QuizStats, QuizSummary } from '../StatsPage/QuizStats';
 import { Stats } from '../StatsPage/Stats';
 import {QuizHandler} from '../Quiz/QuizHandler'
 import UploadQuiz from '../UploadQuiz/UploadQuiz';
-import { auth, firebaseUIConfig, firestore } from '../../firebase';
+import { auth, firestore } from '../../firebase';
 import { FrontPage } from './FrontPage';
 import { QuizInfoMini } from '../Quiz/QuizInfoMini';
 
@@ -20,6 +20,8 @@ interface MainPageState {
   statsQuiz: QuizStats | null
 }
 
+// this is the main top level component for the application,
+// displaying each of the desired pages and the toolbar
 export class MainPage extends React.Component<{}, MainPageState> {
   constructor(props: any) {
     super(props);
@@ -56,7 +58,7 @@ export class MainPage extends React.Component<{}, MainPageState> {
     return (
       <div>
         <div style={{marginBottom: "2%"}}>
-          <TopBar user={auth.currentUser} onQuizClick={() => this.setPage(0)} makeQuiz={() => this.setPage(2)} onSignOut={() => this.signOut()}/>
+          <TopBar user={auth.currentUser} onQuizClick={() => this.setPage(0)} makeQuiz={() => this.setPage(2)} onSignOut={() => auth.signOut()}/>
         </div>
         <div className={"centered"}>
           {auth.currentUser ? pages[this.state.pageNum] : <FrontPage />}
@@ -66,25 +68,31 @@ export class MainPage extends React.Component<{}, MainPageState> {
   }
 
 
-
+  // sets the current page index
   setPage(page: number) {
     if (auth.currentUser) {
       this.setState({pageNum: page});
     }
   }
 
+  // adds a quiz to the current set of 
+  // user's quizzes upon creation
   addQuiz(qz: QuizInfoMini) {
     this.setState((prev: MainPageState) => ({
       quizzes: [...prev.quizzes, qz]
     }));
   }
 
+  // removes a quiz from the current set of
+  // user's quizzes locally upon deletion
   removeQuiz(id: string){
     this.setState((prev: MainPageState)=>({
       quizzes: prev.quizzes.filter(function(value, index, arr){ return value.uid !== id;})
     }));
   }
 
+  // retrieves the necessary statistics for the
+  // chosen quiz
   async getData(qz: QuizInfoMini) {
     let object = await firestore.collection("users").doc(auth.currentUser!.uid).get();
     let quests = await firestore.collection("quizzes").doc(qz.uid).get();
@@ -100,16 +108,14 @@ export class MainPage extends React.Component<{}, MainPageState> {
     ]
     let stats : QuizStats = new QuizStats(...pathParams);
 
-    console.log(stats);
+  
 
     this.setState({statsQuiz: stats, groupQuizzes: null, pageNum: 3});
   }
 
-
-  signOut() {
-    auth.signOut();
-  }
-
+  // registers an auth listener to the firebase auth ref,
+  // waiting for a user sign in or sign out. Upon signing in
+  // we retrieve their quizzes to be displayed.
   async registerAuthListener(newUser: firebase.User | null) {
     var stateQuizzes: QuizInfoMini[] = [];
     if (newUser) {
