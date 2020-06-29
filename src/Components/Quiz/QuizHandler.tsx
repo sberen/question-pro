@@ -221,11 +221,11 @@ export class QuizHandler extends React.Component<HandlerProps, HandlerState> {
   // ONLY CALLED IF NEW Qs IS OF SAME TYPE AS CURRENT QUIZ (ie. single to single and mega to mega)
   // *** use changeQuiz to change from a mega to a single) ***
   shrinkQs(newQs: any[]) {
-    const newAns : any[] = [];
+    let newAns: any[];
     if (this.state.quiz.type === "Mega") { // re-set mega answers in order to handle mega retest
-      this.props.megaQs!.forEach((val) => newAns.push(this.populateAnswers(val)));
+      newAns = this.props.megaQs!.map((val) => this.populateAnswers(val));
     } else {
-      newAns.push(this.populateAnswers(new QuizInfo("", this.state.quiz.type, "", newQs)));
+      newAns = (this.populateAnswers(new QuizInfo("", this.state.quiz.type, "", newQs)));
     }
     const id : string = (newQs.length === this.state.quiz.questions.length) ? this.state.quiz.uid : "";
     const name : string = (newQs.length === this.state.quiz.questions.length) ?
