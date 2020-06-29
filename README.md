@@ -24,6 +24,9 @@ The following images illustrtate the site's appearance for a user with multiple 
 
 ### Graded Quiz Page
 ![Grades](./demo-images/Grade-Page.PNG)
+
+### Graded Mega-Quiz Page
+![Mega Quiz Grades](./demo-images/Mega-Quiz-Results.PNG)
 ## Contributors
 
 - [Zizhen Song](https://github.com/HolderOfTime99)
