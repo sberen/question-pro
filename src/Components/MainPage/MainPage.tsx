@@ -127,10 +127,8 @@ export class MainPage extends React.Component<{}, MainPageState> {
                               });
 
       if (returned) {
-        console.log(returned);
         for (let quiz of Object.keys(returned)) {
           let object: string[] = returned[quiz];
-          console.log(object);
           stateQuizzes.push(new QuizInfoMini(object[0], object[1], quiz));
         }
       } else {
@@ -147,8 +145,6 @@ export class MainPage extends React.Component<{}, MainPageState> {
           console.error("Document Not Set");
         })
       }
-
-      console.log(stateQuizzes)
     }
 
     this.setState({quizzes: stateQuizzes, quiz: null, pageNum: 0});

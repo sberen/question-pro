@@ -46,7 +46,7 @@ export default class Form extends React.Component<FormProps, FormState> {
   // adds a question to be rendered
   addQ() {
     this.setState((prevState:FormState) => ({
-      questions: [...prevState.questions, {prompts: "", answer: "", questionType: this.props.quizType}]
+      questions: [...prevState.questions, {prompts: "", answer: "", choices:[], questionType: this.props.quizType}]
     }));
   }
 
@@ -77,8 +77,6 @@ export default class Form extends React.Component<FormProps, FormState> {
   onAnswerChange(evt: any, qNum: number) {
     let newQs = this.state.questions.slice();
 
-    console.log(evt);
-
     newQs[qNum] = {
       prompts: newQs[qNum].prompts,
       answer: evt.target.value,
@@ -101,19 +99,24 @@ export default class Form extends React.Component<FormProps, FormState> {
     }).then((docRef) => {
       this.props.addQuiz(new QuizInfoMini(this.state.title, this.props.quizType, docRef.id));
       return docRef.id;
+    }).catch((error) => {
+      console.error(error);
+      return 'Error';
     });
 
-    var key = `quizzes.${quizID}`;
-    const wrongCnt: number[] = new Array(qs.length).fill(0);
-
-    firestore.collection("users").doc(auth.currentUser!.uid).update({
-      [key] : [this.state.title, this.props.quizType],
-      [`quizResults.${quizID}.overall.attemptCnt`] : 0,
-      [`quizResults.${quizID}.overall.wrongCnt`] : 0,
-      [`quizResults.${quizID}.attempts`] :{},
-      [`quizResults.${quizID}.wrongQCnt`] :wrongCnt,
-      [`quizResults.${quizID}.lastAttempt`] :0
-    });
+    if (quizID !== 'Error') {
+      var key = `quizzes.${quizID}`;
+      const wrongCnt: number[] = new Array(qs.length).fill(0);
+  
+      firestore.collection("users").doc(auth.currentUser!.uid).update({
+        [key] : [this.state.title, this.props.quizType],
+        [`quizResults.${quizID}.overall.attemptCnt`] : 0,
+        [`quizResults.${quizID}.overall.wrongCnt`] : 0,
+        [`quizResults.${quizID}.attempts`] :{},
+        [`quizResults.${quizID}.wrongQCnt`] :wrongCnt,
+        [`quizResults.${quizID}.lastAttempt`] :0
+      });
+    }
 
     this.props.afterSubmit();
   }

@@ -22,7 +22,6 @@ export class QuizResult {
     } else {
       info = MultiResults(quiz, responses);
     }
-    console.log(quiz);
     uploadResults(quiz, user, info[2]);
 
     this.display = info[0];
@@ -107,9 +106,6 @@ function MultiResults(quiz: QuizInfo, responses: string[]): [any, any[], number[
     }
 
     let numCorrectPrompts: number = responses[quest].length - numIncorrectPrompts;
-
-    console.log(quest);
-    console.log(quiz.questions[quest])
     display.push(
       <Grid item component={Card} xs={12} sm={12} md={12} className={numIncorrectPrompts === 0  ? "correctCard" : "incorrectCard"}>
         <CardContent>
